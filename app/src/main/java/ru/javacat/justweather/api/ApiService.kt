@@ -7,6 +7,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
+import ru.javacat.justweather.API_KEY
 import ru.javacat.justweather.response_models.Weather
 
 
