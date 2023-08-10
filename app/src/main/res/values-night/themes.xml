@@ -1,7 +1,20 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.JustWeather" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="colorPrimary">@color/md_theme_dark_primary</item>
+        <item name="colorOnPrimary">@color/md_theme_dark_onPrimary</item>
+        <item name="colorSecondary">@color/md_theme_dark_secondary</item>
+        <item name="colorOnSecondary">@color/md_theme_dark_onSecondary</item>
+
+        <item name="android:colorBackground">@color/dark_status_bar</item>
+        <item name="colorOnBackground">@color/md_theme_dark_onBackground</item>
+        <item name="android:statusBarColor">@color/dark_status_bar</item>
+
+        <item name="textFillColor">@color/dark_text_accent</item>
+        <item name="android:textColorSecondary">@color/dark_text_secondary</item>
+        <item name="cardBackgroundColor">@color/dark_card_back</item>
+
+        <item name="background">@drawable/night</item>
+
     </style>
 </resources>

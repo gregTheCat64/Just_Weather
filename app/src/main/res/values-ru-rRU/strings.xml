@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Just Weather</string>
+    <string name="realfeel">Ощущается как</string>
+    <string name="more">подробнее</string>
+</resources>

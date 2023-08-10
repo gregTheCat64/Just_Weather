@@ -1,8 +1,18 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.JustWeather" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/md_theme_light_primary</item>
+        <item name="colorOnPrimary">@color/md_theme_light_onPrimary</item>
+        <item name="colorSecondary">@color/md_theme_light_secondary</item>
+        <item name="colorOnSecondary">@color/md_theme_light_onSecondary</item>
+        <item name="android:colorBackground">@color/md_theme_light_background</item>
+        <item name="android:statusBarColor">@color/md_theme_light_secondary</item>
+        <item name="textFillColor">@color/light_text_accent</item>
+        <item name="android:textColorSecondary">@color/light_text_secondary</item>
+        <item name="cardBackgroundColor">@color/light_card_back</item>
+
+        <item name="background">@drawable/day</item>
+
     </style>
 
     <style name="Theme.JustWeather" parent="Base.Theme.JustWeather" />

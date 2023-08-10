@@ -32,8 +32,15 @@ private val retrofit = Retrofit.Builder()
     .build()
 
 interface ApiService{
-    @GET("current.json?key=$API_KEY")
-    suspend fun getByName (@Query ("q") name: String): Response<Weather>
+    @GET("forecast.json?key=$API_KEY")
+    suspend fun getByName (
+        @Query ("q") name: String,
+        @Query ("days") daysCount: Int,
+        @Query ("aqi") aqi: String = "no",
+        @Query ("alerts") alerts: String = "yes",
+        @Query ("lang") lang:String = "ru"
+    ): Response<Weather>
+
 }
 
 object Api {

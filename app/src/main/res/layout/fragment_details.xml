@@ -1,6 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Wind:"
+        />
+
+    <TextView
+        android:id="@+id/windSpeed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="5 м/с"
+        />
+    <TextView
+        android:id="@+id/windDirection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ЮЗ"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pressure:"
+        />
+    <TextView
+        android:id="@+id/pressure"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="10Мбар"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Precipation:"
+        />
+    <TextView
+        android:id="@+id/precipation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="10мм"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Humidity:"/>
+    <TextView
+        android:id="@+id/humidity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="47%"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="cloud"
+        />
+    <TextView
+        android:id="@+id/cloud"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="30%"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="uv index:"
+        />
+    <TextView
+        android:id="@+id/uvIndex"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="5"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Wind gust:"
+        />
+
+    <TextView
+        android:id="@+id/windGust"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="10 м/с"
+        />
+
+
+
+
+
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>

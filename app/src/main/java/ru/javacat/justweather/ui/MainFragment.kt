@@ -10,6 +10,8 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import ru.javacat.justweather.databinding.FragmentMainBinding
 import ru.javacat.justweather.util.isPermissionGranted
 import ru.javacat.justweather.util.load
@@ -19,6 +21,7 @@ import kotlin.math.roundToInt
 class MainFragment: Fragment() {
     private lateinit var pLauncher: ActivityResultLauncher<String>
     private lateinit var binding: FragmentMainBinding
+    private lateinit var adapter: ForecastAdapter
     private val viewModel: MainViewModel by viewModels()
 
     override fun onCreateView(
@@ -28,16 +31,24 @@ class MainFragment: Fragment() {
     ): View {
         binding = FragmentMainBinding.inflate(inflater, container,false)
 
-        viewModel.loadWeatherByName("London")
+        viewModel.loadWeatherByName("Saratov", 3)
 
         viewModel.data.observe(viewLifecycleOwner){
-            val image = "https://koshka.top/uploads/posts/2021-11/1637342603_11-koshka-top-p-kotik-risovat-legko-16.jpg"
+            val image = "https://${it.current.condition.icon}"
             binding.apply {
-                tempTxtView.text = it.current.temp_c.roundToInt().toString() + " \u2103"
+                tempTxtView.text = it.current.temp_c.roundToInt().toString() + "°"
                 cityTxtView.text = it.location.name
                 conditionTxtView.text = it.current.condition.text
-                realFeelTxtView.text = it.current.feelslike_c.toString() + "℃"
-                //imageView.load(image)
+                realFeelTxtView.text = it.current.feelslike_c.toString() + "°"
+                imageView.load(image)
+                val alerts = it.alerts.alert
+                for (element in alerts){
+                    if (element.desc.isNotEmpty()){
+                        //Toast.makeText(requireContext(), element.desc, Toast.LENGTH_LONG).show()
+                        Snackbar.make(requireView(),element.desc,Snackbar.LENGTH_LONG).show()
+                    }
+                }
+                initRecView()
             }
         }
 
@@ -47,6 +58,17 @@ class MainFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         checkPermission()
+        //initRecView()
+
+    }
+
+    private fun initRecView() {
+        binding.daysRecView.layoutManager = LinearLayoutManager(requireContext())
+        adapter = ForecastAdapter()
+        binding.daysRecView.adapter = adapter
+        val list = viewModel.data.value?.forecast?.forecastday
+        println("list: ${list?.size}")
+        adapter.submitList(list)
     }
 
     private fun permissionListener(){

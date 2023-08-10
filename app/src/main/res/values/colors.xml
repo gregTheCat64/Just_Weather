@@ -1,5 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+
+    <color name="md_theme_light_primary">#C25E18</color>
+    <color name="md_theme_light_onPrimary">#FFFFFF</color>
+
+    <color name="md_theme_light_secondary">#C76D2E</color>
+    <color name="md_theme_light_onSecondary">#FFFFFF</color>
+
+    <color name="md_theme_light_background">#FF7D54</color>
+    <color name="md_theme_light_onBackground">#FDFDF5</color>
+
+    <color name="light_text_accent">#222222</color>
+    <color name="light_text_secondary">#494949</color>
+    <color name="light_card_back">#D9FFF1DC</color>
+    <color name="light_status_bar"></color>
+
+    <color name="md_theme_dark_primary">#F9F9F9</color>
+    <color name="md_theme_dark_onPrimary">#101844</color>
+
+    <color name="md_theme_dark_secondary">#161C3D</color>
+    <color name="md_theme_dark_onSecondary">#FFFFFF</color>
+
+    <color name="md_theme_dark_background">#000C4D</color>
+    <color name="md_theme_dark_onBackground">#E3E3DC</color>
+
+    <color name="dark_text_accent">#FFFFFF</color>
+    <color name="dark_text_secondary">#9E9E9E</color>
+    <color name="dark_card_back">#9B2E2E2E</color>
+    <color name="dark_status_bar">#2F2F2F</color>
+
 </resources>

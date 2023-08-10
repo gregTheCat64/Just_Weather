@@ -9,9 +9,9 @@ import java.lang.Exception
 
 class RepositoryImpl: Repository {
 
-    override suspend fun getByName(name: String): Weather? {
+    override suspend fun getByName(name: String, daysCount: Int): Weather? {
         try {
-            val response = Api.service.getByName(name)
+            val response = Api.service.getByName(name, daysCount)
             return response.body()
         } catch (e: Exception){
             e.printStackTrace()

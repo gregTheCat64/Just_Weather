@@ -20,10 +20,10 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
         get() = _data
 
 
-    fun loadWeatherByName(name: String){
+    fun loadWeatherByName(name: String, daysCount: Int){
         viewModelScope.launch {
             try {
-                val response = repository.getByName(name)
+                val response = repository.getByName(name, daysCount)
                 if (response != null) {
                     _data.value = response!!
                     println(response.current.temp_c)

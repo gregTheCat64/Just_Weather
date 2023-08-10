@@ -2,26 +2,14 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="#253236"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
 
-        <TextView
-            android:id="@+id/cityTxtView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Saratov"
-            android:layout_gravity="center|top"
-            android:layout_marginTop="32dp"
-            android:textColor="#989898"
-            android:textStyle="bold"
-            android:textSize="36sp"/>
-
         <com.google.android.material.button.MaterialButton
             android:id="@+id/refresh"
             style="@style/Widget.Material3.Button.IconButton"
-            app:iconTint="@color/white"
+            app:iconTint="?attr/colorPrimary"
             app:icon="@drawable/baseline_refresh_24"
             android:layout_margin="16dp"
             android:layout_gravity="end"
@@ -32,14 +20,26 @@
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_gravity="center"
         android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/cityTxtView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_gravity="center|top"
+            android:layout_marginTop="16dp"
+            android:textColor="?android:textColorSecondary"
+            android:textStyle="bold"
+            android:textSize="36sp"/>
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginTop="16dp"
             android:orientation="horizontal">
 
             <TextView
@@ -47,8 +47,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="+29"
-                android:textColor="@color/white"
+
+                android:textColor="?attr/textFillColor"
                 android:textSize="56sp"
                 android:textStyle="bold" />
 
@@ -58,9 +58,8 @@
                 android:layout_height="64dp"
                 android:layout_gravity="center"
                 android:layout_marginStart="16dp"
-                android:src="@drawable/baseline_wb_sunny_24"
-                app:tint="@color/white"
-
+                android:src="@drawable/icon_cloud"
+                app:tint="?attr/colorPrimary"
                 />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
@@ -72,8 +71,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="8dp"
-            android:text="Clear"
-            android:textColor="@color/white"
+
+            android:textColor="?attr/textFillColor"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -86,37 +85,48 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="RealFeel "/>
+                android:textColor="?android:textColorSecondary"
+                android:text="@string/realfeel"/>
 
             <TextView
                 android:id="@+id/realFeelTxtView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-
+                android:textColor="?android:textColorSecondary"
                 android:text="25"/>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:orientation="vertical"
+        <Button
+            android:id="@+id/toDetailsFragBtn"
+            style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_marginTop="16dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/daysRecView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                tools:listitem="@layout/day_item"
-                tools:itemCount="3"
-                />
-
-        </androidx.appcompat.widget.LinearLayoutCompat>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="подробнее"/>
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
 
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:orientation="vertical"
+        android:layout_marginBottom="64dp"
+        android:layout_gravity="bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/daysRecView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/day_item"
+            tools:itemCount="3"
+            />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
 
 </FrameLayout>
