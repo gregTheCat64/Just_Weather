@@ -17,9 +17,15 @@ import ru.javacat.justweather.util.load
 import ru.javacat.justweather.util.toLocalDate
 import kotlin.math.roundToInt
 
-class ForecastAdapter: ListAdapter<Forecastday, ForecastAdapter.Holder>(Comparator()) {
+interface OnInteractionListener {
+    fun onForecastItem(item: Forecastday)
+}
 
-    class Holder(view: View): RecyclerView.ViewHolder(view){
+class ForecastAdapter(
+    private val onInteractionListener: OnInteractionListener
+): ListAdapter<Forecastday, ForecastAdapter.Holder>(Comparator()) {
+
+    class Holder(view: View, private val onInteractionListener: OnInteractionListener): RecyclerView.ViewHolder(view){
         private val binding = DayItemBinding.bind(view)
 
         @RequiresApi(Build.VERSION_CODES.O)
@@ -27,10 +33,22 @@ class ForecastAdapter: ListAdapter<Forecastday, ForecastAdapter.Holder>(Comparat
             binding.dayOfWeek.text = item.date.toLocalDate().asDayOfWeek()
             binding.maxTempTxtView.text = item.day.maxtemp_c.roundToInt().toString()+ "\u00B0"
             binding.minTempTxtView.text = item.day.mintemp_c.roundToInt().toString()+ "°"
-
+            binding.root.setOnClickListener {
+                onInteractionListener.onForecastItem(item)
+            }
             val image = "https://${item.day.condition.icon}"
             binding.conditionImgView.load(image.toUri().toString())
         }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.day_item, parent, false)
+        return Holder(view, onInteractionListener)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onBindViewHolder(holder: Holder, position: Int) {
+        holder.bind(getItem(position))
     }
 
     class Comparator: DiffUtil.ItemCallback<Forecastday>(){
@@ -41,15 +59,5 @@ class ForecastAdapter: ListAdapter<Forecastday, ForecastAdapter.Holder>(Comparat
         override fun areContentsTheSame(oldItem: Forecastday, newItem: Forecastday): Boolean {
             return oldItem == newItem
         }
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.day_item, parent, false)
-        return Holder(view)
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    override fun onBindViewHolder(holder: Holder, position: Int) {
-        holder.bind(getItem(position))
     }
 }

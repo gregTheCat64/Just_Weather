@@ -1,6 +1,7 @@
 package ru.javacat.justweather.ui
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,6 +10,8 @@ import kotlinx.coroutines.launch
 import ru.javacat.justweather.NetworkError
 import ru.javacat.justweather.repository.Repository
 import ru.javacat.justweather.repository.RepositoryImpl
+import ru.javacat.justweather.response_models.Forecast
+import ru.javacat.justweather.response_models.Forecastday
 import ru.javacat.justweather.response_models.Weather
 
 class MainViewModel(application: Application): AndroidViewModel(application) {
@@ -18,6 +21,10 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
     private val _data = MutableLiveData<Weather>()
     val data: LiveData<Weather>
         get() = _data
+
+    private val _forecastData = MutableLiveData<Forecastday>()
+    val forecastData: LiveData<Forecastday>
+        get() = _forecastData
 
 
     fun loadWeatherByName(name: String, daysCount: Int){
@@ -32,5 +39,10 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
                 e.printStackTrace()
             }
         }
+    }
+
+    fun chooseForecastData(item: Forecastday){
+        _forecastData.value = item
+        Log.i("MyLog", "${forecastData.value!!.date}")
     }
 }

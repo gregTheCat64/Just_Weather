@@ -7,7 +7,7 @@
     <color name="md_theme_light_secondary">#C76D2E</color>
     <color name="md_theme_light_onSecondary">#FFFFFF</color>
 
-    <color name="md_theme_light_background">#FF7D54</color>
+    <color name="md_theme_light_background">#FFD9CD</color>
     <color name="md_theme_light_onBackground">#FDFDF5</color>
 
     <color name="light_text_accent">#222222</color>
