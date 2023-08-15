@@ -33,6 +33,8 @@ val emptyForecastday = Forecastday(
 
 class MainViewModel(application: Application): AndroidViewModel(application) {
 
+
+
     private val repository: Repository = RepositoryImpl()
 
     private val _data = MutableLiveData<Weather>()
@@ -42,6 +44,10 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
     private val _forecastData = MutableLiveData<Forecastday>()
     val forecastData: LiveData<Forecastday>
         get() = _forecastData
+
+    init {
+        Log.i("MyTag", "initing VM")
+    }
 
 
     fun loadWeatherByName(name: String, daysCount: Int){

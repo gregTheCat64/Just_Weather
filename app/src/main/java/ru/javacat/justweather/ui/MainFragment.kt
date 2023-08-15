@@ -2,6 +2,7 @@ package ru.javacat.justweather.ui
 
 import android.Manifest
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,6 +39,7 @@ class MainFragment: Fragment() {
 
         viewModel.loadWeatherByName("Saratov", 3)
 
+        Log.i("MyTag", "mainVM: $viewModel")
         binding.refresh.setOnClickListener {
             viewModel.loadWeatherByName("Saratov", 3)
         }
