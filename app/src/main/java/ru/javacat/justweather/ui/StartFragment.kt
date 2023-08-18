@@ -20,6 +20,7 @@ import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
 import ru.javacat.justweather.R
 import ru.javacat.justweather.databinding.FragmentStartBinding
+import ru.javacat.justweather.ui.view_models.MainViewModel
 import ru.javacat.justweather.util.isPermissionGranted
 
 class StartFragment: Fragment() {

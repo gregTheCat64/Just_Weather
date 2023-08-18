@@ -1,4 +1,4 @@
-package ru.javacat.justweather.ui
+package ru.javacat.justweather.ui.view_models
 
 import android.app.Application
 import android.util.Log
@@ -32,8 +32,6 @@ val emptyForecastday = Forecastday(
 )
 
 class MainViewModel(application: Application): AndroidViewModel(application) {
-
-
 
     private val repository: Repository = RepositoryImpl()
 

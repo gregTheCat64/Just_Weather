@@ -13,6 +13,7 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import ru.javacat.justweather.R
 import ru.javacat.justweather.databinding.FragmentMainBinding
 import ru.javacat.justweather.response_models.Forecastday
+import ru.javacat.justweather.ui.view_models.MainViewModel
 import ru.javacat.justweather.util.load
 import kotlin.math.roundToInt
 
@@ -40,6 +41,14 @@ class MainFragment: Fragment() {
         binding = FragmentMainBinding.inflate(inflater, container,false)
 
         initDataObserver()
+
+        binding.placeLayout.setOnClickListener {
+            parentFragmentManager
+                .beginTransaction()
+                .addToBackStack(null)
+                .replace(R.id.fragmentContainer, PlaceFragment.newInstance())
+                .commit()
+        }
 
         Log.i("MyTag", "mainVM: $viewModel")
         binding.refresh.setOnClickListener {

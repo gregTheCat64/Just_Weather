@@ -14,7 +14,7 @@ class PlacesRepositorySharedPrefsImpl(
     private val prefs = context.getSharedPreferences("repo", Context.MODE_PRIVATE)
     private val type = TypeToken.getParameterized(List::class.java, Place::class.java).type
     private val key = "places"
-    private var nextId = 1
+    private var lastId = 0
     private var places = emptyList<Place>()
     private val data = MutableLiveData(places)
 
@@ -29,14 +29,27 @@ class PlacesRepositorySharedPrefsImpl(
     override fun getPlaces(): LiveData<List<Place>> = data
 
     override fun save(place: Place) {
-        if (place.id == 0) {
-            places = listOf(
-                place.copy(id = nextId++)
-            ) + places
+        if (places.isNotEmpty() ){
+            lastId = places.last().id
         }
+        places = listOf(
+            place.copy(id = lastId++)
+        ) + places
+
+        data.value = places
+        sync()
     }
 
     override fun removeById(id: Int) {
-        TODO("Not yet implemented")
+        places = places.filter { it.id != id }
+        data.value = places
+        sync()
+    }
+
+    private fun sync() {
+        with(prefs.edit()) {
+            putString(key, gson.toJson(places))
+            apply()
+        }
     }
 }

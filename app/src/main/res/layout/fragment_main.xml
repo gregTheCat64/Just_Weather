@@ -33,6 +33,7 @@
             >
 
             <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/placeLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"

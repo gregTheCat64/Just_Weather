@@ -14,6 +14,8 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import ru.javacat.justweather.R
 import ru.javacat.justweather.databinding.FragmentForecastBinding
+import ru.javacat.justweather.ui.adapters.ForecastAdapter
+import ru.javacat.justweather.ui.view_models.MainViewModel
 import ru.javacat.justweather.util.asLocalDate
 import ru.javacat.justweather.util.toLocalDate
 
