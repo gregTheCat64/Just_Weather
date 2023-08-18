@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_margin="8dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/conditionImgView"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_gravity="center"
+        android:src="@drawable/baseline_wb_sunny_24"
+        app:tint="?attr/colorPrimary" />
+
+
+        <TextView
+            android:id="@+id/tempTxtView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="23"
+            android:layout_gravity="center"
+            android:textSize="16sp"
+            style="@style/TextAppearance.Material3.BodyLarge" />
+
+
+    <TextView
+        android:id="@+id/hourValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="5"
+        android:textColor="?android:textColorSecondary"
+        android:text="5pm"
+        android:textSize="14sp"
+        />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

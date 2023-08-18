@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="TextAppearance.Material3.BodySmall.MyText" parent="TextAppearance.Material3.BodySmall">
+
+    </style>
+</resources>

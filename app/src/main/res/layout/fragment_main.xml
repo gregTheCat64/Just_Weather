@@ -24,15 +24,41 @@
         android:layout_gravity="center"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/cityTxtView"
+        <androidx.cardview.widget.CardView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center|top"
-            android:layout_marginTop="8dp"
-            android:textColor="?android:textColorSecondary"
-            android:textStyle="bold"
-            android:textSize="36sp"/>
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            app:cardCornerRadius="8dp"
+            >
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="8dp"
+                >
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_gravity="center"
+                    app:tint="?attr/colorPrimary"
+                    android:src="@drawable/baseline_location_on_24"/>
+
+                <TextView
+                    android:id="@+id/cityTxtView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Saratov"
+                    android:layout_marginStart="8dp"
+                    android:textSize="18sp"/>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+        </androidx.cardview.widget.CardView>
+
+
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="wrap_content"
@@ -58,22 +84,12 @@
                 android:layout_gravity="center"
                 android:layout_marginStart="16dp"
                 android:src="@drawable/icon_cloud"
-                app:tint="?attr/colorPrimary"
+                app:tint="@color/white"
                 />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
 
-        <TextView
-            android:id="@+id/conditionTxtView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="8dp"
-
-            android:textColor="?attr/textFillColor"
-            android:textSize="18sp"
-            android:textStyle="bold" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="wrap_content"
@@ -83,7 +99,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="?android:textColorSecondary"
+                android:textColor="?attr/textFillColor"
                 android:text="@string/realfeel"/>
 
             <TextView
@@ -91,15 +107,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:textColor="?android:textColorSecondary"
-                android:text="25"/>
+                android:textColor="?attr/textFillColor"
+               />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
 
         <include
             android:id="@+id/detailsLayout"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="24dp"
             layout="@layout/fragment_details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -113,18 +129,42 @@
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:orientation="vertical"
-        android:layout_marginBottom="96dp"
+
         android:layout_gravity="bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+
+
+
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/daysRecView"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="64dp"
             tools:listitem="@layout/day_item"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:orientation="horizontal"
             tools:itemCount="3"
             />
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:backgroundTint="?attr/cardBackgroundColor"
+            >
+            <TextView
+                android:id="@+id/alarmMsg"
+                android:text="Сегодня прекрасный день"
+                android:padding="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+
+        </androidx.cardview.widget.CardView>
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

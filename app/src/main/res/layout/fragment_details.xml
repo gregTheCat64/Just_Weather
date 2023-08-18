@@ -20,12 +20,13 @@
             android:layout_height="24dp"
             android:layout_gravity="center"
             android:src="@drawable/icon_wind"
-            app:tint="?attr/colorPrimary" />
+            app:tint="@color/white" />
 
         <TextView
             android:id="@+id/windSpeed"
             android:layout_gravity="center"
             android:layout_marginTop="4dp"
+            android:textColor="?attr/textFillColor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="5 км/ч" />
@@ -33,6 +34,7 @@
         <TextView
             android:id="@+id/windDir"
             android:layout_gravity="center"
+            android:textColor="?attr/textFillColor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="ЮЗ" />
@@ -54,13 +56,14 @@
             android:layout_height="24dp"
             android:layout_gravity="center"
             android:src="@drawable/icon_precipation"
-            app:tint="?attr/colorPrimary" />
+            app:tint="@color/white" />
 
 
         <TextView
             android:id="@+id/precipation"
             android:layout_gravity="center"
             android:layout_marginTop="4dp"
+            android:textColor="?attr/textFillColor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="10мм" />
@@ -82,13 +85,14 @@
             android:layout_height="24dp"
             android:layout_gravity="center"
             android:src="@drawable/icon_drop"
-            app:tint="?attr/colorPrimary" />
+            app:tint="@color/white" />
 
 
         <TextView
             android:id="@+id/humidity"
             android:layout_gravity="center"
             android:layout_marginTop="4dp"
+            android:textColor="?attr/textFillColor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="47%" />
@@ -110,13 +114,14 @@
             android:layout_height="24dp"
             android:layout_gravity="center"
             android:src="@drawable/icon_cloud_chance"
-            app:tint="?attr/colorPrimary" />
+            app:tint="@color/white" />
 
 
         <TextView
             android:id="@+id/cloud"
             android:layout_gravity="center"
             android:layout_marginTop="4dp"
+            android:textColor="?attr/textFillColor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="30%" />
@@ -138,13 +143,14 @@
             android:layout_height="wrap_content"
             android:text="UV:"
             android:textSize="18sp"
-            android:textColor="?attr/colorPrimary"
+            android:textColor="@color/white"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/uvIndex"
             android:layout_gravity="center"
             android:layout_marginTop="4dp"
+            android:textColor="?attr/textFillColor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="5" />

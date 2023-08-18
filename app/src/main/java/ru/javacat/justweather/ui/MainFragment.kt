@@ -1,34 +1,36 @@
 package ru.javacat.justweather.ui
 
-import android.Manifest
 import android.os.Bundle
+import android.transition.TransitionInflater
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.launch
+import com.google.android.gms.location.FusedLocationProviderClient
 import ru.javacat.justweather.R
 import ru.javacat.justweather.databinding.FragmentMainBinding
 import ru.javacat.justweather.response_models.Forecastday
-import ru.javacat.justweather.util.isPermissionGranted
 import ru.javacat.justweather.util.load
 import kotlin.math.roundToInt
 
 
 class MainFragment: Fragment() {
-    private lateinit var pLauncher: ActivityResultLauncher<String>
+
     private lateinit var binding: FragmentMainBinding
-    private lateinit var adapter: ForecastAdapter
+    private lateinit var adapter: MainAdapter
+
+
     private val viewModel: MainViewModel by activityViewModels()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val inflater = TransitionInflater.from(requireContext())
+        exitTransition = inflater.inflateTransition(R.transition.fade)
+        enterTransition = inflater.inflateTransition(R.transition.slide_right)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,14 +39,12 @@ class MainFragment: Fragment() {
     ): View {
         binding = FragmentMainBinding.inflate(inflater, container,false)
 
-        viewModel.loadWeatherByName("Saratov", 3)
+        initDataObserver()
 
         Log.i("MyTag", "mainVM: $viewModel")
         binding.refresh.setOnClickListener {
-            viewModel.loadWeatherByName("Saratov", 3)
-        }
 
-        initDataObserver()
+        }
 
 
 
@@ -53,20 +53,23 @@ class MainFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        checkPermission()
+
         //initRecView()
+
+        //getLocation()
+
 
     }
 
     private fun initDataObserver(){
-
+        Log.i("MyLog", "observing data")
             viewModel.data.observe(viewLifecycleOwner){
                 val image = "https://${it.current.condition.icon}"
                 binding.apply {
                     //it.forecast.forecastday.get(0).astro.is_moon_up
                     tempTxtView.text = it.current.temp_c.roundToInt().toString() + "°"
                     cityTxtView.text = it.location.name
-                    conditionTxtView.text = it.current.condition.text
+                    //conditionTxtView.text = it.current.condition.text
                     realFeelTxtView.text = it.current.feelslike_c.toString() + "°"
                     imageView.load(image)
                     detailsLayout.cloud.text = it.current.cloud.toString()+"%"
@@ -79,19 +82,20 @@ class MainFragment: Fragment() {
                     for (element in alerts){
                         if (element.desc.isNotEmpty()){
                             //Toast.makeText(requireContext(), element.desc, Toast.LENGTH_LONG).show()
-                            Snackbar.make(requireView(),element.desc,Snackbar.LENGTH_LONG).show()
+                            //Snackbar.make(requireView(),element.desc,Snackbar.LENGTH_LONG).show()
+                            alarmMsg.text = element.desc
+
                         }
                     }
-                    initRecView()
-
                 }
+                initRecView()
             }
-
     }
 
     private fun initRecView() {
-        binding.daysRecView.layoutManager = LinearLayoutManager(requireContext())
-        adapter = ForecastAdapter(object : OnInteractionListener{
+        Log.i("MyLog", "Init RecView")
+
+        adapter = MainAdapter(object : OnInteractionListener{
             override fun onForecastItem(item: Forecastday) {
                 viewModel.chooseForecastData(item)
 
@@ -100,29 +104,16 @@ class MainFragment: Fragment() {
                     .addToBackStack(null)
                     .replace(R.id.fragmentContainer, ForecastFragment.newInstance())
                     .commit()
-
             }
         })
         binding.daysRecView.adapter = adapter
         val list = viewModel.data.value?.forecast?.forecastday
-        println("list: ${list?.size}")
+        Log.i("MyLog", "${list?.size}")
         adapter.submitList(list)
     }
 
-    private fun permissionListener(){
-        pLauncher = registerForActivityResult(
-            ActivityResultContracts.RequestPermission()
-        ){
-            Toast.makeText(requireContext(), "Permission is $it", Toast.LENGTH_SHORT).show()
-        }
-    }
 
-    private fun checkPermission(){
-        if (!isPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION)){
-            permissionListener()
-            pLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-        }
-    }
+
 
     companion object {
         fun newInstance(): MainFragment {

@@ -21,9 +21,9 @@ interface OnInteractionListener {
     fun onForecastItem(item: Forecastday)
 }
 
-class ForecastAdapter(
+class MainAdapter(
     private val onInteractionListener: OnInteractionListener
-): ListAdapter<Forecastday, ForecastAdapter.Holder>(Comparator()) {
+): ListAdapter<Forecastday, MainAdapter.Holder>(Comparator()) {
 
     class Holder(view: View, private val onInteractionListener: OnInteractionListener): RecyclerView.ViewHolder(view){
         private val binding = DayItemBinding.bind(view)
