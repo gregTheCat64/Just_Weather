@@ -3,18 +3,9 @@ package ru.javacat.justweather
 import android.database.SQLException
 import java.io.IOException
 
-sealed class AppError(var code: String) : RuntimeException() {
-    companion object {
-        fun from(e: Throwable): AppError = when (e) {
-            is AppError -> e
-            is SQLException -> DbError
-            is IOException -> NetworkError
-            else -> UnknownError
-        }
-    }
-}
+sealed class AppError() : RuntimeException()
+class ApiError(val code: Int, override val message: String) : AppError()
+class DbError(override val message: String) : AppError()
 
-class ApiError(val status: Int, code: String) : AppError(code)
-object NetworkError : AppError("error_network")
-object DbError : AppError("error_db")
-object UnknownError : AppError("error_unknown")
+object NetworkError : AppError()
+object UnknownError : AppError()

@@ -30,10 +30,11 @@ class PlacesRepositorySharedPrefsImpl(
 
     override fun save(place: Place) {
         if (places.isNotEmpty() ){
-            lastId = places.last().id
+            lastId = places.first().id
         }
+        println("lastID: $lastId")
         places = listOf(
-            place.copy(id = lastId++)
+            place.copy(id = lastId+ 1)
         ) + places
 
         data.value = places

@@ -24,6 +24,8 @@
         android:layout_gravity="center"
         android:orientation="vertical">
 
+
+
         <androidx.cardview.widget.CardView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -31,6 +33,7 @@
             android:layout_marginStart="16dp"
             app:cardCornerRadius="8dp"
             >
+
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/placeLayout"
@@ -152,18 +155,27 @@
             />
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/alarmCard"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="64dp"
             android:layout_margin="8dp"
+            android:visibility="invisible"
             android:backgroundTint="?attr/cardBackgroundColor"
             >
-            <TextView
-                android:id="@+id/alarmMsg"
-                android:text="Сегодня прекрасный день"
-                android:padding="8dp"
+
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                />
+                android:layout_height="match_parent">
+                <TextView
+                    android:id="@+id/alarmMsg"
+                    android:text="Сегодня прекрасный день"
+                    android:padding="8dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
+
+            </ScrollView>
+
 
         </androidx.cardview.widget.CardView>
 

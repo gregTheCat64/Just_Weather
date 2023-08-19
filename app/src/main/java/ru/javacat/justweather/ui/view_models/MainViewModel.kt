@@ -6,34 +6,58 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import ru.javacat.justweather.ApiError
 import ru.javacat.justweather.NetworkError
+import ru.javacat.justweather.models.Place
+import ru.javacat.justweather.repository.PlacesRepository
+import ru.javacat.justweather.repository.PlacesRepositorySharedPrefsImpl
 import ru.javacat.justweather.repository.Repository
 import ru.javacat.justweather.repository.RepositoryImpl
 import ru.javacat.justweather.response_models.Astro
 import ru.javacat.justweather.response_models.Condition
 import ru.javacat.justweather.response_models.Day
-import ru.javacat.justweather.response_models.Forecast
 import ru.javacat.justweather.response_models.Forecastday
 import ru.javacat.justweather.response_models.Weather
+import ru.javacat.justweather.ui.LoadingState
+import ru.javacat.justweather.ui.SingleLiveEvent
+import java.lang.Exception
 
 val emptyForecastday = Forecastday(
-    Astro(0,0,"","","","","",""),
+    Astro(0, 0, "", "", "", "", "", ""),
     "error",
     0,
-    Day(0.0,0.0,0.0,0.0, 0.0, Condition(0,"",""),0,0,0,0,0.0,0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0),
+    Day(
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        Condition(0, "", ""),
+        0,
+        0,
+        0,
+        0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+    ),
     emptyList()
 )
 
-class MainViewModel(application: Application): AndroidViewModel(application) {
+class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository: Repository = RepositoryImpl()
+    private val placesRepository: PlacesRepository = PlacesRepositorySharedPrefsImpl(application)
+
+    val loadingState = SingleLiveEvent<LoadingState>()
 
     private val _data = MutableLiveData<Weather>()
     val data: LiveData<Weather>
@@ -43,30 +67,68 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
     val forecastData: LiveData<Forecastday>
         get() = _forecastData
 
+
+    private val _placeData = MutableLiveData<List<Place>>()
+
+    val placeData: LiveData<List<Place>>
+        get() = _placeData
+
+
     init {
         Log.i("MyTag", "initing VM")
+        loadPlaces()
     }
 
 
-    fun loadWeatherByName(name: String, daysCount: Int){
+    fun loadWeatherByName(name: String, daysCount: Int) {
         viewModelScope.launch {
+            loadingState.postValue(LoadingState.Load)
             try {
-                val response = repository.getByName(name, daysCount)
-                if (response != null) {
-                    _data.value = response!!
-                    println(response.current.temp_c)
-                } else return@launch
-            } catch (e: NetworkError){
-                e.printStackTrace()
+                val weather = repository.loadByName(name, daysCount)
+                Log.i("MyTag", "weatherResp: $weather")
+                if (weather != null) {
+                    _data.value = weather!!
+                    savePlace(Place(0, weather.location.name, weather.location.region))
+                }
+            }catch (e: ApiError) {
+                loadingState.postValue(LoadingState.InputError)
+                Log.i("MyTag", "ОШИБКА: ${e.code}")
+            }catch (e: NetworkError){
+                loadingState.postValue(LoadingState.NetworkError)
+                Log.i("MyTag", "ОШИБКА: NETWORK")
             }
         }
     }
 
-    fun chooseForecastData(item: Forecastday){
+    fun chooseForecastDay(item: Forecastday) {
         viewModelScope.launch {
-            _forecastData.postValue(item)
+            try {
+                _forecastData.postValue(item)
+            } catch (e: Exception){
+                loadingState.postValue(LoadingState.NetworkError)
+            }
+
         }
 
         //Log.i("MyLog", forecastData.value!!.date)
+    }
+
+    private fun loadPlaces() {
+        _placeData.value = placesRepository.getPlaces().value
+    }
+
+
+    private fun savePlace(place: Place) {
+        val places = placeData.value
+        val result = places?.find { it.name == place.name }
+        if (result == null) {
+            placesRepository.save(place)
+            loadPlaces()
+        }
+    }
+
+    fun removePlace(id: Int) {
+        placesRepository.removeById(id)
+        loadPlaces()
     }
 }

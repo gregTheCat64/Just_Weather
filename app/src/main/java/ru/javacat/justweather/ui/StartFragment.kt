@@ -12,16 +12,19 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
+import com.google.android.material.snackbar.Snackbar
 import ru.javacat.justweather.R
 import ru.javacat.justweather.databinding.FragmentStartBinding
 import ru.javacat.justweather.ui.view_models.MainViewModel
 import ru.javacat.justweather.util.isPermissionGranted
+import ru.javacat.justweather.util.snack
 
 class StartFragment: Fragment() {
     private lateinit var binding: FragmentStartBinding
@@ -44,14 +47,19 @@ class StartFragment: Fragment() {
 
         fLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
 
-        getLocation()
+
 
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initLoadingStateObserving()
+        init()
+    }
 
+    private fun init(){
+        getLocation()
         checkPermission()
         initObserver()
     }
@@ -63,6 +71,24 @@ class StartFragment: Fragment() {
                 .addToBackStack(null)
                 .replace(R.id.fragmentContainer, MainFragment.newInstance())
                 .commit()
+        }
+    }
+
+    private fun initLoadingStateObserving(){
+        viewModel.loadingState.observe(viewLifecycleOwner){
+            when (it) {
+                is  LoadingState.NetworkError ->  {
+                    Snackbar.make(requireView(), "Ошибка соединения", Snackbar.LENGTH_LONG)
+                        .setAction("Повторить") {
+                            init()
+                        }.show()
+                    binding.progressBar.isVisible = false
+                }
+                is LoadingState.Load -> {
+                    binding.progressBar.isVisible = true
+                }
+                else ->  binding.progressBar.isVisible = false
+            }
         }
     }
 

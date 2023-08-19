@@ -6,10 +6,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.ActivityResultLauncher
+import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.google.android.gms.location.FusedLocationProviderClient
 import ru.javacat.justweather.R
 import ru.javacat.justweather.databinding.FragmentMainBinding
 import ru.javacat.justweather.response_models.Forecastday
@@ -28,8 +28,9 @@ class MainFragment: Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.i("MyTag", "onCreate")
         val inflater = TransitionInflater.from(requireContext())
-        exitTransition = inflater.inflateTransition(R.transition.fade)
+        //exitTransition = inflater.inflateTransition(R.transition.fade)
         enterTransition = inflater.inflateTransition(R.transition.slide_right)
     }
 
@@ -39,7 +40,9 @@ class MainFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentMainBinding.inflate(inflater, container,false)
+        Log.i("MyTag", "onCreateView")
 
+        //initLoadingStateObserving()
         initDataObserver()
 
         binding.placeLayout.setOnClickListener {
@@ -50,23 +53,16 @@ class MainFragment: Fragment() {
                 .commit()
         }
 
-        Log.i("MyTag", "mainVM: $viewModel")
+
+
         binding.refresh.setOnClickListener {
-
         }
-
-
 
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        //initRecView()
-
-        //getLocation()
-
 
     }
 
@@ -75,6 +71,7 @@ class MainFragment: Fragment() {
             viewModel.data.observe(viewLifecycleOwner){
                 val image = "https://${it.current.condition.icon}"
                 binding.apply {
+                    alarmCard.visibility = View.INVISIBLE
                     //it.forecast.forecastday.get(0).astro.is_moon_up
                     tempTxtView.text = it.current.temp_c.roundToInt().toString() + "°"
                     cityTxtView.text = it.location.name
@@ -88,12 +85,16 @@ class MainFragment: Fragment() {
                     detailsLayout.humidity.text = it.current.humidity.toString()+"%"
                     detailsLayout.uvIndex.text = it.current.uv.toString()
                     val alerts = it.alerts.alert
+
+
                     for (element in alerts){
                         if (element.desc.isNotEmpty()){
                             //Toast.makeText(requireContext(), element.desc, Toast.LENGTH_LONG).show()
                             //Snackbar.make(requireView(),element.desc,Snackbar.LENGTH_LONG).show()
+                            alarmCard.visibility = View.VISIBLE
                             alarmMsg.text = element.desc
-
+                        } else {
+                            alarmCard.visibility = View.INVISIBLE
                         }
                     }
                 }
@@ -101,12 +102,13 @@ class MainFragment: Fragment() {
             }
     }
 
+
     private fun initRecView() {
         Log.i("MyLog", "Init RecView")
 
         adapter = MainAdapter(object : OnInteractionListener{
             override fun onForecastItem(item: Forecastday) {
-                viewModel.chooseForecastData(item)
+                viewModel.chooseForecastDay(item)
 
                 parentFragmentManager
                     .beginTransaction()
@@ -120,7 +122,6 @@ class MainFragment: Fragment() {
         Log.i("MyLog", "${list?.size}")
         adapter.submitList(list)
     }
-
 
 
 
