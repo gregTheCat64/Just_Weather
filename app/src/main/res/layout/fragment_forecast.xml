@@ -5,43 +5,156 @@
     android:orientation="vertical"
 
 
-    android:backgroundTint="?attr/cardBackgroundColor"
+
     android:layout_margin="16dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/dateTxtView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:textSize="28sp"
-            android:textColor="@color/white"
-            android:layout_gravity="center"
-            android:text="11 августа"
-            android:textStyle="bold"
+
+        <Button
+            android:id="@+id/backBtn"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            style="@style/Widget.Material3.Button.IconButton.Filled"
+            app:icon="@drawable/baseline_keyboard_backspace_48"
+            android:drawableTint="@color/white"
             />
 
-    <View
-        android:background="?attr/colorPrimary"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="4dp"
-        android:layout_gravity="center"
-        android:layout_width="248dp"
-        android:layout_height="1dp"/>
-
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/dateTxtView"
+            style="@style/TextAppearance.Material3.BodyLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_gravity="center"
-            android:text="Солнечно"
-            android:textSize="18sp"
+            android:layout_gravity="end|bottom"
             android:textColor="@color/white"
-            app:layout_constraintStart_toStartOf="@+id/dateTxtView"
-            app:layout_constraintTop_toBottomOf="@+id/dateTxtView" />
+            android:layout_marginTop="16dp"
+            android:text="11 августа"
+             />
+
+
+    <androidx.cardview.widget.CardView
+        android:backgroundTint="?attr/cardBackgroundColor"
+        app:cardCornerRadius="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/conditionLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="8dp"
+                app:layout_constraintEnd_toStartOf="@+id/uvLayout"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/conditionImage"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_cloud"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="?attr/colorPrimary" />
+
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/conditionValue"
+                        style="@style/TextAppearance.Material3.BodySmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="4dp"
+                        android:text="Солнечно"
+                        app:layout_constraintStart_toStartOf="@+id/avgTempValue"
+                        app:layout_constraintTop_toBottomOf="@+id/avgTempValue" />
+
+                    <TextView
+                        android:id="@+id/avgTempValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="18"
+                        style="@style/TextAppearance.Material3.BodyLarge"
+                        app:layout_constraintStart_toEndOf="@+id/conditionImage"
+                        app:layout_constraintTop_toTopOf="@+id/conditionImage" />
+
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/uvLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/conditionLayout"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="UV"
+                    android:textSize="28sp"
+                    android:textColor="?attr/colorPrimary"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="@+id/minTempImgView"
+                    app:layout_constraintTop_toTopOf="@+id/totalPrecipTxtView" />
+
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/uvIndexTxtView"
+                        style="@style/TextAppearance.Material3.BodySmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="УФ индекс" />
+
+                    <TextView
+                        android:id="@+id/uvIndexValue"
+                        style="@style/TextAppearance.Material3.BodyLarge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="15" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+    </androidx.cardview.widget.CardView>
+
+
 
     <androidx.cardview.widget.CardView
         app:cardCornerRadius="8dp"
@@ -65,11 +178,10 @@
 
     <androidx.cardview.widget.CardView
         app:cardCornerRadius="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:backgroundTint="?attr/cardBackgroundColor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -171,7 +283,7 @@
 
     <androidx.cardview.widget.CardView
         app:cardCornerRadius="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:backgroundTint="?attr/cardBackgroundColor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -193,8 +305,8 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:layout_gravity="center"
                     android:src="@drawable/icon_sunset"
                     app:layout_constraintStart_toStartOf="@+id/minTempImgView"
@@ -237,8 +349,8 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:layout_gravity="center"
                     android:src="@drawable/icon_sunrise"
                     app:layout_constraintStart_toStartOf="@+id/minTempImgView"
@@ -275,7 +387,7 @@
 
     <androidx.cardview.widget.CardView
         app:cardCornerRadius="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:backgroundTint="?attr/cardBackgroundColor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -289,17 +401,18 @@
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/avgHumidityLayout"
-                android:layout_width="115dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:orientation="horizontal"
+
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/precipationLayout"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
                     android:layout_gravity="center"
                     android:src="@drawable/icon_drop"
                     app:layout_constraintStart_toStartOf="@+id/minTempImgView"
@@ -307,156 +420,72 @@
                     app:tint="?attr/colorPrimary" />
 
 
-                <TextView
-                    android:id="@+id/avgHumidityTxtView"
-                    style="@style/TextAppearance.Material3.BodySmall"
+                <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="Влажность" />
+                    android:layout_marginStart="16dp"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/avgHumidityValue"
-                    style="@style/TextAppearance.Material3.BodyLarge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="15" />
+                    <TextView
+                        android:id="@+id/avgHumidityTxtView"
+                        style="@style/TextAppearance.Material3.BodySmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+
+                        android:text="Влажность" />
+
+                    <TextView
+                        android:id="@+id/avgHumidityValue"
+                        style="@style/TextAppearance.Material3.BodyLarge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="15" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
 
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/precipationLayout"
-                android:layout_width="114dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:orientation="horizontal"
+
                 app:layout_constraintEnd_toStartOf="@+id/avgHumidityLayout"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/maxWindSpeedLayout"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <ImageView
-                    android:id="@+id/precipImageView"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/icon_precipation"
-                    app:layout_constraintTop_toTopOf="@+id/totalPrecipTxtView"
-                    app:tint="?attr/colorPrimary" />
-
-
-                <TextView
-                    android:id="@+id/totalPrecipTxtView"
-                    style="@style/TextAppearance.Material3.BodySmall"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="Осадки"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/avgvisLayout" />
-
-                <TextView
-                    android:id="@+id/totalPrecipValue"
-                    style="@style/TextAppearance.Material3.BodyLarge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="15" />
-
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/maxWindSpeedLayout"
-                android:layout_width="114dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintEnd_toStartOf="@+id/precipationLayout"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
-                    android:id="@+id/maxWindSpeedImgView"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:id="@+id/precipImageView"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/icon_wind"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/minTempLayout"
+                    android:src="@drawable/icon_precipation"
+                    app:layout_constraintTop_toTopOf="@+id/totalPrecipTxtView"
                     app:tint="?attr/colorPrimary" />
-
-
-                <TextView
-                    android:id="@+id/maxWindSpeedTxtView"
-                    style="@style/TextAppearance.Material3.BodySmall"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="Ветер:" />
-
-                <TextView
-                    android:id="@+id/maxWindSpeedValue"
-                    style="@style/TextAppearance.Material3.BodyLarge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="24" />
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        app:cardCornerRadius="8dp"
-        android:layout_marginTop="8dp"
-        android:backgroundTint="?attr/cardBackgroundColor"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp">
-
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/uvLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/avgvisLayout"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <TextView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_gravity="center"
-                    android:text="UV"
-                    android:textColor="?attr/colorPrimary"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="@+id/minTempImgView"
-                    app:layout_constraintTop_toTopOf="@+id/totalPrecipTxtView" />
-
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
                     android:orientation="vertical">
+
                     <TextView
-                        android:id="@+id/uvIndexTxtView"
+                        android:id="@+id/totalPrecipTxtView"
                         style="@style/TextAppearance.Material3.BodySmall"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:text="УФ индекс" />
+                        android:layout_gravity="center"
+
+                        android:text="Осадки"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/avgvisLayout" />
 
                     <TextView
-                        android:id="@+id/uvIndexValue"
+                        android:id="@+id/totalPrecipValue"
                         style="@style/TextAppearance.Material3.BodyLarge"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -468,20 +497,84 @@
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        app:cardCornerRadius="8dp"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="?attr/cardBackgroundColor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/maxWindSpeedLayout"
+                android:layout_width="114dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toStartOf="@+id/avgvisLayout"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/maxWindSpeedImgView"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_wind"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/minTempLayout"
+                    app:tint="?attr/colorPrimary" />
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/maxWindSpeedTxtView"
+                        style="@style/TextAppearance.Material3.BodySmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Ветер:" />
+
+                    <TextView
+                        android:id="@+id/maxWindSpeedValue"
+                        style="@style/TextAppearance.Material3.BodyLarge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="24 км/ч" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/avgvisLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintEnd_toStartOf="@+id/uvLayout"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/maxWindSpeedLayout"
                 app:layout_constraintTop_toTopOf="parent">
 
 
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
                     android:layout_gravity="center"
                     android:src="@drawable/icon_visibility"
                     app:layout_constraintStart_toStartOf="@+id/minTempImgView"
@@ -491,6 +584,7 @@
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
                     android:orientation="vertical">
 
                     <TextView
@@ -498,8 +592,7 @@
                         style="@style/TextAppearance.Material3.BodySmall"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Ср. видимость"
-                        android:layout_marginStart="8dp" />
+                        android:text="Ср. видимость" />
 
                     <TextView
                         android:id="@+id/avgvisValue"
@@ -511,7 +604,6 @@
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
 
-
             </androidx.appcompat.widget.LinearLayoutCompat>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -526,7 +618,7 @@
 
     <androidx.cardview.widget.CardView
         app:cardCornerRadius="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:backgroundTint="?attr/cardBackgroundColor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -548,8 +640,8 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
                     android:layout_gravity="center"
                     android:src="@drawable/icon_moonset"
                     app:layout_constraintStart_toStartOf="@+id/minTempImgView"
@@ -591,8 +683,8 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
                     android:layout_gravity="center"
                     android:src="@drawable/icon_moonrise"
                     app:layout_constraintStart_toStartOf="@+id/minTempImgView"
@@ -647,25 +739,7 @@
                 app:layout_constraintBottom_toBottomOf="@+id/moonPhaseTxtView"
                 app:layout_constraintStart_toEndOf="@+id/moonPhaseTxtView" />
 
-            <TextView
-                android:id="@+id/moonIllumTxtView"
-                style="@style/TextAppearance.Material3.BodySmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="Лунное свечение"
-                app:layout_constraintStart_toStartOf="@+id/moonPhaseTxtView"
-                app:layout_constraintTop_toBottomOf="@+id/moonPhaseTxtView" />
 
-            <TextView
-                android:id="@+id/moonIllumTxtValue"
-                style="@style/TextAppearance.Material3.BodyLarge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:text="15"
-                app:layout_constraintBottom_toBottomOf="@+id/moonIllumTxtView"
-                app:layout_constraintStart_toEndOf="@+id/moonIllumTxtView" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

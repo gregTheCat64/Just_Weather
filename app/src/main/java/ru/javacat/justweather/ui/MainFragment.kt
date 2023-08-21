@@ -15,6 +15,7 @@ import ru.javacat.justweather.databinding.FragmentMainBinding
 import ru.javacat.justweather.response_models.Forecastday
 import ru.javacat.justweather.ui.view_models.MainViewModel
 import ru.javacat.justweather.util.load
+import ru.javacat.justweather.util.toWindRus
 import kotlin.math.roundToInt
 
 
@@ -58,6 +59,8 @@ class MainFragment: Fragment() {
         binding.refresh.setOnClickListener {
         }
 
+
+
         return binding.root
     }
 
@@ -69,7 +72,6 @@ class MainFragment: Fragment() {
     private fun initDataObserver(){
         Log.i("MyLog", "observing data")
             viewModel.data.observe(viewLifecycleOwner){
-                val image = "https://${it.current.condition.icon}"
                 binding.apply {
                     alarmCard.visibility = View.INVISIBLE
                     //it.forecast.forecastday.get(0).astro.is_moon_up
@@ -77,10 +79,10 @@ class MainFragment: Fragment() {
                     cityTxtView.text = it.location.name
                     //conditionTxtView.text = it.current.condition.text
                     realFeelTxtView.text = it.current.feelslike_c.toString() + "°"
-                    imageView.load(image)
+                    imageView.load(it.current.condition.icon)
                     detailsLayout.cloud.text = it.current.cloud.toString()+"%"
                     detailsLayout.windSpeed.text = it.current.wind_kph.roundToInt().toString()+"км/ч"
-                    detailsLayout.windDir.text = it.current.wind_dir
+                    detailsLayout.windDir.text = it.current.wind_dir.toWindRus()
                     detailsLayout.precipation.text = it.current.precip_mm.toString()+"мм"
                     detailsLayout.humidity.text = it.current.humidity.toString()+"%"
                     detailsLayout.uvIndex.text = it.current.uv.toString()

@@ -21,4 +21,11 @@ fun String.toLocalDateTime(): LocalDateTime =
     LocalDateTime.parse(this, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
 
 @RequiresApi(Build.VERSION_CODES.O)
+fun String.toLocalTime(): LocalTime =
+    LocalTime.parse(this, DateTimeFormatter.ofPattern("HH:mm"))
+
+@RequiresApi(Build.VERSION_CODES.O)
 fun LocalDateTime.asHour(): String = format(DateTimeFormatter.ofPattern("h a"))
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun LocalDateTime.asTime(): String = format(DateTimeFormatter.ofPattern("hh:mm"))

@@ -6,7 +6,7 @@ import com.bumptech.glide.load.resource.bitmap.BitmapTransformation
 
 fun ImageView.load(url: String, vararg  transforms: BitmapTransformation = emptyArray()) =
     Glide.with(this)
-        .load(url)
+        .load("https://$url")
         .circleCrop()
         .transform(*transforms)
         .into(this)

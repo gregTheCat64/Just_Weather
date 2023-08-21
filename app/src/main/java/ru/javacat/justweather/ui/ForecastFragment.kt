@@ -17,7 +17,9 @@ import ru.javacat.justweather.databinding.FragmentForecastBinding
 import ru.javacat.justweather.ui.adapters.ForecastAdapter
 import ru.javacat.justweather.ui.view_models.MainViewModel
 import ru.javacat.justweather.util.asLocalDate
+import ru.javacat.justweather.util.load
 import ru.javacat.justweather.util.toLocalDate
+import ru.javacat.justweather.util.toLocalTime
 
 class ForecastFragment: Fragment() {
     private lateinit var binding: FragmentForecastBinding
@@ -41,6 +43,10 @@ class ForecastFragment: Fragment() {
 
 //        val forecastday = viewModel.forecastData.value
 //        binding.dateTxtView.text = forecastday?.date
+
+        binding.backBtn.setOnClickListener {
+            parentFragmentManager.popBackStack()
+        }
         initForecastObserver()
 
 
@@ -54,6 +60,8 @@ class ForecastFragment: Fragment() {
             viewModel.forecastData.observe(viewLifecycleOwner) {
                // Toast.makeText(requireContext(), "Llala", Toast.LENGTH_SHORT).show()
 
+                binding.conditionImage.load(it.day.condition.icon)
+                binding.conditionValue.text = it.day.condition.text
                 binding.dateTxtView.text = it.date.toLocalDate().asLocalDate()
                 binding.maxTempValue.text = it.day.maxtemp_c.toString()
                 binding.minTempValue.text = it.day.mintemp_c.toString()
@@ -66,8 +74,18 @@ class ForecastFragment: Fragment() {
                 binding.sunSetValue.text = it.astro.sunset
                 binding.moonRiseValue.text = it.astro.moonrise
                 binding.moonSetValue.text = it.astro.moonset
-                binding.moonPhaseValue.text = it.astro.moon_phase
-                binding.moonIllumTxtValue.text = it.astro.moon_illumination
+
+                binding.moonPhaseValue.text = when(it.astro.moon_phase){
+                    "New Moon" -> getString(R.string.Full_Moon)
+                    "Waxing Crescent" -> getString(R.string.Waxing_Crescent)
+                    "First Quarter" -> getString(R.string.First_Quarter)
+                    "Waxing Gibbous" -> getString(R.string.Waning_Gibbous)
+                    "Full Moon" -> getString(R.string.Full_Moon)
+                    "Waning Gibbous" -> getString(R.string.Waning_Gibbous)
+                    "Last Quarter" -> getString(R.string.Last_Quarter)
+                    "Waning Crescent" -> getString(R.string.Waning_Crescent)
+                    else -> "Какой-то новый вид луны, неизвестный разработчику"
+                }
 
                 initForecastRecView()
             }

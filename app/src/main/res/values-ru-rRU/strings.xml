@@ -3,4 +3,13 @@
     <string name="app_name">Just Weather</string>
     <string name="realfeel">Ощущается как</string>
     <string name="more">подробнее</string>
+    <string name="new_moon">Новолуние</string>
+    <string name="Waxing_Crescent">Молодая луна</string>
+    <string name="First_Quarter">Первая четверть</string>
+    <string name="Full_Moon">Полнолуние</string>
+    <string name="Waning_Gibbous">Убывающая луна</string>
+    <string name="Last_Quarter">Последняя четверть</string>
+    <string name="Waning_Crescent">Старая луна</string>
+    <string name="City">Город</string>
+    <string name="enter_the_city">Введите город</string>
 </resources>

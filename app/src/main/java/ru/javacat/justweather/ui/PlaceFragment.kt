@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -40,16 +41,34 @@ class PlaceFragment : Fragment() {
         initLoadingStateObserving()
         initObserver()
 
+        binding.backBtn.setOnClickListener {
+            parentFragmentManager.popBackStack()
+        }
+        
+        binding.placeInput.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE){
+                val placeName = binding.placeInput.text.toString()
+                AndroidUtils.hideKeyboard(requireView())
+                if (placeName.isNotEmpty()) {
+                    viewModel.loadWeatherByName(placeName, 3)
+                    binding.placeInput.text?.clear()
+
+                } else {
+                    Toast.makeText(requireContext(), getString(R.string.enter_the_city), Toast.LENGTH_SHORT).show()
+                }
+            }
+            true
+        }
+
         binding.addPlaceBtn.setOnClickListener {
             val placeName = binding.placeInput.text.toString()
             AndroidUtils.hideKeyboard(it)
             if (placeName.isNotEmpty()) {
                 viewModel.loadWeatherByName(placeName, 3)
-                //viewModel.savePlace(Place(0,placeName))
                 binding.placeInput.text?.clear()
 
             } else {
-                Toast.makeText(requireContext(), "Введите город", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.enter_the_city), Toast.LENGTH_SHORT).show()
             }
         }
         return binding.root

@@ -34,7 +34,7 @@ class ForecastAdapter(): ListAdapter<Hour, ForecastAdapter.Holder>(Comparator())
 
         @RequiresApi(Build.VERSION_CODES.O)
         fun bind(item: Hour) {
-            binding.conditionImgView.load("https://${item.condition.icon}")
+            binding.conditionImgView.load("${item.condition.icon}")
             binding.hourValue.text = item.time.toLocalDateTime().asHour()
             binding.tempTxtView.text = item.temp_c.roundToInt().toString() + "\u00B0"
         }

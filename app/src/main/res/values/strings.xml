@@ -2,4 +2,13 @@
     <string name="app_name">Just Weather</string>
     <string name="realfeel">RealFeel</string>
     <string name="more">more</string>
+    <string name="new_moon">New Moon</string>
+    <string name="Waxing_Crescent">Waxing Crescent</string>
+    <string name="First_Quarter">First Quarter</string>
+    <string name="Full_Moon">Full Moon</string>
+    <string name="Waning_Gibbous">Waning Gibbous</string>
+    <string name="Last_Quarter">Last Quarter</string>
+    <string name="Waning_Crescent">Waning Crescent</string>
+    <string name="City">City</string>
+    <string name="enter_the_city">Enter the city\n</string>
 </resources>

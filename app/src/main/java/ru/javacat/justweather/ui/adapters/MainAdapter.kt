@@ -36,7 +36,7 @@ class MainAdapter(
             binding.root.setOnClickListener {
                 onInteractionListener.onForecastItem(item)
             }
-            val image = "https://${item.day.condition.icon}"
+            val image = item.day.condition.icon
             binding.conditionImgView.load(image.toUri().toString())
         }
     }
