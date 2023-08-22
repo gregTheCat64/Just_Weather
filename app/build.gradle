@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace 'ru.javacat.justweather'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "ru.javacat.justweather"
         minSdk 24
-        targetSdk 33
+        targetSdk 34
         versionCode 1
         versionName "1.0"
 
@@ -36,6 +36,8 @@ android {
 }
 
 dependencies {
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.7.0'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.7.0'
     def retrofit_version = "2.9.0"
     def retrofitgson_version = "2.9.0"
     def okhttplogging_version = "4.10.0"

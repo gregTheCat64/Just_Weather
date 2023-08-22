@@ -1,7 +1,10 @@
 package ru.javacat.justweather.ui
 
 import android.Manifest
+import android.app.Activity
+import android.content.Context
 import android.content.pm.PackageManager
+import android.location.LocationManager
 import android.os.Bundle
 import android.transition.TransitionInflater
 import android.util.Log
@@ -15,6 +18,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
@@ -33,7 +37,9 @@ class StartFragment: Fragment() {
     private val viewModel: MainViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
+
         val inflater = TransitionInflater.from(requireContext())
         exitTransition = inflater.inflateTransition(R.transition.fade)
     }
@@ -49,6 +55,7 @@ class StartFragment: Fragment() {
 
 
 
+
         return binding.root
     }
 
@@ -56,21 +63,31 @@ class StartFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initLoadingStateObserving()
         init()
+
+        binding.repeatBtn.setOnClickListener {
+            it.isVisible = false
+            binding.progressBar.isVisible = true
+            init()
+        }
     }
 
     private fun init(){
         getLocation()
         checkPermission()
         initObserver()
+
     }
 
     private fun initObserver(){
         viewModel.data.observe(viewLifecycleOwner){
-            parentFragmentManager
-                .beginTransaction()
-                .addToBackStack(null)
-                .replace(R.id.fragmentContainer, MainFragment.newInstance())
-                .commit()
+//            parentFragmentManager
+//                .beginTransaction()
+//                .addToBackStack(null)
+//                .replace(R.id.fragmentContainer, MainFragment.newInstance())
+//                .commit()
+            updateTheme()
+            findNavController().navigate(R.id.mainFragment)
+
         }
     }
 
@@ -83,9 +100,11 @@ class StartFragment: Fragment() {
                             init()
                         }.show()
                     binding.progressBar.isVisible = false
+                    binding.repeatBtn.isVisible = true
                 }
                 is LoadingState.Load -> {
                     binding.progressBar.isVisible = true
+                    binding.repeatBtn.isVisible = false
                 }
                 else ->  binding.progressBar.isVisible = false
             }
@@ -98,7 +117,19 @@ class StartFragment: Fragment() {
         viewModel.setPlace("$lat,$long", 3)
     }
 
+    private fun isLocationEnabled(): Boolean{
+        val lm = activity?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        return lm.isProviderEnabled(LocationManager.GPS_PROVIDER)
+    }
+
     private fun getLocation(){
+        if (!isLocationEnabled()){
+            snack(getString(R.string.location_disabled))
+            binding.repeatBtn.isVisible = true
+            binding.progressBar.isVisible = false
+            return
+
+        }
         val ct = CancellationTokenSource()
         if (ActivityCompat.checkSelfPermission(
                 requireContext(),
@@ -136,6 +167,16 @@ class StartFragment: Fragment() {
             permissionListener()
             pLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         } else getLocation()
+    }
+
+    private fun updateTheme(){
+        val weatherCondition = viewModel.data.value?.current?.condition?.code
+        if (weatherCondition == 1063 ) run {
+            requireActivity().application.setTheme(R.style.Base_Theme_RainWeather)
+            snack("сегодня дождяра хлещет")
+            //Toast.makeText(requireContext(), "RAIN", Toast.LENGTH_SHORT).show()
+
+        }
     }
 
     companion object{

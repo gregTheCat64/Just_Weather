@@ -10,6 +10,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import ru.javacat.justweather.NetworkError
 import ru.javacat.justweather.R
 import ru.javacat.justweather.databinding.FragmentPlaceBinding
@@ -78,8 +79,9 @@ class PlaceFragment : Fragment() {
         adapter = PlacesAdapter(object : OnPlacesInteractionListener {
             override fun onSetPlace(item: Place) {
                 viewModel.setPlace(item.name, 3)
-                parentFragmentManager
-                    .popBackStack()
+                findNavController().navigateUp()
+//                parentFragmentManager
+//                    .popBackStack()
             }
 
             override fun onRemovePlace(item: Place) {

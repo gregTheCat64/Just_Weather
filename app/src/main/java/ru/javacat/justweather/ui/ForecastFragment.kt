@@ -11,6 +11,7 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import kotlinx.coroutines.launch
 import ru.javacat.justweather.R
 import ru.javacat.justweather.databinding.FragmentForecastBinding
@@ -20,6 +21,7 @@ import ru.javacat.justweather.util.asLocalDate
 import ru.javacat.justweather.util.load
 import ru.javacat.justweather.util.toLocalDate
 import ru.javacat.justweather.util.toLocalTime
+import kotlin.math.roundToInt
 
 class ForecastFragment: Fragment() {
     private lateinit var binding: FragmentForecastBinding
@@ -45,7 +47,8 @@ class ForecastFragment: Fragment() {
 //        binding.dateTxtView.text = forecastday?.date
 
         binding.backBtn.setOnClickListener {
-            parentFragmentManager.popBackStack()
+            //parentFragmentManager.popBackStack()
+            findNavController().navigateUp()
         }
         initForecastObserver()
 
@@ -63,9 +66,10 @@ class ForecastFragment: Fragment() {
                 binding.conditionImage.load(it.day.condition.icon)
                 binding.conditionValue.text = it.day.condition.text
                 binding.dateTxtView.text = it.date.toLocalDate().asLocalDate()
+                binding.avgTempValue.text = it.day.avgtemp_c.toString()+"°"
                 binding.maxTempValue.text = it.day.maxtemp_c.toString()
                 binding.minTempValue.text = it.day.mintemp_c.toString()
-                binding.maxWindSpeedValue.text = it.day.maxwind_kph.toString() + "км/ч"
+                binding.maxWindSpeedValue.text = it.day.maxwind_kph.roundToInt().toString() + "км/ч"
                 binding.totalPrecipValue.text = it.day.totalprecip_mm.toString() + "мм"
                 binding.avgHumidityValue.text = it.day.avghumidity.toString() + "%"
                 binding.avgvisValue.text = it.day.avgvis_km.toString() + "км"

@@ -6,16 +6,52 @@
     android:layout_height="match_parent">
 
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/refresh"
-            style="@style/Widget.Material3.Button.IconButton"
-            app:iconTint="?attr/colorPrimary"
-            app:icon="@drawable/baseline_refresh_24"
-            android:layout_margin="16dp"
-            android:layout_gravity="end"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/refresh"
+        style="@style/Widget.Material3.Button.IconButton"
+        app:iconTint="?attr/colorPrimary"
+        app:icon="@drawable/baseline_refresh_24"
+        android:layout_margin="16dp"
+        android:layout_gravity="end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        app:cardCornerRadius="8dp"
+        >
+
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/placeLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            />
+            android:orientation="horizontal"
+            android:padding="8dp"
+            >
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_gravity="center"
+                app:tint="?attr/colorPrimary"
+                android:src="@drawable/baseline_location_on_24"/>
+
+            <TextView
+                android:id="@+id/cityTxtView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Saratov"
+                android:layout_marginStart="8dp"
+                android:textSize="18sp"/>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+    </androidx.cardview.widget.CardView>
 
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -26,41 +62,7 @@
 
 
 
-        <androidx.cardview.widget.CardView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginStart="16dp"
-            app:cardCornerRadius="8dp"
-            >
 
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/placeLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="8dp"
-                >
-                <ImageView
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:layout_gravity="center"
-                    app:tint="?attr/colorPrimary"
-                    android:src="@drawable/baseline_location_on_24"/>
-
-                <TextView
-                    android:id="@+id/cityTxtView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="Saratov"
-                    android:layout_marginStart="8dp"
-                    android:textSize="18sp"/>
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-        </androidx.cardview.widget.CardView>
 
 
 
@@ -68,7 +70,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="4dp"
             android:orientation="horizontal">
 
             <TextView
@@ -112,7 +113,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:textColor="?attr/textFillColor"
-               />
+                />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -121,7 +122,8 @@
             android:id="@+id/detailsLayout"
             android:layout_marginTop="24dp"
             layout="@layout/fragment_details"
-            android:layout_width="match_parent"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             />
 
@@ -147,7 +149,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginBottom="64dp"
+            android:layout_marginBottom="12dp"
             tools:listitem="@layout/day_item"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:orientation="horizontal"

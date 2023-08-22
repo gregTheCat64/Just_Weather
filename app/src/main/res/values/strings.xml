@@ -11,4 +11,5 @@
     <string name="Waning_Crescent">Waning Crescent</string>
     <string name="City">City</string>
     <string name="enter_the_city">Enter the city\n</string>
+    <string name="location_disabled">Location disabled</string>
 </resources>

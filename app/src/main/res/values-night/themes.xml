@@ -15,6 +15,7 @@
         <item name="cardBackgroundColor">@color/dark_card_back</item>
 
         <item name="background">@drawable/night</item>
+        <item name="android:backgroundSplit">@drawable/back_night_light</item>
 
     </style>
 </resources>

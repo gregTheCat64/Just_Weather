@@ -9,9 +9,11 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import ru.javacat.justweather.R
 import ru.javacat.justweather.databinding.FragmentMainBinding
 import ru.javacat.justweather.response_models.Forecastday
@@ -32,6 +34,11 @@ class MainFragment: Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.i("MyTag", "onCreate")
+
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            requireActivity().finish()
+        }
+
         val inflater = TransitionInflater.from(requireContext())
         //exitTransition = inflater.inflateTransition(R.transition.fade)
         enterTransition = inflater.inflateTransition(R.transition.slide_right)
@@ -50,11 +57,12 @@ class MainFragment: Fragment() {
         initDataObserver()
 
         binding.placeLayout.setOnClickListener {
-            parentFragmentManager
-                .beginTransaction()
-                .addToBackStack(null)
-                .replace(R.id.fragmentContainer, PlaceFragment.newInstance())
-                .commit()
+            findNavController().navigate(R.id.placeFragment)
+//            parentFragmentManager
+//                .beginTransaction()
+//                .addToBackStack(null)
+//                .replace(R.id.fragmentContainer, PlaceFragment.newInstance())
+//                .commit()
         }
 
 
@@ -113,11 +121,12 @@ class MainFragment: Fragment() {
             override fun onForecastItem(item: Forecastday) {
                 viewModel.chooseForecastDay(item)
 
-                parentFragmentManager
-                    .beginTransaction()
-                    .addToBackStack(null)
-                    .replace(R.id.fragmentContainer, ForecastFragment.newInstance())
-                    .commit()
+                findNavController().navigate(R.id.forecastFragment)
+//                parentFragmentManager
+//                    .beginTransaction()
+//                    .addToBackStack(null)
+//                    .replace(R.id.fragmentContainer, ForecastFragment.newInstance())
+//                    .commit()
             }
         })
         binding.daysRecView.adapter = adapter
