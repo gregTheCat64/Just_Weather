@@ -12,7 +12,7 @@
         android:layout_height="24dp"
         android:layout_gravity="center"
         android:src="@drawable/baseline_wb_sunny_24"
-        app:tint="?attr/colorPrimary" />
+         />
 
 
         <TextView

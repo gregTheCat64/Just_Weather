@@ -6,6 +6,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -43,7 +45,8 @@ class MainFragment: Fragment() {
         binding = FragmentMainBinding.inflate(inflater, container,false)
         Log.i("MyTag", "onCreateView")
 
-        //initLoadingStateObserving()
+        val refreshAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.rotate)
+
         initDataObserver()
 
         binding.placeLayout.setOnClickListener {
@@ -55,8 +58,10 @@ class MainFragment: Fragment() {
         }
 
 
-
         binding.refresh.setOnClickListener {
+            println(viewModel.currentPlace.toString())
+            viewModel.setPlace(viewModel.currentPlace.value.toString(), 3)
+            it.startAnimation(refreshAnimation)
         }
 
 
@@ -64,10 +69,6 @@ class MainFragment: Fragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-    }
 
     private fun initDataObserver(){
         Log.i("MyLog", "observing data")
@@ -78,7 +79,7 @@ class MainFragment: Fragment() {
                     tempTxtView.text = it.current.temp_c.roundToInt().toString() + "°"
                     cityTxtView.text = it.location.name
                     //conditionTxtView.text = it.current.condition.text
-                    realFeelTxtView.text = it.current.feelslike_c.toString() + "°"
+                    realFeelTxtView.text = it.current.feelslike_c.roundToInt().toString() + "°"
                     imageView.load(it.current.condition.icon)
                     detailsLayout.cloud.text = it.current.cloud.toString()+"%"
                     detailsLayout.windSpeed.text = it.current.wind_kph.roundToInt().toString()+"км/ч"

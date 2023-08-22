@@ -50,7 +50,7 @@ class PlaceFragment : Fragment() {
                 val placeName = binding.placeInput.text.toString()
                 AndroidUtils.hideKeyboard(requireView())
                 if (placeName.isNotEmpty()) {
-                    viewModel.loadWeatherByName(placeName, 3)
+                    viewModel.findPlace(placeName, 3)
                     binding.placeInput.text?.clear()
 
                 } else {
@@ -64,7 +64,7 @@ class PlaceFragment : Fragment() {
             val placeName = binding.placeInput.text.toString()
             AndroidUtils.hideKeyboard(it)
             if (placeName.isNotEmpty()) {
-                viewModel.loadWeatherByName(placeName, 3)
+                viewModel.findPlace(placeName, 3)
                 binding.placeInput.text?.clear()
 
             } else {
@@ -77,7 +77,7 @@ class PlaceFragment : Fragment() {
     private fun initObserver() {
         adapter = PlacesAdapter(object : OnPlacesInteractionListener {
             override fun onSetPlace(item: Place) {
-                viewModel.loadWeatherByName(item.name, 3)
+                viewModel.setPlace(item.name, 3)
                 parentFragmentManager
                     .popBackStack()
             }

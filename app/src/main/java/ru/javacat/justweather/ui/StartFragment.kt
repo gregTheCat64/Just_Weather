@@ -94,7 +94,8 @@ class StartFragment: Fragment() {
 
     private fun loadData(lat: Double, long: Double){
         Log.i("MyLog", "Loading data")
-        viewModel.loadWeatherByName("$lat,$long", 3)
+        viewModel.findPlace("$lat,$long", 3)
+        viewModel.setPlace("$lat,$long", 3)
     }
 
     private fun getLocation(){

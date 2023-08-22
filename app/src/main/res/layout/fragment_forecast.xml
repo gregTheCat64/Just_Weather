@@ -3,9 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-
-
-
     android:layout_margin="16dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -298,10 +295,9 @@
                 android:id="@+id/sunSetLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
                 android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/sunriseLayout"
+                app:layout_constraintStart_toStartOf="@+id/guideline3"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
@@ -337,14 +333,20 @@
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </androidx.appcompat.widget.LinearLayoutCompat>
 
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.5"/>
+
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/sunriseLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_marginStart="32dp"
 
-                app:layout_constraintEnd_toStartOf="@+id/sunSetLayout"
-                app:layout_constraintHorizontal_bias="0.5"
+                android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -369,7 +371,7 @@
                         style="@style/TextAppearance.Material3.BodySmall"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Восход солнца" />
+                        android:text="Восход" />
 
                     <TextView
                         android:id="@+id/sunRiseValue"
@@ -403,11 +405,10 @@
                 android:id="@+id/avgHumidityLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_marginStart="32dp"
 
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/precipationLayout"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="@+id/guideline"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
@@ -447,14 +448,20 @@
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.5"/>
+
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/precipationLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_marginStart="32dp"
 
-                app:layout_constraintEnd_toStartOf="@+id/avgHumidityLayout"
-                app:layout_constraintHorizontal_bias="0.5"
+                android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -498,6 +505,8 @@
             </androidx.appcompat.widget.LinearLayoutCompat>
 
 
+
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
@@ -517,9 +526,8 @@
                 android:id="@+id/maxWindSpeedLayout"
                 android:layout_width="114dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
                 android:orientation="horizontal"
-                app:layout_constraintEnd_toStartOf="@+id/avgvisLayout"
-                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -560,15 +568,20 @@
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.5"/>
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/avgvisLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
                 android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/maxWindSpeedLayout"
+                app:layout_constraintStart_toStartOf="@+id/guideline2"
                 app:layout_constraintTop_toTopOf="parent">
 
 
@@ -611,17 +624,12 @@
     </androidx.cardview.widget.CardView>
 
 
-
-
-
-
-
     <androidx.cardview.widget.CardView
-        app:cardCornerRadius="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:backgroundTint="?attr/cardBackgroundColor"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        app:cardCornerRadius="8dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -633,10 +641,9 @@
                 android:id="@+id/moonSetLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
                 android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/moonRiseLayout"
+                app:layout_constraintStart_toStartOf="@+id/guideline4"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
@@ -672,13 +679,19 @@
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </androidx.appcompat.widget.LinearLayoutCompat>
 
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.5"/>
+
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/moonRiseLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
                 android:orientation="horizontal"
-                app:layout_constraintEnd_toStartOf="@+id/moonSetLayout"
-                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -715,7 +728,6 @@
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
 
-
             </androidx.appcompat.widget.LinearLayoutCompat>
 
             <TextView
@@ -740,14 +752,9 @@
                 app:layout_constraintStart_toEndOf="@+id/moonPhaseTxtView" />
 
 
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>
-
-
-
-
 
 
 </LinearLayout>
