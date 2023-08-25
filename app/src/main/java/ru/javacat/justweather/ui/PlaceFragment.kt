@@ -28,8 +28,8 @@ class PlaceFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val inflater = TransitionInflater.from(requireContext())
-        enterTransition = inflater.inflateTransition(R.transition.slide_right)
+        //val inflater = TransitionInflater.from(requireContext())
+        //enterTransition = inflater.inflateTransition(R.transition.slide_right)
     }
 
     override fun onCreateView(
@@ -43,7 +43,7 @@ class PlaceFragment : Fragment() {
         initObserver()
 
         binding.backBtn.setOnClickListener {
-            parentFragmentManager.popBackStack()
+            findNavController().navigateUp()
         }
         
         binding.placeInput.setOnEditorActionListener { _, actionId, _ ->

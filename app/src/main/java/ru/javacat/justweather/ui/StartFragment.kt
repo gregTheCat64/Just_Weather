@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -50,11 +51,7 @@ class StartFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentStartBinding.inflate(inflater, container, false)
-
         fLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
-
-
-
 
         return binding.root
     }
@@ -72,7 +69,7 @@ class StartFragment: Fragment() {
     }
 
     private fun init(){
-        getLocation()
+        //getLocation()
         checkPermission()
         initObserver()
 
@@ -96,9 +93,10 @@ class StartFragment: Fragment() {
             when (it) {
                 is  LoadingState.NetworkError ->  {
                     Snackbar.make(requireView(), "Ошибка соединения", Snackbar.LENGTH_LONG)
-                        .setAction("Повторить") {
-                            init()
-                        }.show()
+//                        .setAction("Повторить") {
+//                            init()
+//                        }
+                        .show()
                     binding.progressBar.isVisible = false
                     binding.repeatBtn.isVisible = true
                 }
@@ -113,8 +111,7 @@ class StartFragment: Fragment() {
 
     private fun loadData(lat: Double, long: Double){
         Log.i("MyLog", "Loading data")
-        viewModel.findPlace("$lat,$long", 3)
-        viewModel.setPlace("$lat,$long", 3)
+        viewModel.findPlaceByLocation("$lat,$long", 3)
     }
 
     private fun isLocationEnabled(): Boolean{
@@ -147,7 +144,6 @@ class StartFragment: Fragment() {
             .addOnCompleteListener{
                 Log.i("MyLog", "getting location")
                 loadData(it.result.latitude, it.result.longitude)
-
             }
     }
 
@@ -171,10 +167,9 @@ class StartFragment: Fragment() {
 
     private fun updateTheme(){
         val weatherCondition = viewModel.data.value?.current?.condition?.code
-        if (weatherCondition == 1063 ) run {
-            requireActivity().application.setTheme(R.style.Base_Theme_RainWeather)
+        if (weatherCondition == 1003 ) run {
+            (requireActivity() as AppCompatActivity).setTheme(R.style.Base_Theme_RainWeather)
             snack("сегодня дождяра хлещет")
-            //Toast.makeText(requireContext(), "RAIN", Toast.LENGTH_SHORT).show()
 
         }
     }

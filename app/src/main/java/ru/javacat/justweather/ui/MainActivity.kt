@@ -10,7 +10,7 @@ class MainActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
 
-        setTheme(R.style.Base_Theme_RainWeather)
+        //setTheme(R.style.Base_Theme_RainWeather)
         setContentView(R.layout.activity_main)
 
 //        if (savedInstanceState == null) {

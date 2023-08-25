@@ -10,6 +10,7 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.activity.addCallback
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -34,14 +35,14 @@ class MainFragment: Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.i("MyTag", "onCreate")
-
+        //requireActivity().setTheme(R.style.Base_Theme_RainWeather)
         requireActivity().onBackPressedDispatcher.addCallback(this) {
             requireActivity().finish()
         }
 
-        val inflater = TransitionInflater.from(requireContext())
+        //val inflater = TransitionInflater.from(requireContext())
         //exitTransition = inflater.inflateTransition(R.transition.fade)
-        enterTransition = inflater.inflateTransition(R.transition.slide_right)
+        //enterTransition = inflater.inflateTransition(R.transition.slide_right)
     }
 
     override fun onCreateView(
@@ -52,12 +53,15 @@ class MainFragment: Fragment() {
         binding = FragmentMainBinding.inflate(inflater, container,false)
         Log.i("MyTag", "onCreateView")
 
+
+
+
         val refreshAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.rotate)
 
         initDataObserver()
 
         binding.placeLayout.setOnClickListener {
-            findNavController().navigate(R.id.placeFragment)
+            findNavController().navigate(R.id.action_mainFragment_to_placeFragment)
 //            parentFragmentManager
 //                .beginTransaction()
 //                .addToBackStack(null)
@@ -121,7 +125,7 @@ class MainFragment: Fragment() {
             override fun onForecastItem(item: Forecastday) {
                 viewModel.chooseForecastDay(item)
 
-                findNavController().navigate(R.id.forecastFragment)
+                findNavController().navigate(R.id.action_mainFragment_to_forecastFragment)
 //                parentFragmentManager
 //                    .beginTransaction()
 //                    .addToBackStack(null)
