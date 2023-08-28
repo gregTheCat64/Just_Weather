@@ -168,10 +168,10 @@ class StartFragment: Fragment() {
     private fun updateTheme(){
         val weatherCondition = viewModel.data.value?.current?.condition?.code
         if (weatherCondition == 1003 ) run {
-            (requireActivity() as AppCompatActivity).setTheme(R.style.Base_Theme_RainWeather)
+            (requireActivity() as AppCompatActivity).applicationContext.setTheme(R.style.Base_Theme_RainWeather)
             snack("сегодня дождяра хлещет")
-
         }
+
     }
 
     companion object{

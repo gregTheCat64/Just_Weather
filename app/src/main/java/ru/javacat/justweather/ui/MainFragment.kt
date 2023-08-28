@@ -36,6 +36,7 @@ class MainFragment: Fragment() {
         super.onCreate(savedInstanceState)
         Log.i("MyTag", "onCreate")
         //requireActivity().setTheme(R.style.Base_Theme_RainWeather)
+        //requireActivity().baseContext.theme.applyStyle(R.style.Base_Theme_RainWeather, true)
         requireActivity().onBackPressedDispatcher.addCallback(this) {
             requireActivity().finish()
         }

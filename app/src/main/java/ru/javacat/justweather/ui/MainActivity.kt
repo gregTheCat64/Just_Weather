@@ -13,6 +13,7 @@ class MainActivity : AppCompatActivity() {
         //setTheme(R.style.Base_Theme_RainWeather)
         setContentView(R.layout.activity_main)
 
+
 //        if (savedInstanceState == null) {
 //            supportFragmentManager
 //                .beginTransaction()
