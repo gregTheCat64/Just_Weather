@@ -19,12 +19,15 @@ import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import ru.javacat.justweather.R
 import ru.javacat.justweather.base.BaseFragment
 import ru.javacat.justweather.databinding.FragmentStartBinding
@@ -83,15 +86,11 @@ class StartFragment: BaseFragment<FragmentStartBinding>() {
     }
 
     private fun initObserver(){
-        viewModel.data.observe(viewLifecycleOwner){
-//            parentFragmentManager
-//                .beginTransaction()
-//                .addToBackStack(null)
-//                .replace(R.id.fragmentContainer, MainFragment.newInstance())
-//                .commit()
-            updateTheme()
-            findNavController().navigate(R.id.mainFragment)
-
+        lifecycleScope.launch {
+            viewModel.data.collectLatest {
+                updateTheme()
+                findNavController().navigate(R.id.mainFragment)
+            }
         }
     }
 

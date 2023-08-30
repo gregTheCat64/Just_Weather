@@ -7,6 +7,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import ru.javacat.justweather.ApiError
 import ru.javacat.justweather.NetworkError
@@ -32,18 +34,17 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     val loadingState = SingleLiveEvent<LoadingState>()
 
-    private val _data = MutableLiveData<Weather>()
-    val data: LiveData<Weather>
+    private val _data = MutableStateFlow<Weather?>(null)
+    val data: StateFlow<Weather?>
         get() = _data
 
 
-    private val _forecastData = MutableLiveData<Forecastday>()
-    val forecastData: LiveData<Forecastday>
+    private val _forecastData = MutableStateFlow<Forecastday?>(null)
+    val forecastData: StateFlow<Forecastday?>
         get() = _forecastData
 
 
     private val _placeData = MutableLiveData<List<Place>>()
-
     val placeData: LiveData<List<Place>>
         get() = _placeData
 
@@ -66,7 +67,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 val foundWeather = repository.loadByName(name, daysCount) ?: throw NetworkError
 
                 savePlace(Place(0, foundWeather.location.name, foundWeather.location.region))
-                _data.postValue(foundWeather)
+                _data.value = foundWeather
                 _currentPlace.postValue(foundWeather.location.name)
                 Log.i("MyTag", "found: ${foundWeather.location.name}")
 
@@ -81,7 +82,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun findPlace(name: String, daysCount: Int) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             loadingState.postValue(LoadingState.Load)
             try {
                 val foundWeather = repository.loadByName(name, daysCount) ?: throw NetworkError
@@ -100,7 +101,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun setPlace(name: String, daysCount: Int) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             loadingState.postValue(LoadingState.Load)
 
             try {
