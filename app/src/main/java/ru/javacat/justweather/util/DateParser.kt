@@ -13,6 +13,7 @@ fun LocalDate.asDayOfWeek(): String = format(DateTimeFormatter.ofPattern("EEE"))
 @RequiresApi(Build.VERSION_CODES.O)
 fun LocalDate.asLocalDate(): String = format(DateTimeFormatter.ofPattern("dd MMMM"))
 
+
 @RequiresApi(Build.VERSION_CODES.O)
 fun String.toLocalDate(): LocalDate = LocalDate.parse(this, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 

@@ -13,6 +13,7 @@ class RepositoryImpl: Repository {
 
     override suspend fun loadByName(name: String, daysCount: Int): Weather? {
         return apiRequest {
+
             Api.service.getByName(name, daysCount)
         }
 //        try {

@@ -18,7 +18,7 @@ import ru.javacat.justweather.util.toLocalDate
 import kotlin.math.roundToInt
 
 interface OnInteractionListener {
-    fun onForecastItem(item: Forecastday)
+    fun onForecastItem(item: Forecastday, view: View)
 }
 
 class MainAdapter(
@@ -30,14 +30,19 @@ class MainAdapter(
 
         @RequiresApi(Build.VERSION_CODES.O)
         fun bind(item: Forecastday)  {
-            binding.dayOfWeek.text = item.date.toLocalDate().asDayOfWeek()
-            binding.maxTempTxtView.text = item.day.maxtemp_c.roundToInt().toString()+ "\u00B0"
-            binding.minTempTxtView.text = item.day.mintemp_c.roundToInt().toString()+ "°"
-            binding.root.setOnClickListener {
-                onInteractionListener.onForecastItem(item)
+            binding.apply {
+                val image = item.day.condition.icon
+                dayOfWeek.text = item.date.toLocalDate().asDayOfWeek()
+                maxTempTxtView.text = item.day.maxtemp_c.roundToInt().toString()+ "\u00B0"
+                minTempTxtView.text = item.day.mintemp_c.roundToInt().toString()+ "°"
+                root.setOnClickListener {
+                    onInteractionListener.onForecastItem(item, binding.underLine)
+                }
+
+                conditionImgView.load(image.toUri().toString())
+
             }
-            val image = item.day.condition.icon
-            binding.conditionImgView.load(image.toUri().toString())
+
         }
     }
 

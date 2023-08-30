@@ -15,7 +15,9 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import kotlinx.coroutines.delay
 import ru.javacat.justweather.R
+import ru.javacat.justweather.base.BaseFragment
 import ru.javacat.justweather.databinding.FragmentMainBinding
 import ru.javacat.justweather.response_models.Forecastday
 import ru.javacat.justweather.ui.view_models.MainViewModel
@@ -24,11 +26,17 @@ import ru.javacat.justweather.util.toWindRus
 import kotlin.math.roundToInt
 
 
-class MainFragment: Fragment() {
+class MainFragment: BaseFragment<FragmentMainBinding>() {
 
-    private lateinit var binding: FragmentMainBinding
+    override val bindingInflater: (LayoutInflater, ViewGroup?) -> FragmentMainBinding ={
+        inflater, container ->
+        FragmentMainBinding.inflate(inflater, container, false)
+    }
+
+
     private lateinit var adapter: MainAdapter
-
+    private lateinit var refreshAnimation: Animation
+    private lateinit var pushAnimation: Animation
 
     private val viewModel: MainViewModel by activityViewModels()
 
@@ -41,6 +49,9 @@ class MainFragment: Fragment() {
             requireActivity().finish()
         }
 
+        refreshAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.rotate)
+        pushAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.push)
+
         //val inflater = TransitionInflater.from(requireContext())
         //exitTransition = inflater.inflateTransition(R.transition.fade)
         //enterTransition = inflater.inflateTransition(R.transition.slide_right)
@@ -50,18 +61,24 @@ class MainFragment: Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentMainBinding.inflate(inflater, container,false)
+    ): View? {
+
         Log.i("MyTag", "onCreateView")
 
 
 
+        return super.onCreateView(inflater, container, savedInstanceState)
+    }
 
-        val refreshAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.rotate)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+
 
         initDataObserver()
 
         binding.placeLayout.setOnClickListener {
+            it.setBackgroundColor(resources.getColor(R.color.md_theme_light_primary))
             findNavController().navigate(R.id.action_mainFragment_to_placeFragment)
 //            parentFragmentManager
 //                .beginTransaction()
@@ -70,17 +87,13 @@ class MainFragment: Fragment() {
 //                .commit()
         }
 
-
         binding.refresh.setOnClickListener {
             println(viewModel.currentPlace.toString())
             viewModel.setPlace(viewModel.currentPlace.value.toString(), 3)
             it.startAnimation(refreshAnimation)
         }
-
-
-
-        return binding.root
     }
+
 
 
     private fun initDataObserver(){
@@ -89,16 +102,18 @@ class MainFragment: Fragment() {
                 binding.apply {
                     alarmCard.visibility = View.INVISIBLE
                     //it.forecast.forecastday.get(0).astro.is_moon_up
-                    tempTxtView.text = it.current.temp_c.roundToInt().toString() + "°"
+                    tempTxtView.text = it.current.temp_c.roundToInt().toString() + getString(R.string.celcius)
                     cityTxtView.text = it.location.name
                     //conditionTxtView.text = it.current.condition.text
-                    realFeelTxtView.text = it.current.feelslike_c.roundToInt().toString() + "°"
+                    realFeelTxtView.text = it.current.feelslike_c.roundToInt().toString() + getString(
+                                            R.string.celcius)
                     imageView.load(it.current.condition.icon)
                     detailsLayout.cloud.text = it.current.cloud.toString()+"%"
-                    detailsLayout.windSpeed.text = it.current.wind_kph.roundToInt().toString()+"км/ч"
+                    detailsLayout.windSpeed.text = it.current.wind_kph.roundToInt().toString()+getString(
+                                            R.string.km_h)
                     detailsLayout.windDir.text = it.current.wind_dir.toWindRus()
-                    detailsLayout.precipation.text = it.current.precip_mm.toString()+"мм"
-                    detailsLayout.humidity.text = it.current.humidity.toString()+"%"
+                    detailsLayout.precipation.text = it.current.precip_mm.toString()+getString(R.string.mm)
+                    detailsLayout.humidity.text = it.current.humidity.toString()+getString(R.string.percent)
                     detailsLayout.uvIndex.text = it.current.uv.toString()
                     val alerts = it.alerts.alert
 
@@ -123,7 +138,9 @@ class MainFragment: Fragment() {
         Log.i("MyLog", "Init RecView")
 
         adapter = MainAdapter(object : OnInteractionListener{
-            override fun onForecastItem(item: Forecastday) {
+            override fun onForecastItem(item: Forecastday, view: View) {
+                val color = context!!.resources.getColor(R.color.md_theme_light_primary)
+                view.setBackgroundColor(color)
                 viewModel.chooseForecastDay(item)
 
                 findNavController().navigate(R.id.action_mainFragment_to_forecastFragment)

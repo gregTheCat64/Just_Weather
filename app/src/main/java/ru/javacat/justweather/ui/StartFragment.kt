@@ -26,13 +26,19 @@ import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.material.snackbar.Snackbar
 import ru.javacat.justweather.R
+import ru.javacat.justweather.base.BaseFragment
 import ru.javacat.justweather.databinding.FragmentStartBinding
 import ru.javacat.justweather.ui.view_models.MainViewModel
 import ru.javacat.justweather.util.isPermissionGranted
 import ru.javacat.justweather.util.snack
 
-class StartFragment: Fragment() {
-    private lateinit var binding: FragmentStartBinding
+class StartFragment: BaseFragment<FragmentStartBinding>() {
+
+    override val bindingInflater: (LayoutInflater, ViewGroup?) -> FragmentStartBinding = {
+        inflater, container ->
+        FragmentStartBinding.inflate(inflater, container, false)
+    }
+
     private lateinit var pLauncher: ActivityResultLauncher<String>
     private lateinit var fLocationClient: FusedLocationProviderClient
     private val viewModel: MainViewModel by activityViewModels()
@@ -45,19 +51,20 @@ class StartFragment: Fragment() {
         exitTransition = inflater.inflateTransition(R.transition.fade)
     }
 
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentStartBinding.inflate(inflater, container, false)
+    ): View? {
         fLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
 
-        return binding.root
+        return super.onCreateView(inflater, container, savedInstanceState)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         initLoadingStateObserving()
         init()
 

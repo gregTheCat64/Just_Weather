@@ -13,6 +13,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import ru.javacat.justweather.NetworkError
 import ru.javacat.justweather.R
+import ru.javacat.justweather.base.BaseFragment
 import ru.javacat.justweather.databinding.FragmentPlaceBinding
 import ru.javacat.justweather.models.Place
 import ru.javacat.justweather.ui.adapters.OnPlacesInteractionListener
@@ -21,8 +22,11 @@ import ru.javacat.justweather.ui.view_models.MainViewModel
 import ru.javacat.justweather.util.AndroidUtils
 
 
-class PlaceFragment : Fragment() {
-    private lateinit var binding: FragmentPlaceBinding
+class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {
+    override val bindingInflater: (LayoutInflater, ViewGroup?) -> FragmentPlaceBinding ={
+        inflater, container ->
+        FragmentPlaceBinding.inflate(inflater, container, false)
+    }
     private lateinit var adapter: PlacesAdapter
     private val viewModel: MainViewModel by activityViewModels()
 
@@ -32,12 +36,8 @@ class PlaceFragment : Fragment() {
         //enterTransition = inflater.inflateTransition(R.transition.slide_right)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentPlaceBinding.inflate(inflater, container, false)
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         initLoadingStateObserving()
         initObserver()
@@ -45,7 +45,7 @@ class PlaceFragment : Fragment() {
         binding.backBtn.setOnClickListener {
             findNavController().navigateUp()
         }
-        
+
         binding.placeInput.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE){
                 val placeName = binding.placeInput.text.toString()
@@ -72,7 +72,8 @@ class PlaceFragment : Fragment() {
                 Toast.makeText(requireContext(), getString(R.string.enter_the_city), Toast.LENGTH_SHORT).show()
             }
         }
-        return binding.root
+
+        super.onViewCreated(view, savedInstanceState)
     }
 
     private fun initObserver() {

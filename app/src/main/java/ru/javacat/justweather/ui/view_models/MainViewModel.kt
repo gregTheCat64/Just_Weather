@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.javacat.justweather.ApiError
 import ru.javacat.justweather.NetworkError
@@ -23,34 +24,6 @@ import ru.javacat.justweather.ui.LoadingState
 import ru.javacat.justweather.ui.SingleLiveEvent
 import java.lang.Exception
 
-val emptyForecastday = Forecastday(
-    Astro(0, 0, "", "", "", "", "", ""),
-    "error",
-    0,
-    Day(
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        Condition(0, "", ""),
-        0,
-        0,
-        0,
-        0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0
-    ),
-    emptyList()
-)
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -78,9 +51,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val currentPlace: LiveData<String>
         get() = _currentPlace
 
-//    private val _newPlace = MutableLiveData<String>()
-//    val newPlace: LiveData<String>
-//        get() = _newPlace
 
 
     init {
@@ -89,100 +59,77 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
 
-//    fun loadWeatherByName(name: String, daysCount: Int) {
-//        viewModelScope.launch {
-//            loadingState.postValue(LoadingState.Load)
-//            try {
-//                val weather = repository.loadByName(name, daysCount)
-//                Log.i("MyTag", "weatherResp: $weather")
-//                if (weather != null) {
-//                    _data.value = weather!!
-//                    savePlace(Place(0, weather.location.name, weather.location.region))
-//                    _currentPlace.postValue(weather.location.name)
-//                }
-//            }catch (e: ApiError) {
-//                loadingState.postValue(LoadingState.InputError)
-//                Log.i("MyTag", "ОШИБКА: ${e.code}")
-//            }catch (e: NetworkError){
-//                loadingState.postValue(LoadingState.NetworkError)
-//                Log.i("MyTag", "ОШИБКА: NETWORK")
-//            }
-//        }
-//    }
-
-    fun findPlaceByLocation(name: String, daysCount: Int){
-        viewModelScope.launch {
+    fun findPlaceByLocation(name: String, daysCount: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
             loadingState.postValue(LoadingState.Load)
             try {
-                val foundWeather = repository.loadByName(name, daysCount)
-                if (foundWeather != null) {
-                    savePlace(Place(0, foundWeather.location.name, foundWeather.location.region))
-                    _data.postValue(foundWeather!!)
-                    _currentPlace.postValue(foundWeather.location.name)
-                    Log.i("MyTag", "found: ${foundWeather.location.name}")
-                }
-            }catch (e: ApiError) {
+                val foundWeather = repository.loadByName(name, daysCount) ?: throw NetworkError
+
+                savePlace(Place(0, foundWeather.location.name, foundWeather.location.region))
+                _data.postValue(foundWeather)
+                _currentPlace.postValue(foundWeather.location.name)
+                Log.i("MyTag", "found: ${foundWeather.location.name}")
+
+            } catch (e: ApiError) {
                 loadingState.postValue(LoadingState.InputError)
                 Log.i("MyTag", "ОШИБКА: ${e.code}")
-            }catch (e: NetworkError){
+            } catch (e: NetworkError) {
                 loadingState.postValue(LoadingState.NetworkError)
                 Log.i("MyTag", "ОШИБКА: NETWORK")
             }
         }
     }
+
     fun findPlace(name: String, daysCount: Int) {
         viewModelScope.launch {
             loadingState.postValue(LoadingState.Load)
             try {
-                val foundWeather = repository.loadByName(name, daysCount)
-                if (foundWeather != null) {
-                    savePlace(Place(0, foundWeather.location.name, foundWeather.location.region))
-                    Log.i("MyTag", "found: ${foundWeather.location.name}")
-                }
-            }catch (e: ApiError) {
-            loadingState.postValue(LoadingState.InputError)
-            Log.i("MyTag", "ОШИБКА: ${e.code}")
-        }catch (e: NetworkError){
-            loadingState.postValue(LoadingState.NetworkError)
-            Log.i("MyTag", "ОШИБКА: NETWORK")
-        }
-        }
-    }
+                val foundWeather = repository.loadByName(name, daysCount) ?: throw NetworkError
 
-    fun setPlace(name: String, daysCount: Int) {
-        viewModelScope.launch{
-            loadingState.postValue(LoadingState.Load)
+                savePlace(Place(0, foundWeather.location.name, foundWeather.location.region))
+                Log.i("MyTag", "found: ${foundWeather.location.name}")
 
-            try {
-                val weather = repository.loadByName(name, daysCount)
-                Log.i("MyTag", "weatherResp: $weather")
-                if (weather != null) {
-                    _data.value = weather!!
-                    _currentPlace.postValue(weather.location.name)
-                }
-            }catch (e: ApiError) {
+            } catch (e: ApiError) {
                 loadingState.postValue(LoadingState.InputError)
                 Log.i("MyTag", "ОШИБКА: ${e.code}")
-            }catch (e: NetworkError){
+            } catch (e: NetworkError) {
                 loadingState.postValue(LoadingState.NetworkError)
                 Log.i("MyTag", "ОШИБКА: NETWORK")
             }
         }
     }
 
+    fun setPlace(name: String, daysCount: Int) {
+        viewModelScope.launch {
+            loadingState.postValue(LoadingState.Load)
+
+            try {
+                val weather = repository.loadByName(name, daysCount) ?: throw NetworkError
+                Log.i("MyTag", "weatherResp: $weather")
+
+                _data.value = weather
+                _currentPlace.postValue(weather.location.name)
+
+            } catch (e: ApiError) {
+                loadingState.postValue(LoadingState.InputError)
+                Log.i("MyTag", "ОШИБКА: ${e.code}")
+            } catch (e: NetworkError) {
+                loadingState.postValue(LoadingState.NetworkError)
+                Log.i("MyTag", "ОШИБКА: NETWORK")
+            }
+        }
+    }
 
 
     fun chooseForecastDay(item: Forecastday) {
         viewModelScope.launch {
             try {
                 _forecastData.postValue(item)
-            } catch (e: Exception){
+            } catch (e: Exception) {
                 loadingState.postValue(LoadingState.NetworkError)
             }
-
         }
 
-        //Log.i("MyLog", forecastData.value!!.date)
     }
 
     private fun loadPlaces() {

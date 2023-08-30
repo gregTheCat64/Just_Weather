@@ -12,4 +12,8 @@
     <string name="City">City</string>
     <string name="enter_the_city">Enter the city\n</string>
     <string name="location_disabled">Location disabled</string>
+    <string name="km_h">km/h</string>
+    <string name="mm">mm</string>
+    <string name="celcius" translatable="false">°</string>
+    <string name="percent" translatable="false">%</string>
 </resources>

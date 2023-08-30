@@ -13,4 +13,6 @@
     <string name="City">Город</string>
     <string name="enter_the_city">Введите город</string>
     <string name="location_disabled">Включите определение местоположения</string>
+    <string name="km_h">км/ч</string>
+    <string name="mm">мм</string>
 </resources>

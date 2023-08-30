@@ -33,14 +33,17 @@ class PlacesAdapter(
         private val binding = PlaceItemBinding.bind(view)
 
         fun bind(item: Place) {
-            binding.placeId.text = item.id.toString()
-            binding.nameValue.text = item.region +", "+item.name
-            binding.root.setOnClickListener {
-                onInteractionListener.onSetPlace(item)
+            binding.apply {
+                placeId.text = item.id.toString()
+                nameValue.text = item.region +", "+item.name
+                root.setOnClickListener {
+                    onInteractionListener.onSetPlace(item)
+                }
+               removeBtn.setOnClickListener {
+                    onInteractionListener.onRemovePlace(item)
+                }
             }
-            binding.removeBtn.setOnClickListener {
-                onInteractionListener.onRemovePlace(item)
-            }
+
         }
     }
 

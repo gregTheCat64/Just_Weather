@@ -14,6 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import kotlinx.coroutines.launch
 import ru.javacat.justweather.R
+import ru.javacat.justweather.base.BaseFragment
 import ru.javacat.justweather.databinding.FragmentForecastBinding
 import ru.javacat.justweather.ui.adapters.ForecastAdapter
 import ru.javacat.justweather.ui.view_models.MainViewModel
@@ -23,8 +24,12 @@ import ru.javacat.justweather.util.toLocalDate
 import ru.javacat.justweather.util.toLocalTime
 import kotlin.math.roundToInt
 
-class ForecastFragment: Fragment() {
-    private lateinit var binding: FragmentForecastBinding
+class ForecastFragment: BaseFragment<FragmentForecastBinding>() {
+
+    override val bindingInflater: (LayoutInflater, ViewGroup?) -> FragmentForecastBinding ={
+        inflater, container ->
+        FragmentForecastBinding.inflate(inflater, container, false)
+    }
     private val viewModel: MainViewModel by activityViewModels()
     private lateinit var forecastAdapter: ForecastAdapter
 
@@ -34,27 +39,16 @@ class ForecastFragment: Fragment() {
         //enterTransition = inflater.inflateTransition(R.transition.slide_right)
     }
 
+
     @RequiresApi(Build.VERSION_CODES.O)
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentForecastBinding.inflate(inflater, container, false)
-
-
-//        val forecastday = viewModel.forecastData.value
-//        binding.dateTxtView.text = forecastday?.date
-
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.backBtn.setOnClickListener {
             //parentFragmentManager.popBackStack()
             findNavController().navigateUp()
         }
         initForecastObserver()
 
-
-        Log.i("MyTag", "forecastVM: $viewModel")
-        return binding.root
+        super.onViewCreated(view, savedInstanceState)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
