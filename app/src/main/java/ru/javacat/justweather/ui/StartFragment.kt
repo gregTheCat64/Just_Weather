@@ -19,7 +19,9 @@ import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -87,10 +89,16 @@ class StartFragment: BaseFragment<FragmentStartBinding>() {
 
     private fun initObserver(){
         lifecycleScope.launch {
-            viewModel.data.collectLatest {
-                updateTheme()
-                findNavController().navigate(R.id.mainFragment)
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                viewModel.data.collectLatest {
+                    //updateTheme()
+                    it?.let {
+                        findNavController().navigate(R.id.mainFragment)
+                    }
+
+                }
             }
+
         }
     }
 
@@ -98,7 +106,7 @@ class StartFragment: BaseFragment<FragmentStartBinding>() {
         viewModel.loadingState.observe(viewLifecycleOwner){
             when (it) {
                 is  LoadingState.NetworkError ->  {
-                    Snackbar.make(requireView(), "Ошибка соединения", Snackbar.LENGTH_LONG)
+                    Snackbar.make(requireView(), getString(R.string.network_error), Snackbar.LENGTH_LONG)
 //                        .setAction("Повторить") {
 //                            init()
 //                        }
@@ -160,7 +168,7 @@ class StartFragment: BaseFragment<FragmentStartBinding>() {
             if (it == true) {
                 getLocation()
             } else
-                Toast.makeText(requireContext(), "Чтобы пользоваться приложением, необходимо разрешение", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.permission_alarm), Toast.LENGTH_SHORT).show()
         }
     }
 

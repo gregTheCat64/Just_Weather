@@ -24,12 +24,12 @@ import ru.javacat.justweather.util.toLocalDate
 import ru.javacat.justweather.util.toLocalTime
 import kotlin.math.roundToInt
 
-class ForecastFragment: BaseFragment<FragmentForecastBinding>() {
+class ForecastFragment : BaseFragment<FragmentForecastBinding>() {
 
-    override val bindingInflater: (LayoutInflater, ViewGroup?) -> FragmentForecastBinding ={
-        inflater, container ->
-        FragmentForecastBinding.inflate(inflater, container, false)
-    }
+    override val bindingInflater: (LayoutInflater, ViewGroup?) -> FragmentForecastBinding =
+        { inflater, container ->
+            FragmentForecastBinding.inflate(inflater, container, false)
+        }
     private val viewModel: MainViewModel by activityViewModels()
     private lateinit var forecastAdapter: ForecastAdapter
 
@@ -52,38 +52,40 @@ class ForecastFragment: BaseFragment<FragmentForecastBinding>() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun initForecastObserver(){
+    private fun initForecastObserver() {
         lifecycleScope.launch {
             viewModel.forecastData.observe(viewLifecycleOwner) {
-               // Toast.makeText(requireContext(), "Llala", Toast.LENGTH_SHORT).show()
+                // Toast.makeText(requireContext(), "Llala", Toast.LENGTH_SHORT).show()
+                binding.apply {
+                    conditionImage.load(it.day.condition.icon)
+                    conditionValue.text = it.day.condition.text
+                    dateTxtView.text = it.date.toLocalDate().asLocalDate()
+                    avgTempValue.text = it.day.avgtemp_c.toString() + "°"
+                    maxTempValue.text = it.day.maxtemp_c.toString()
+                    minTempValue.text = it.day.mintemp_c.toString()
+                    maxWindSpeedValue.text = it.day.maxwind_kph.roundToInt().toString() + "км/ч"
+                    totalPrecipValue.text = it.day.totalprecip_mm.toString() + "мм"
+                    avgHumidityValue.text = it.day.avghumidity.toString() + "%"
+                    avgvisValue.text = it.day.avgvis_km.toString() + "км"
+                    uvIndexValue.text = it.day.uv.toString()
+                    sunRiseValue.text = it.astro.sunrise
+                    sunSetValue.text = it.astro.sunset
+                    moonRiseValue.text = it.astro.moonrise
+                    moonSetValue.text = it.astro.moonset
 
-                binding.conditionImage.load(it.day.condition.icon)
-                binding.conditionValue.text = it.day.condition.text
-                binding.dateTxtView.text = it.date.toLocalDate().asLocalDate()
-                binding.avgTempValue.text = it.day.avgtemp_c.toString()+"°"
-                binding.maxTempValue.text = it.day.maxtemp_c.toString()
-                binding.minTempValue.text = it.day.mintemp_c.toString()
-                binding.maxWindSpeedValue.text = it.day.maxwind_kph.roundToInt().toString() + "км/ч"
-                binding.totalPrecipValue.text = it.day.totalprecip_mm.toString() + "мм"
-                binding.avgHumidityValue.text = it.day.avghumidity.toString() + "%"
-                binding.avgvisValue.text = it.day.avgvis_km.toString() + "км"
-                binding.uvIndexValue.text = it.day.uv.toString()
-                binding.sunRiseValue.text = it.astro.sunrise
-                binding.sunSetValue.text = it.astro.sunset
-                binding.moonRiseValue.text = it.astro.moonrise
-                binding.moonSetValue.text = it.astro.moonset
-
-                binding.moonPhaseValue.text = when(it.astro.moon_phase){
-                    "New Moon" -> getString(R.string.Full_Moon)
-                    "Waxing Crescent" -> getString(R.string.Waxing_Crescent)
-                    "First Quarter" -> getString(R.string.First_Quarter)
-                    "Waxing Gibbous" -> getString(R.string.Waning_Gibbous)
-                    "Full Moon" -> getString(R.string.Full_Moon)
-                    "Waning Gibbous" -> getString(R.string.Waning_Gibbous)
-                    "Last Quarter" -> getString(R.string.Last_Quarter)
-                    "Waning Crescent" -> getString(R.string.Waning_Crescent)
-                    else -> "Какой-то новый вид луны, неизвестный разработчику"
+                    moonPhaseValue.text = when (it.astro.moon_phase) {
+                        "New Moon" -> getString(R.string.Full_Moon)
+                        "Waxing Crescent" -> getString(R.string.Waxing_Crescent)
+                        "First Quarter" -> getString(R.string.First_Quarter)
+                        "Waxing Gibbous" -> getString(R.string.Waning_Gibbous)
+                        "Full Moon" -> getString(R.string.Full_Moon)
+                        "Waning Gibbous" -> getString(R.string.Waning_Gibbous)
+                        "Last Quarter" -> getString(R.string.Last_Quarter)
+                        "Waning Crescent" -> getString(R.string.Waning_Crescent)
+                        else -> "Какой-то новый вид луны, неизвестный разработчику"
+                    }
                 }
+
 
                 initForecastRecView()
             }
@@ -102,8 +104,8 @@ class ForecastFragment: BaseFragment<FragmentForecastBinding>() {
     }
 
 
-    companion object{
-        fun newInstance(): ForecastFragment{
+    companion object {
+        fun newInstance(): ForecastFragment {
             return ForecastFragment()
         }
     }

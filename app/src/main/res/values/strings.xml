@@ -16,4 +16,6 @@
     <string name="mm">mm</string>
     <string name="celcius" translatable="false">°</string>
     <string name="percent" translatable="false">%</string>
+    <string name="permission_alarm">We need location permission to continue</string>
+    <string name="network_error">Network error</string>
 </resources>

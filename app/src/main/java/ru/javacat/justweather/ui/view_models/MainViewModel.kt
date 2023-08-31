@@ -8,7 +8,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ru.javacat.justweather.ApiError
 import ru.javacat.justweather.NetworkError
@@ -32,17 +34,17 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: Repository = RepositoryImpl()
     private val placesRepository: PlacesRepository = PlacesRepositorySharedPrefsImpl(application)
 
+    val weatherFlow: SharedFlow<Weather?> = repository.weatherFlow
+
     val loadingState = SingleLiveEvent<LoadingState>()
 
     private val _data = MutableStateFlow<Weather?>(null)
     val data: StateFlow<Weather?>
         get() = _data
 
-
-    private val _forecastData = MutableStateFlow<Forecastday?>(null)
-    val forecastData: StateFlow<Forecastday?>
+    private val _forecastData = MutableLiveData<Forecastday>(null)
+    val forecastData: LiveData<Forecastday>
         get() = _forecastData
-
 
     private val _placeData = MutableLiveData<List<Place>>()
     val placeData: LiveData<List<Place>>
@@ -51,7 +53,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val _currentPlace = MutableLiveData<String>()
     val currentPlace: LiveData<String>
         get() = _currentPlace
-
 
 
     init {
@@ -63,13 +64,18 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     fun findPlaceByLocation(name: String, daysCount: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             loadingState.postValue(LoadingState.Load)
-            try {
-                val foundWeather = repository.loadByName(name, daysCount) ?: throw NetworkError
 
-                savePlace(Place(0, foundWeather.location.name, foundWeather.location.region))
-                _data.value = foundWeather
-                _currentPlace.postValue(foundWeather.location.name)
-                Log.i("MyTag", "found: ${foundWeather.location.name}")
+
+            try {
+                repository.loadByName(name, 3)
+                repository.weatherFlow.collect { foundWeather ->
+
+                    savePlace(Place(0, foundWeather.location.name, foundWeather.location.region))
+
+                    _data.value = foundWeather
+                    _currentPlace.postValue(foundWeather.location.name)
+                    Log.i("MyTag", "found: ${foundWeather.location.name}")
+                }
 
             } catch (e: ApiError) {
                 loadingState.postValue(LoadingState.InputError)

@@ -1,9 +1,10 @@
 package ru.javacat.justweather.repository
 
 import androidx.lifecycle.LiveData
+import kotlinx.coroutines.flow.SharedFlow
 import ru.javacat.justweather.response_models.Weather
 
 interface Repository {
-    //val data: LiveData<Weather>
-    suspend fun loadByName(name: String, daysCount: Int): Weather?
+    val weatherFlow: SharedFlow<Weather?>
+    suspend fun loadByName(name: String, daysCount: Int)
 }

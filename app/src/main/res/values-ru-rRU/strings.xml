@@ -15,4 +15,6 @@
     <string name="location_disabled">Включите определение местоположения</string>
     <string name="km_h">км/ч</string>
     <string name="mm">мм</string>
+    <string name="permission_alarm">Чтобы пользоваться приложением, необходимо разрешение</string>
+    <string name="network_error">Ошибка сети</string>
 </resources>
