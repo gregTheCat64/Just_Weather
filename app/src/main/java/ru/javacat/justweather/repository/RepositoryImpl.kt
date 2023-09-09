@@ -1,5 +1,7 @@
 package ru.javacat.justweather.repository
 
+import android.util.Log
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,26 +18,25 @@ import java.lang.Exception
 
 class RepositoryImpl: Repository {
 
-    private val _weatherFlow = MutableSharedFlow<Weather?>(1)
+    private val _weatherFlow = MutableSharedFlow<Weather?>(1,1,BufferOverflow.SUSPEND)
     override val weatherFlow: SharedFlow<Weather?>
         get() = _weatherFlow
 
-    override suspend fun loadByName(name: String, daysCount: Int) {
+    override suspend fun loadByName(name: String, daysCount: Int): Weather? {
        val result =  apiRequest {
             Api.service.getByName(name, daysCount)
         }
         _weatherFlow.emit(result)
-//        try {
-//            val response = Api.service.getByName(name, daysCount)
-//            if (!response.isSuccessful) {
-//                throw ApiError(response.code(), response.message())
-//            }
-//            return response.body()
-//        } catch (e: IOException){
-//            throw NetworkError
-//        } catch (e: Exception) {
-//            throw UnknownError
-//        }
-        //return Api.service.getByName(name, daysCount).body()
+        Log.i("MyTag", "emiting result: ${result.location}")
+        return result
+    }
+
+    suspend fun findByName(name: String, daysCount: Int): Weather? {
+        val result =  apiRequest {
+            Api.service.getByName(name, daysCount)
+        }
+        _weatherFlow.emit(result)
+        Log.i("MyTag", "emiting result: ${result.location}")
+        return result
     }
 }

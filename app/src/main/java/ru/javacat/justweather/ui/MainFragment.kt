@@ -14,7 +14,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
@@ -66,8 +68,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
         savedInstanceState: Bundle?
     ): View? {
 
-        Log.i("MyTag", "onCreateView")
-
+        Log.i("MyTag", "onCreateMainView")
 
 
         return super.onCreateView(inflater, container, savedInstanceState)
@@ -75,8 +76,6 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
 
         initDataObserver()
 
@@ -91,92 +90,80 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
         }
 
         binding.refresh.setOnClickListener {
-            println(viewModel.currentPlace.toString())
-            viewModel.setPlace(viewModel.currentPlace.value.toString(), 3)
-            it.startAnimation(refreshAnimation)
+//            println(viewModel.currentPlace.toString())
+//            viewModel.setPlace(viewModel.currentPlace.value.toString(), 3)
+//            it.startAnimation(refreshAnimation)
         }
     }
 
 
     private fun initDataObserver() {
-        Log.i("MyLog", "observing data")
+        Log.i("MyTag", "observing data")
 
 
-        lifecycleScope.launch {
-            viewModel.data.collectLatest {weather->
-                binding.apply {
-                    alarmCard.visibility = View.INVISIBLE
+        viewModel.data.observe(viewLifecycleOwner){weather->
 
-                    weather?.let {
-                        tempTxtView.text =
-                            it.current.temp_c.roundToInt().toString() + getString(R.string.celcius)
-                        cityTxtView.text = it.location.name
-                        //conditionTxtView.text = it.current.condition.text
-                        realFeelTxtView.text =
-                            it.current.feelslike_c.roundToInt().toString() + getString(
-                                R.string.celcius
-                            )
-                        it.current.condition.icon.let { it1 -> imageView.load(it1) }
-                        detailsLayout.cloud.text = it.current.cloud.toString() + "%"
-                        detailsLayout.windSpeed.text =
-                            it.current.wind_kph.roundToInt().toString() + getString(
-                                R.string.km_h
-                            )
-                        detailsLayout.windDir.text = it.current.wind_dir.toWindRus()
-                        detailsLayout.precipation.text =
-                            it.current.precip_mm.toString() + getString(R.string.mm)
-                        detailsLayout.humidity.text =
-                            it.current.humidity.toString() + getString(R.string.percent)
-                        detailsLayout.uvIndex.text = it.current.uv.toString()
-                        val alerts = it.alerts.alert
-                        for (element in alerts) {
-                            if (element.desc.isNotEmpty()) {
-                                //Toast.makeText(requireContext(), element.desc, Toast.LENGTH_LONG).show()
-                                //Snackbar.make(requireView(),element.desc,Snackbar.LENGTH_LONG).show()
-                                alarmCard.visibility = View.VISIBLE
-                                alarmMsg.text = element.desc
-                            } else {
-                                alarmCard.visibility = View.INVISIBLE
+//        }
+//        lifecycleScope.launch {
+//            repeatOnLifecycle(Lifecycle.State.STARTED){
+//                viewModel.weatherFlow.collect {weather->
+                    Log.i("MyTag", "weather: ${weather?.location}")
+                    binding.apply {
+                        alarmCard.visibility = View.INVISIBLE
+
+                        weather?.let {
+                            tempTxtView.text =
+                                it.current.temp_c.roundToInt().toString() + getString(R.string.celcius)
+                            cityTxtView.text = it.location.name
+                            //conditionTxtView.text = it.current.condition.text
+                            realFeelTxtView.text =
+                                it.current.feelslike_c.roundToInt().toString() + getString(
+                                    R.string.celcius
+                                )
+                            it.current.condition.icon.let { it1 -> imageView.load(it1) }
+                            detailsLayout.cloud.text = it.current.cloud.toString() + "%"
+                            detailsLayout.windSpeed.text =
+                                it.current.wind_kph.roundToInt().toString() + getString(
+                                    R.string.km_h
+                                )
+                            detailsLayout.windDir.text = it.current.wind_dir.toWindRus()
+                            detailsLayout.precipation.text =
+                                it.current.precip_mm.toString() + getString(R.string.mm)
+                            detailsLayout.humidity.text =
+                                it.current.humidity.toString() + getString(R.string.percent)
+                            detailsLayout.uvIndex.text = it.current.uv.toString()
+                            val alerts = it.alerts.alert
+                            for (element in alerts) {
+                                if (element.desc.isNotEmpty()) {
+                                    //Toast.makeText(requireContext(), element.desc, Toast.LENGTH_LONG).show()
+                                    //Snackbar.make(requireView(),element.desc,Snackbar.LENGTH_LONG).show()
+                                    alarmCard.visibility = View.VISIBLE
+                                    alarmMsg.text = element.desc
+                                } else {
+                                    alarmCard.visibility = View.INVISIBLE
+                                }
                             }
-                        }
-                    }
-                    //it.forecast.forecastday.get(0).astro.is_moon_up
 
+                            adapter = MainAdapter(object : OnInteractionListener {
+                                override fun onForecastItem(item: Forecastday, view: View) {
+                                    val color = context!!.resources.getColor(R.color.md_theme_light_primary)
+                                    view.setBackgroundColor(color)
+                                    viewModel.chooseForecastDay(item)
+
+                                    findNavController().navigate(R.id.action_mainFragment_to_forecastFragment)
+
+                                }
+                            })
+                            binding.daysRecView.adapter = adapter
+                            val list = weather.forecast.forecastday
+                            //Log.i("MyLog", "${list?.size}")
+                            adapter.submitList(list)
+                        }
+                        //it.forecast.forecastday.get(0).astro.is_moon_up
+
+                    }
                 }
             }
+
         }
-        initRecView()
-
-}
-
-
-private fun initRecView() {
-    Log.i("MyLog", "Init RecView")
-
-    adapter = MainAdapter(object : OnInteractionListener {
-        override fun onForecastItem(item: Forecastday, view: View) {
-            val color = context!!.resources.getColor(R.color.md_theme_light_primary)
-            view.setBackgroundColor(color)
-            viewModel.chooseForecastDay(item)
-
-            findNavController().navigate(R.id.action_mainFragment_to_forecastFragment)
-//                parentFragmentManager
-//                    .beginTransaction()
-//                    .addToBackStack(null)
-//                    .replace(R.id.fragmentContainer, ForecastFragment.newInstance())
-//                    .commit()
-        }
-    })
-    binding.daysRecView.adapter = adapter
-    val list = viewModel.data.value?.forecast?.forecastday
-    Log.i("MyLog", "${list?.size}")
-    adapter.submitList(list)
-}
-
-
-companion object {
-    fun newInstance(): MainFragment {
-        return MainFragment()
-    }
-}
-}
+        //initRecView()

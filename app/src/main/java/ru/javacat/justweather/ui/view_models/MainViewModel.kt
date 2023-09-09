@@ -32,32 +32,32 @@ import java.lang.Exception
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository: Repository = RepositoryImpl()
-    private val placesRepository: PlacesRepository = PlacesRepositorySharedPrefsImpl(application)
 
     val weatherFlow: SharedFlow<Weather?> = repository.weatherFlow
 
     val loadingState = SingleLiveEvent<LoadingState>()
 
-    private val _data = MutableStateFlow<Weather?>(null)
-    val data: StateFlow<Weather?>
+    private val _data = MutableLiveData<Weather?>(null)
+    val data: LiveData<Weather?>
         get() = _data
 
     private val _forecastData = MutableLiveData<Forecastday>(null)
     val forecastData: LiveData<Forecastday>
         get() = _forecastData
 
-    private val _placeData = MutableLiveData<List<Place>>()
-    val placeData: LiveData<List<Place>>
-        get() = _placeData
 
-    private val _currentPlace = MutableLiveData<String>()
-    val currentPlace: LiveData<String>
-        get() = _currentPlace
 
 
     init {
         Log.i("MyTag", "initing VM")
-        loadPlaces()
+        //loadPlaces()
+
+        viewModelScope.launch {
+            repository.weatherFlow.collect{
+                Log.i("MyTag", "weather: ${it?.location}")
+                _data.postValue(it)
+            }
+        }
     }
 
 
@@ -65,17 +65,13 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch(Dispatchers.IO) {
             loadingState.postValue(LoadingState.Load)
 
-
             try {
                 repository.loadByName(name, 3)
-                repository.weatherFlow.collect { foundWeather ->
+//                savePlace(Place(0, weatherFlow.location.name, foundWeather.location.region))
+//                _data.value = foundWeather
+//                _currentPlace.postValue(foundWeather.location.name)
+//                Log.i("MyTag", "found: ${foundWeather.location.name}")
 
-                    savePlace(Place(0, foundWeather.location.name, foundWeather.location.region))
-
-                    _data.value = foundWeather
-                    _currentPlace.postValue(foundWeather.location.name)
-                    Log.i("MyTag", "found: ${foundWeather.location.name}")
-                }
 
             } catch (e: ApiError) {
                 loadingState.postValue(LoadingState.InputError)
@@ -87,45 +83,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun findPlace(name: String, daysCount: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
-            loadingState.postValue(LoadingState.Load)
-            try {
-                val foundWeather = repository.loadByName(name, daysCount) ?: throw NetworkError
-
-                savePlace(Place(0, foundWeather.location.name, foundWeather.location.region))
-                Log.i("MyTag", "found: ${foundWeather.location.name}")
-
-            } catch (e: ApiError) {
-                loadingState.postValue(LoadingState.InputError)
-                Log.i("MyTag", "ОШИБКА: ${e.code}")
-            } catch (e: NetworkError) {
-                loadingState.postValue(LoadingState.NetworkError)
-                Log.i("MyTag", "ОШИБКА: NETWORK")
-            }
-        }
-    }
-
-    fun setPlace(name: String, daysCount: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
-            loadingState.postValue(LoadingState.Load)
-
-            try {
-                val weather = repository.loadByName(name, daysCount) ?: throw NetworkError
-                Log.i("MyTag", "weatherResp: $weather")
-
-                _data.value = weather
-                _currentPlace.postValue(weather.location.name)
-
-            } catch (e: ApiError) {
-                loadingState.postValue(LoadingState.InputError)
-                Log.i("MyTag", "ОШИБКА: ${e.code}")
-            } catch (e: NetworkError) {
-                loadingState.postValue(LoadingState.NetworkError)
-                Log.i("MyTag", "ОШИБКА: NETWORK")
-            }
-        }
-    }
 
 
     fun chooseForecastDay(item: Forecastday) {
@@ -139,23 +96,5 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     }
 
-    private fun loadPlaces() {
-        _placeData.value = placesRepository.getPlaces().value
 
-    }
-
-
-    private fun savePlace(place: Place) {
-        val places = placeData.value
-        val result = places?.find { it.name == place.name }
-        if (result == null) {
-            placesRepository.save(place)
-            loadPlaces()
-        }
-    }
-
-    fun removePlace(id: Int) {
-        placesRepository.removeById(id)
-        loadPlaces()
-    }
 }

@@ -19,6 +19,7 @@ import ru.javacat.justweather.models.Place
 import ru.javacat.justweather.ui.adapters.OnPlacesInteractionListener
 import ru.javacat.justweather.ui.adapters.PlacesAdapter
 import ru.javacat.justweather.ui.view_models.MainViewModel
+import ru.javacat.justweather.ui.view_models.PlaceViewModel
 import ru.javacat.justweather.util.AndroidUtils
 
 
@@ -28,7 +29,7 @@ class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {
         FragmentPlaceBinding.inflate(inflater, container, false)
     }
     private lateinit var adapter: PlacesAdapter
-    private val viewModel: MainViewModel by activityViewModels()
+    private val viewModel: PlaceViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,7 +81,7 @@ class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {
         adapter = PlacesAdapter(object : OnPlacesInteractionListener {
             override fun onSetPlace(item: Place) {
                 viewModel.setPlace(item.name, 3)
-                findNavController().navigateUp()
+                //findNavController().navigateUp()
 //                parentFragmentManager
 //                    .popBackStack()
             }

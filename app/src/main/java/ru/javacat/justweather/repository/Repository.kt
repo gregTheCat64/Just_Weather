@@ -6,5 +6,5 @@ import ru.javacat.justweather.response_models.Weather
 
 interface Repository {
     val weatherFlow: SharedFlow<Weather?>
-    suspend fun loadByName(name: String, daysCount: Int)
+    suspend fun loadByName(name: String, daysCount: Int): Weather?
 }

@@ -90,7 +90,7 @@ class StartFragment: BaseFragment<FragmentStartBinding>() {
     private fun initObserver(){
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED){
-                viewModel.data.collectLatest {
+                viewModel.weatherFlow.collectLatest {
                     //updateTheme()
                     it?.let {
                         findNavController().navigate(R.id.mainFragment)
