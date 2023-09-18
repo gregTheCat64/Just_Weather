@@ -6,16 +6,15 @@
     android:layout_height="match_parent">
 
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/refresh"
-            style="@style/Widget.Material3.Button.IconButton"
-            app:iconTint="?attr/colorPrimary"
-            app:icon="@drawable/baseline_refresh_24"
-            android:layout_margin="16dp"
-            android:layout_gravity="end"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/refresh"
+        style="@style/Widget.Material3.Button.IconButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_margin="16dp"
+        app:icon="@drawable/baseline_refresh_24"
+        app:iconTint="?attr/colorPrimary" />
 
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -25,14 +24,12 @@
         android:orientation="vertical">
 
 
-
         <androidx.cardview.widget.CardView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:layout_marginStart="16dp"
-            app:cardCornerRadius="8dp"
-            >
+            android:layout_marginTop="16dp"
+            app:cardCornerRadius="8dp">
 
 
             <androidx.appcompat.widget.LinearLayoutCompat
@@ -40,28 +37,27 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="8dp"
-                >
+                android:padding="8dp">
+
                 <ImageView
                     android:layout_width="18dp"
                     android:layout_height="18dp"
                     android:layout_gravity="center"
-                    app:tint="?attr/colorPrimary"
-                    android:src="@drawable/baseline_location_on_24"/>
+                    android:src="@drawable/baseline_location_on_24"
+                    app:tint="?attr/colorPrimary" />
 
                 <TextView
                     android:id="@+id/cityTxtView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Saratov"
                     android:layout_marginStart="8dp"
-                    android:textSize="18sp"/>
+                    android:text="Saratov"
+                    android:textSize="18sp" />
             </androidx.appcompat.widget.LinearLayoutCompat>
 
 
         </androidx.cardview.widget.CardView>
-
 
 
         <androidx.appcompat.widget.LinearLayoutCompat
@@ -88,11 +84,9 @@
                 android:layout_gravity="center"
                 android:layout_marginStart="16dp"
                 android:src="@drawable/icon_cloud"
-                app:tint="@color/white"
-                />
+                app:tint="@color/white" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
-
 
 
         <androidx.appcompat.widget.LinearLayoutCompat
@@ -100,46 +94,40 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:orientation="horizontal">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="?attr/textFillColor"
-                android:text="@string/realfeel"/>
+                android:text="@string/realfeel"
+                android:textColor="?attr/textFillColor" />
 
             <TextView
                 android:id="@+id/realFeelTxtView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:textColor="?attr/textFillColor"
-               />
+                android:textColor="?attr/textFillColor" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
 
         <include
             android:id="@+id/detailsLayout"
-            android:layout_marginTop="24dp"
             layout="@layout/fragment_details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            />
-
+            android:layout_marginTop="24dp" />
 
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
 
-
     <androidx.appcompat.widget.LinearLayoutCompat
-        android:orientation="vertical"
-
-        android:layout_gravity="bottom"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
 
-
-
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="vertical">
 
 
         <androidx.recyclerview.widget.RecyclerView
@@ -148,38 +136,48 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginBottom="64dp"
-            tools:listitem="@layout/day_item"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:itemCount="3"
-            />
+            tools:listitem="@layout/day_item" />
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/alarmCard"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:visibility="invisible"
-            android:backgroundTint="?attr/cardBackgroundColor"
-            >
 
-            <ScrollView
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/alarmCard"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="84dp"
+                android:layout_margin="8dp"
+                android:visibility="invisible"
                 >
-                <TextView
-                    android:id="@+id/alarmMsg"
-                    android:text="Сегодня прекрасный день"
-                    android:padding="8dp"
+
+                <ScrollView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:maxHeight="100dp"
-                    />
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
 
-            </ScrollView>
 
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="?attr/cardBackgroundColor">
 
-        </androidx.cardview.widget.CardView>
+                        <TextView
+                            android:id="@+id/alarmMsg"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="bottom"
+                            android:maxHeight="100dp"
+                            android:padding="8dp"
+                            android:text="Сегодня прекрасный день" />
+
+                    </androidx.cardview.widget.CardView>
+
+                </ScrollView>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

@@ -14,10 +14,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -26,11 +28,14 @@ import ru.javacat.justweather.base.BaseFragment
 import ru.javacat.justweather.databinding.FragmentMainBinding
 import ru.javacat.justweather.response_models.Forecastday
 import ru.javacat.justweather.ui.view_models.MainViewModel
+import ru.javacat.justweather.util.changeColorOnPush
 import ru.javacat.justweather.util.load
+import ru.javacat.justweather.util.refreshAnimation
 import ru.javacat.justweather.util.toWindRus
 import kotlin.math.roundToInt
 
 
+@AndroidEntryPoint
 class MainFragment : BaseFragment<FragmentMainBinding>() {
 
     override val bindingInflater: (LayoutInflater, ViewGroup?) -> FragmentMainBinding =
@@ -40,8 +45,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
 
 
     private lateinit var adapter: MainAdapter
-    private lateinit var refreshAnimation: Animation
-    private lateinit var pushAnimation: Animation
+
 
     private val viewModel: MainViewModel by activityViewModels()
 
@@ -54,8 +58,8 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
             requireActivity().finish()
         }
 
-        refreshAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.rotate)
-        pushAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.push)
+        //refreshAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.rotate)
+        //pushAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.push)
 
         //val inflater = TransitionInflater.from(requireContext())
         //exitTransition = inflater.inflateTransition(R.transition.fade)
@@ -80,7 +84,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
         initDataObserver()
 
         binding.placeLayout.setOnClickListener {
-            it.setBackgroundColor(resources.getColor(R.color.md_theme_light_primary))
+            it.changeColorOnPush(requireContext())
             findNavController().navigate(R.id.action_mainFragment_to_placeFragment)
 //            parentFragmentManager
 //                .beginTransaction()
@@ -90,9 +94,11 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
         }
 
         binding.refresh.setOnClickListener {
-//            println(viewModel.currentPlace.toString())
-//            viewModel.setPlace(viewModel.currentPlace.value.toString(), 3)
-//            it.startAnimation(refreshAnimation)
+            val currentPlace = viewModel.data.value?.location?.name
+            println(currentPlace)
+            currentPlace?.let { place ->
+                viewModel.findPlaceByLocation(place, 3) }
+            it.refreshAnimation(requireContext())
         }
     }
 
@@ -109,7 +115,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
 //                viewModel.weatherFlow.collect {weather->
                     Log.i("MyTag", "weather: ${weather?.location}")
                     binding.apply {
-                        alarmCard.visibility = View.INVISIBLE
+                        alarmCard?.visibility = View.INVISIBLE
 
                         weather?.let {
                             tempTxtView.text =
@@ -137,17 +143,17 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
                                 if (element.desc.isNotEmpty()) {
                                     //Toast.makeText(requireContext(), element.desc, Toast.LENGTH_LONG).show()
                                     //Snackbar.make(requireView(),element.desc,Snackbar.LENGTH_LONG).show()
-                                    alarmCard.visibility = View.VISIBLE
+                                    alarmCard?.visibility = View.VISIBLE
                                     alarmMsg.text = element.desc
                                 } else {
-                                    alarmCard.visibility = View.INVISIBLE
+                                    alarmCard?.visibility = View.INVISIBLE
                                 }
                             }
 
                             adapter = MainAdapter(object : OnInteractionListener {
                                 override fun onForecastItem(item: Forecastday, view: View) {
-                                    val color = context!!.resources.getColor(R.color.md_theme_light_primary)
-                                    view.setBackgroundColor(color)
+                                    //val color = context!!.resources.getColor(R.color.md_theme_light_primary)
+                                    view.changeColorOnPush(requireContext())
                                     viewModel.chooseForecastDay(item)
 
                                     findNavController().navigate(R.id.action_mainFragment_to_forecastFragment)

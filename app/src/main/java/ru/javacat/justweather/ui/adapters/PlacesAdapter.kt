@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.javacat.justweather.R
 import ru.javacat.justweather.databinding.PlaceItemBinding
 import ru.javacat.justweather.models.Place
+import ru.javacat.justweather.util.changeColorOnPush
+import ru.javacat.justweather.util.pushAnimation
 
 interface OnPlacesInteractionListener {
     fun onSetPlace(item: Place)
@@ -37,7 +39,9 @@ class PlacesAdapter(
                 placeId.text = item.id.toString()
                 nameValue.text = item.region +", "+item.name
                 root.setOnClickListener {
+                    it.pushAnimation(binding.root.context)
                     onInteractionListener.onSetPlace(item)
+
                 }
                removeBtn.setOnClickListener {
                     onInteractionListener.onRemovePlace(item)

@@ -9,27 +9,29 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 import ru.javacat.justweather.API_KEY
 import ru.javacat.justweather.response_models.Weather
+import java.util.concurrent.TimeUnit
 
 
 //private const val name = "London"
 
 //val url = "http://api.weatherapi.com/v1/current.json?key=$API_KEY&q=Moscow&aqi=no"
 
-private const val BASE_URL = "https://api.weatherapi.com/v1/"
-
-private val logging = HttpLoggingInterceptor().apply {
-        level = HttpLoggingInterceptor.Level.BODY
-}
-
-private val okhttp = OkHttpClient.Builder()
-    .addInterceptor(logging)
-    .build()
-
-private val retrofit = Retrofit.Builder()
-    .addConverterFactory(GsonConverterFactory.create())
-    .baseUrl(BASE_URL)
-    .client(okhttp)
-    .build()
+//private const val BASE_URL = "https://api.weatherapi.com/v1/"
+//
+//private val logging = HttpLoggingInterceptor().apply {
+//        level = HttpLoggingInterceptor.Level.BODY
+//}
+//
+//private val okhttp = OkHttpClient.Builder()
+//    .addInterceptor(logging)
+//    .connectTimeout(1, TimeUnit.SECONDS)
+//    .build()
+//
+//private val retrofit = Retrofit.Builder()
+//    .addConverterFactory(GsonConverterFactory.create())
+//    .baseUrl(BASE_URL)
+//    .client(okhttp)
+//    .build()
 
 interface ApiService{
     @GET("forecast.json?key=$API_KEY")
@@ -43,8 +45,8 @@ interface ApiService{
 
 }
 
-object Api {
-    val service: ApiService by lazy {
-        retrofit.create(ApiService::class.java)
-    }
-}
+//object Api {
+//    val service: ApiService by lazy {
+//        retrofit.create(ApiService::class.java)
+//    }
+//}

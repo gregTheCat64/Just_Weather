@@ -55,7 +55,6 @@ class ForecastFragment : BaseFragment<FragmentForecastBinding>() {
     private fun initForecastObserver() {
         lifecycleScope.launch {
             viewModel.forecastData.observe(viewLifecycleOwner) {
-                // Toast.makeText(requireContext(), "Llala", Toast.LENGTH_SHORT).show()
                 binding.apply {
                     conditionImage.load(it.day.condition.icon)
                     conditionValue.text = it.day.condition.text

@@ -156,32 +156,42 @@
             tools:itemCount="3"
             />
 
-        <androidx.cardview.widget.CardView
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/alarmCard"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="400dp"
+            android:layout_height="64dp"
             android:layout_margin="8dp"
             android:visibility="invisible"
+            android:layout_gravity="center_horizontal"
             android:backgroundTint="?attr/cardBackgroundColor"
             >
 
             <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                >
-                <TextView
-                    android:id="@+id/alarmMsg"
-                    android:text="Сегодня прекрасный день"
-                    android:padding="8dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:maxHeight="100dp"
-                    />
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="?attr/cardBackgroundColor">
+
+                    <TextView
+                        android:id="@+id/alarmMsg"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxHeight="100dp"
+                        android:padding="8dp"
+                        android:text="Сегодня прекрасный день" />
+                </androidx.cardview.widget.CardView>
+
 
             </ScrollView>
 
 
-        </androidx.cardview.widget.CardView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

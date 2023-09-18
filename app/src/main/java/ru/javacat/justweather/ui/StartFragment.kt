@@ -19,6 +19,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -28,6 +29,7 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import ru.javacat.justweather.R
@@ -37,6 +39,7 @@ import ru.javacat.justweather.ui.view_models.MainViewModel
 import ru.javacat.justweather.util.isPermissionGranted
 import ru.javacat.justweather.util.snack
 
+@AndroidEntryPoint
 class StartFragment: BaseFragment<FragmentStartBinding>() {
 
     override val bindingInflater: (LayoutInflater, ViewGroup?) -> FragmentStartBinding = {
@@ -46,7 +49,7 @@ class StartFragment: BaseFragment<FragmentStartBinding>() {
 
     private lateinit var pLauncher: ActivityResultLauncher<String>
     private lateinit var fLocationClient: FusedLocationProviderClient
-    private val viewModel: MainViewModel by activityViewModels()
+    private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -82,6 +85,7 @@ class StartFragment: BaseFragment<FragmentStartBinding>() {
 
     private fun init(){
         //getLocation()
+
         checkPermission()
         initObserver()
 

@@ -5,7 +5,9 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -27,11 +29,15 @@ import ru.javacat.justweather.response_models.Weather
 import ru.javacat.justweather.ui.LoadingState
 import ru.javacat.justweather.ui.SingleLiveEvent
 import java.lang.Exception
+import javax.inject.Inject
 
 
-class MainViewModel(application: Application) : AndroidViewModel(application) {
+@HiltViewModel
+class MainViewModel @Inject constructor(
+    private val repository: Repository
+) : ViewModel(){
 
-    private val repository: Repository = RepositoryImpl()
+    //private val repository: Repository = RepositoryImpl()
 
     val weatherFlow: SharedFlow<Weather?> = repository.weatherFlow
 
@@ -44,6 +50,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val _forecastData = MutableLiveData<Forecastday>(null)
     val forecastData: LiveData<Forecastday>
         get() = _forecastData
+
+
 
 
 
@@ -66,7 +74,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             loadingState.postValue(LoadingState.Load)
 
             try {
-                repository.loadByName(name, 3)
+                repository.loadByName(name, 3)?: throw NetworkError
+                loadingState.postValue(LoadingState.Success)
 //                savePlace(Place(0, weatherFlow.location.name, foundWeather.location.region))
 //                _data.value = foundWeather
 //                _currentPlace.postValue(foundWeather.location.name)
@@ -93,7 +102,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 loadingState.postValue(LoadingState.NetworkError)
             }
         }
-
     }
 
 

@@ -8,9 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import dagger.hilt.android.AndroidEntryPoint
 import ru.javacat.justweather.NetworkError
 import ru.javacat.justweather.R
 import ru.javacat.justweather.base.BaseFragment
@@ -22,7 +24,7 @@ import ru.javacat.justweather.ui.view_models.MainViewModel
 import ru.javacat.justweather.ui.view_models.PlaceViewModel
 import ru.javacat.justweather.util.AndroidUtils
 
-
+@AndroidEntryPoint
 class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {
     override val bindingInflater: (LayoutInflater, ViewGroup?) -> FragmentPlaceBinding ={
         inflater, container ->
@@ -42,6 +44,7 @@ class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {
 
         initLoadingStateObserving()
         initObserver()
+        //initOnChangePlaceObserver()
 
         binding.backBtn.setOnClickListener {
             findNavController().navigateUp()
@@ -81,9 +84,7 @@ class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {
         adapter = PlacesAdapter(object : OnPlacesInteractionListener {
             override fun onSetPlace(item: Place) {
                 viewModel.setPlace(item.name, 3)
-                //findNavController().navigateUp()
-//                parentFragmentManager
-//                    .popBackStack()
+
             }
 
             override fun onRemovePlace(item: Place) {
@@ -100,14 +101,22 @@ class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {
     private fun initLoadingStateObserving(){
         viewModel.loadingState.observe(viewLifecycleOwner){
             when (it) {
-                is  LoadingState.NetworkError ->  Toast.makeText(requireContext(), "Проблемы с соединением", Toast.LENGTH_SHORT).show()
-                is LoadingState.InputError -> Toast.makeText(requireContext(), "Город не найден", Toast.LENGTH_SHORT).show()
-                else -> null
+                is  LoadingState.NetworkError -> {
+                    binding.progressBar.visibility = View.INVISIBLE
+                    Toast.makeText(requireContext(), "Проблемы с соединением", Toast.LENGTH_SHORT)
+                        .show()
+                }
+                is LoadingState.InputError -> {
+                    binding.progressBar.visibility = View.INVISIBLE
+                    Toast.makeText(requireContext(), "Город не найден", Toast.LENGTH_SHORT).show()
+                }
+                is LoadingState.Load -> binding.progressBar.visibility = View.VISIBLE
+                is LoadingState.Success -> {
+                    binding.progressBar.visibility = View.INVISIBLE
+                    findNavController().navigateUp()
+                }
             }
         }
     }
 
-    companion object {
-        fun newInstance() = PlaceFragment()
-    }
 }

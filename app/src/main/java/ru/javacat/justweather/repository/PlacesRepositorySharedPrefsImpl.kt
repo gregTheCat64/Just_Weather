@@ -5,11 +5,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import dagger.hilt.android.qualifiers.ApplicationContext
 import ru.javacat.justweather.models.Place
+import javax.inject.Inject
 
-class PlacesRepositorySharedPrefsImpl(
-    private val context: Context
+class PlacesRepositorySharedPrefsImpl @Inject constructor(
+    @ApplicationContext private val context: Context
 ): PlacesRepository {
+
     private val gson = Gson()
     private val prefs = context.getSharedPreferences("repo", Context.MODE_PRIVATE)
     private val type = TypeToken.getParameterized(List::class.java, Place::class.java).type
@@ -26,9 +29,9 @@ class PlacesRepositorySharedPrefsImpl(
     }
 
 
-    override fun getPlaces(): LiveData<List<Place>> = data
+    override suspend fun getPlaces(): LiveData<List<Place>> = data
 
-    override fun save(place: Place) {
+    override suspend fun save(place: Place) {
         if (places.isNotEmpty() ){
             lastId = places.first().id
         }
@@ -37,13 +40,13 @@ class PlacesRepositorySharedPrefsImpl(
             place.copy(id = lastId+ 1)
         ) + places
 
-        data.value = places
+        data.postValue(places)
         sync()
     }
 
-    override fun removeById(id: Int) {
+    override suspend fun removeById(id: Int) {
         places = places.filter { it.id != id }
-        data.value = places
+        data.postValue(places)
         sync()
     }
 
