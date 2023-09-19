@@ -17,6 +17,7 @@ import kotlinx.coroutines.launch
 import ru.javacat.justweather.ApiError
 import ru.javacat.justweather.NetworkError
 import ru.javacat.justweather.models.Place
+import ru.javacat.justweather.repository.CurrentPlaceRepository
 import ru.javacat.justweather.repository.PlacesRepository
 import ru.javacat.justweather.repository.PlacesRepositorySharedPrefsImpl
 import ru.javacat.justweather.repository.Repository
@@ -34,18 +35,19 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val repository: Repository
+    private val repository: Repository,
+    private val currentPlaceRepository: CurrentPlaceRepository
 ) : ViewModel(){
 
     //private val repository: Repository = RepositoryImpl()
 
-    val weatherFlow: SharedFlow<Weather?> = repository.weatherFlow
+    val weatherFlow: StateFlow<Weather?> = repository.weatherFlow
 
     val loadingState = SingleLiveEvent<LoadingState>()
 
-    private val _data = MutableLiveData<Weather?>(null)
-    val data: LiveData<Weather?>
-        get() = _data
+//    private val _data = MutableLiveData<Weather?>(null)
+//    val data: LiveData<Weather?>
+//        get() = _data
 
     private val _forecastData = MutableLiveData<Forecastday>(null)
     val forecastData: LiveData<Forecastday>
@@ -53,19 +55,51 @@ class MainViewModel @Inject constructor(
 
 
 
-
-
-
     init {
         Log.i("MyTag", "initing VM")
-        //loadPlaces()
+        getWeather()
 
+
+    }
+
+    fun getWeather(){
         viewModelScope.launch {
             repository.weatherFlow.collect{
-                Log.i("MyTag", "weather: ${it?.location}")
-                _data.postValue(it)
+                Log.i("MyTag", "weather!!!: ${it?.location}")
+                //_data.postValue(it)
+
             }
         }
+    }
+
+    fun getCurrentPlace(){
+        viewModelScope.launch(Dispatchers.IO){
+            try {
+                val currentLocation = currentPlaceRepository.getCurrentPlace()
+                val coords = currentLocation?.lat.toString() +","+ currentLocation?.lon.toString()
+                repository.loadByName(coords, 3)?: throw NetworkError
+
+            } catch (e: ApiError) {
+
+                Log.i("MyTag", "ОШИБКА: ${e.code}")
+            } catch (e: NetworkError) {
+
+                Log.i("MyTag", "ОШИБКА: NETWORK")
+            }
+        }
+    }
+
+    fun saveCurrentPlace(){
+        viewModelScope.launch{
+            weatherFlow.value?.location?.let { currentPlaceRepository.saveCurrentPlace(it) }
+        }
+    }
+
+    fun updateWeather(){
+        val place = currentPlaceRepository.getCurrentPlace()
+        Log.i("MyTag", "restoring ${place?.name}")
+        val coords = place?.lat.toString()+","+place?.lon.toString()
+        findPlaceByLocation(coords, 3)
     }
 
 
@@ -80,7 +114,6 @@ class MainViewModel @Inject constructor(
 //                _data.value = foundWeather
 //                _currentPlace.postValue(foundWeather.location.name)
 //                Log.i("MyTag", "found: ${foundWeather.location.name}")
-
 
             } catch (e: ApiError) {
                 loadingState.postValue(LoadingState.InputError)

@@ -70,8 +70,8 @@ class PlaceViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             loadingState.postValue(LoadingState.Load)
             try {
-                val foundWeather = repository.loadByName(name, daysCount) ?: throw NetworkError
-                loadingState.postValue(LoadingState.Success)
+                val foundWeather = repository.findByName(name, daysCount) ?: throw NetworkError
+                loadingState.postValue(LoadingState.Found)
                 savePlace(Place(0, foundWeather.location.name, foundWeather.location.region))
                 Log.i("MyTag", "found: ${foundWeather.location.name}")
 

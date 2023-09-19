@@ -30,11 +30,11 @@ class RepositoryImpl @Inject constructor(
         return result
     }
 
-    suspend fun findByName(name: String, daysCount: Int): Weather? {
+    override suspend fun findByName(name: String, daysCount: Int): Weather {
         val result =  apiRequest {
             apiService.getByName(name, daysCount)
         }
-        _weatherFlow.emit(result)
+        //_weatherFlow.emit(result)
         Log.i("MyTag", "emiting result: ${result.location}")
         return result
     }

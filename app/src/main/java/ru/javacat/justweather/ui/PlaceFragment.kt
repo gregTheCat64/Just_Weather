@@ -71,7 +71,7 @@ class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {
             if (placeName.isNotEmpty()) {
                 viewModel.findPlace(placeName, 3)
                 binding.placeInput.text?.clear()
-
+                binding.placesList.smoothScrollToPosition(0)
             } else {
                 Toast.makeText(requireContext(), getString(R.string.enter_the_city), Toast.LENGTH_SHORT).show()
             }
@@ -114,6 +114,9 @@ class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {
                 is LoadingState.Success -> {
                     binding.progressBar.visibility = View.INVISIBLE
                     findNavController().navigateUp()
+                }
+                is LoadingState.Found -> {
+                    binding.progressBar.visibility = View.INVISIBLE
                 }
             }
         }

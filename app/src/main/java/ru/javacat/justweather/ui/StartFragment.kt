@@ -49,7 +49,7 @@ class StartFragment: BaseFragment<FragmentStartBinding>() {
 
     private lateinit var pLauncher: ActivityResultLauncher<String>
     private lateinit var fLocationClient: FusedLocationProviderClient
-    private val viewModel: MainViewModel by viewModels()
+    private val viewModel: MainViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -184,7 +184,7 @@ class StartFragment: BaseFragment<FragmentStartBinding>() {
     }
 
     private fun updateTheme(){
-        val weatherCondition = viewModel.data.value?.current?.condition?.code
+        val weatherCondition = viewModel.weatherFlow.value?.current?.condition?.code
         if (weatherCondition == 1003 ) run {
             (requireActivity() as AppCompatActivity).applicationContext.setTheme(R.style.Base_Theme_RainWeather)
             snack("сегодня дождяра хлещет")
@@ -192,9 +192,4 @@ class StartFragment: BaseFragment<FragmentStartBinding>() {
 
     }
 
-    companion object{
-        fun newInstance(): StartFragment{
-            return StartFragment()
-        }
-    }
 }

@@ -1,5 +1,7 @@
 package ru.javacat.justweather.ui
 
+import android.app.Activity
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.transition.TransitionInflater
 import android.util.Log
@@ -11,6 +13,7 @@ import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -43,15 +46,13 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
             FragmentMainBinding.inflate(inflater, container, false)
         }
 
-
     private lateinit var adapter: MainAdapter
-
 
     private val viewModel: MainViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.i("MyTag", "onCreate")
+        Log.i("MyTag", "onCreateFragment")
         //requireActivity().setTheme(R.style.Base_Theme_RainWeather)
         //requireActivity().baseContext.theme.applyStyle(R.style.Base_Theme_RainWeather, true)
         requireActivity().onBackPressedDispatcher.addCallback(this) {
@@ -66,6 +67,16 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
         //enterTransition = inflater.inflateTransition(R.transition.slide_right)
     }
 
+    override fun onResume() {
+        super.onResume()
+        val currentPlace = viewModel.weatherFlow
+        if (currentPlace.value == null) {
+            viewModel.updateWeather()
+        }
+
+        Log.i("MyTag","onResume MainFragment")
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -73,7 +84,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
     ): View? {
 
         Log.i("MyTag", "onCreateMainView")
-
+        viewModel.saveCurrentPlace()
 
         return super.onCreateView(inflater, container, savedInstanceState)
     }
@@ -94,10 +105,12 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
         }
 
         binding.refresh.setOnClickListener {
-            val currentPlace = viewModel.data.value?.location?.name
-            println(currentPlace)
-            currentPlace?.let { place ->
-                viewModel.findPlaceByLocation(place, 3) }
+            //val currentPlace = viewModel.data.value?.location?.name
+
+//            println(currentPlace)
+//            currentPlace?.let { place ->
+//                viewModel.findPlaceByLocation(place, 3) }
+            viewModel.updateWeather()
             it.refreshAnimation(requireContext())
         }
     }
@@ -106,8 +119,9 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
     private fun initDataObserver() {
         Log.i("MyTag", "observing data")
 
-
-        viewModel.data.observe(viewLifecycleOwner){weather->
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                viewModel.weatherFlow.collectLatest{weather->
 
 //        }
 //        lifecycleScope.launch {
@@ -115,9 +129,20 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
 //                viewModel.weatherFlow.collect {weather->
                     Log.i("MyTag", "weather: ${weather?.location}")
                     binding.apply {
-                        alarmCard?.visibility = View.INVISIBLE
+                        alarmCard.visibility = View.INVISIBLE
 
                         weather?.let {
+
+                            if (true) {
+                                val activity = requireActivity() as AppCompatActivity
+                                val back =
+                                    BitmapFactory.decodeResource(resources, R.drawable.back_rainy)
+                                val bg = AppCompatResources.getDrawable(
+                                    requireContext(),
+                                    R.drawable.back_rainy
+                                )
+                                activity.window.setBackgroundDrawable(bg)
+                            }
                             tempTxtView.text =
                                 it.current.temp_c.roundToInt().toString() + getString(R.string.celcius)
                             cityTxtView.text = it.location.name
@@ -143,10 +168,10 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
                                 if (element.desc.isNotEmpty()) {
                                     //Toast.makeText(requireContext(), element.desc, Toast.LENGTH_LONG).show()
                                     //Snackbar.make(requireView(),element.desc,Snackbar.LENGTH_LONG).show()
-                                    alarmCard?.visibility = View.VISIBLE
+                                    alarmCard.visibility = View.VISIBLE
                                     alarmMsg.text = element.desc
                                 } else {
-                                    alarmCard?.visibility = View.INVISIBLE
+                                    alarmCard.visibility = View.INVISIBLE
                                 }
                             }
 
@@ -169,6 +194,9 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
 
                     }
                 }
+            }
+        }
+
             }
 
         }
