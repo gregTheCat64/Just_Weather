@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -141,7 +142,10 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
                                     requireContext(),
                                     R.drawable.back_rainy
                                 )
-                                activity.window.setBackgroundDrawable(bg)
+                                //activity.window.setBackgroundDrawable(bg)
+                                val fc = activity.findViewById<FragmentContainerView>(R.id.fragmentContainer)
+                                fc.background = resources.getDrawable(R.drawable.back_rainy)
+
                             }
                             tempTxtView.text =
                                 it.current.temp_c.roundToInt().toString() + getString(R.string.celcius)
