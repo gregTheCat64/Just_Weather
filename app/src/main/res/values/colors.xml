@@ -30,5 +30,6 @@
     <color name="dark_status_bar">#2F2F2F</color>
 
     <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
 
 </resources>

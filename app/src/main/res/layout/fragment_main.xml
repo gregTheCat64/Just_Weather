@@ -6,15 +6,31 @@
     android:layout_height="match_parent">
 
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/refresh"
-        style="@style/Widget.Material3.Button.IconButton"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:layout_margin="16dp"
-        app:icon="@drawable/baseline_refresh_24"
-        app:iconTint="?attr/colorPrimary" />
+        android:orientation="vertical">
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/refresh"
+            style="@style/Widget.Material3.Button.IconButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            app:icon="@drawable/baseline_refresh_24"
+            app:iconTint="?attr/colorPrimary" />
+        <TextView
+            android:id="@+id/updateTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="12:00"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/light_text_secondary"/>
+
+
+    </LinearLayout>
+
 
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -60,63 +76,65 @@
         </androidx.cardview.widget.CardView>
 
 
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="4dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/tempTxtView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-
-                android:textColor="?attr/textFillColor"
-                android:textSize="56sp"
-                android:textStyle="bold" />
-
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:layout_gravity="center"
-                android:layout_marginStart="16dp"
-                android:src="@drawable/icon_cloud"
-                app:tint="@color/white" />
-
-        </androidx.appcompat.widget.LinearLayoutCompat>
 
 
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/realfeel"
-                android:textColor="?attr/textFillColor" />
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="32dp"
 
-            <TextView
-                android:id="@+id/realFeelTxtView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:textColor="?attr/textFillColor" />
+                    android:layout_gravity="center_horizontal"
+                    android:orientation="horizontal">
 
-        </androidx.appcompat.widget.LinearLayoutCompat>
+                    <TextView
+                        android:id="@+id/tempTxtView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="15"
+                        android:textColor="?attr/textFillColor"
+                        android:textSize="96sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/imageView"
+                        android:layout_width="64dp"
+                        android:layout_height="64dp"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="8dp"
+                        android:src="@drawable/icon_cloud"
+                        app:tint="@color/light_text_accent"
+                        />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
 
 
-        <include
-            android:id="@+id/detailsLayout"
-            layout="@layout/fragment_details"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp" />
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_gravity="center_horizontal"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16dp"
+                        android:text="@string/realfeel"
+                        android:textColor="?attr/textFillColor" />
+
+                    <TextView
+                        android:id="@+id/realFeelTxtView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="22dp"
+                        android:layout_marginStart="8dp"
+                        android:textColor="?attr/textFillColor" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+
 
 
     </androidx.appcompat.widget.LinearLayoutCompat>
@@ -129,13 +147,21 @@
         android:layout_gravity="bottom"
         android:orientation="vertical">
 
+        <include
+            android:id="@+id/detailsLayout"
+            layout="@layout/fragment_details"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/daysRecView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginBottom="64dp"
+
             android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:itemCount="3"

@@ -39,15 +39,11 @@ class MainViewModel @Inject constructor(
     private val currentPlaceRepository: CurrentPlaceRepository
 ) : ViewModel(){
 
-    //private val repository: Repository = RepositoryImpl()
 
     val weatherFlow: StateFlow<Weather?> = repository.weatherFlow
 
     val loadingState = SingleLiveEvent<LoadingState>()
 
-//    private val _data = MutableLiveData<Weather?>(null)
-//    val data: LiveData<Weather?>
-//        get() = _data
 
     private val _forecastData = MutableLiveData<Forecastday>(null)
     val forecastData: LiveData<Forecastday>

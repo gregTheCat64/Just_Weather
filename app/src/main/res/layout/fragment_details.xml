@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="8dp"
     android:orientation="horizontal">
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -20,7 +21,7 @@
             android:layout_height="24dp"
             android:layout_gravity="center"
             android:src="@drawable/icon_wind"
-            app:tint="@color/white" />
+            app:tint="?attr/textFillColor" />
 
         <TextView
             android:id="@+id/windSpeed"
@@ -55,7 +56,7 @@
             android:layout_height="24dp"
             android:layout_gravity="center"
             android:src="@drawable/icon_precipation"
-            app:tint="@color/white" />
+            app:tint="?attr/textFillColor" />
 
 
         <TextView
@@ -83,7 +84,7 @@
             android:layout_height="24dp"
             android:layout_gravity="center"
             android:src="@drawable/icon_drop"
-            app:tint="@color/white" />
+            app:tint="?attr/textFillColor" />
 
 
         <TextView
@@ -111,7 +112,7 @@
             android:layout_height="24dp"
             android:layout_gravity="center"
             android:src="@drawable/icon_cloud_chance"
-            app:tint="@color/white" />
+            app:tint="?attr/textFillColor" />
 
 
         <TextView
@@ -140,7 +141,7 @@
             android:text="UV:"
             android:layout_gravity="center"
             android:textSize="18sp"
-            android:textColor="@color/white"
+            android:textColor="?attr/textFillColor"
             android:textStyle="bold" />
 
         <TextView

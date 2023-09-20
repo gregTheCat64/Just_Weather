@@ -21,7 +21,6 @@ import ru.javacat.justweather.ui.view_models.MainViewModel
 import ru.javacat.justweather.util.asLocalDate
 import ru.javacat.justweather.util.load
 import ru.javacat.justweather.util.toLocalDate
-import ru.javacat.justweather.util.toLocalTime
 import kotlin.math.roundToInt
 
 class ForecastFragment : BaseFragment<FragmentForecastBinding>() {

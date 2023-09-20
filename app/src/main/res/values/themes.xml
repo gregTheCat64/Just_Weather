@@ -11,7 +11,7 @@
         <item name="android:textColorSecondary">@color/light_text_secondary</item>
         <item name="cardBackgroundColor">@color/light_card_back</item>
         <item name="background">@drawable/back_day</item>
-        <item name="android:backgroundSplit">@drawable/back_day_land</item>
+
 
     </style>
 

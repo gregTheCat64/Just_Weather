@@ -24,7 +24,7 @@ class ForecastAdapter(): ListAdapter<Hour, ForecastAdapter.Holder>(Comparator())
         return Holder(view)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+
     override fun onBindViewHolder(holder: Holder, position: Int) {
         holder.bind(getItem(position))
     }
@@ -32,7 +32,7 @@ class ForecastAdapter(): ListAdapter<Hour, ForecastAdapter.Holder>(Comparator())
     class Holder(view: View): RecyclerView.ViewHolder(view){
         private val binding = HourItemBinding.bind(view)
 
-        @RequiresApi(Build.VERSION_CODES.O)
+
         fun bind(item: Hour) {
             binding.apply {
                 conditionImgView.load("${item.condition.icon}")

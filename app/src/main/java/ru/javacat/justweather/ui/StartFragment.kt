@@ -99,10 +99,8 @@ class StartFragment: BaseFragment<FragmentStartBinding>() {
                     it?.let {
                         findNavController().navigate(R.id.mainFragment)
                     }
-
                 }
             }
-
         }
     }
 
@@ -189,7 +187,6 @@ class StartFragment: BaseFragment<FragmentStartBinding>() {
             (requireActivity() as AppCompatActivity).applicationContext.setTheme(R.style.Base_Theme_RainWeather)
             snack("сегодня дождяра хлещет")
         }
-
     }
 
 }

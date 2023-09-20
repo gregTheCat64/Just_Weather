@@ -30,10 +30,8 @@ class CurrentPlaceSharedPrefsImpl @Inject constructor(
 
     override fun saveCurrentPlace(location: Location) {
         with(prefs.edit()){
-
             putString(key, gson.toJson(location))
             apply()
-
             println("saving location: ${getCurrentPlace()?.name}")
         }
     }
