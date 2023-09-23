@@ -72,8 +72,9 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.i("MyTag", "onCreateFragment")
+        Log.i("MainFragment", "onCreateFragment")
         //currentTime = LocalTime.now()
+        initDataObserver()
 
         requireActivity().onBackPressedDispatcher.addCallback(this) {
             requireActivity().finish()
@@ -96,12 +97,12 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
 
     override fun onResume() {
         super.onResume()
-        val currentPlace = viewModel.weatherFlow
-        if (currentPlace.value == null) {
-            viewModel.updateWeather()
-        }
+//        val currentPlace = viewModel.weatherFlow
+//        if (currentPlace.value == null) {
+//            viewModel.updateWeather()
+//        }
 
-        Log.i("MyTag", "onResume MainFragment")
+        Log.i("MainFragment", "onResume")
     }
 
     override fun onCreateView(
@@ -113,16 +114,15 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
         val activity = requireActivity() as AppCompatActivity
         fc = activity.findViewById<FragmentContainerView>(R.id.fragmentContainer)
         viewModel.saveCurrentPlace()
-        Log.i("MyTag", "onCreateMainFragmentView")
-
+        Log.i("MainFragment", "onCreateView")
 
         return super.onCreateView(inflater, container, savedInstanceState)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.i("MyTag", "onViewCreatedMainFrag")
-        initDataObserver()
+        Log.i("MainFragment", "onViewCreated")
+
 
         binding.placeLayout.setOnClickListener {
             it.changeColorOnPush(requireContext())
@@ -140,24 +140,22 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
         }
     }
 
-
     private fun initDataObserver() {
-        Log.i("MyTag", "observing data")
-
+        Log.i("MainFragment", "observing data")
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.weatherFlow.collect { weather ->
-                    Log.i("MyTag", "collecting")
+                    Log.i("MainFragment", "collecting")
                     updateUi(weather)
 
                 }
             }
         }
-
     }
 
     private fun updateUi(weather: Weather?){
+        Log.i("MainFragment", "updateUI")
         binding.apply {
             alarmCard.visibility = View.INVISIBLE
 
@@ -180,7 +178,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
                         fc.background = back12
                         println("back: back12")
                     }
-                    currentTime.isAfter(LocalTime.of(18,0)) && currentTime.isBefore(LocalTime.of(22,0)) -> {
+                    currentTime.isAfter(LocalTime.of(18,0)) && currentTime.isBefore(LocalTime.of(21,0)) -> {
                         fc.background = back18
                         println("back: back18")
                     }
@@ -188,7 +186,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
 //                        fc.background = back20
 //                        println("back: back20")
 //                    }
-                    currentTime.isAfter(LocalTime.of(22,0)) || currentTime.isBefore(LocalTime.of(5,0)) -> {
+                    currentTime.isAfter(LocalTime.of(21,0)) || currentTime.isBefore(LocalTime.of(5,0)) -> {
                         fc.background = back22
                         println("back: back22")
                     }

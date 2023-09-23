@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import ru.javacat.justweather.NetworkError
@@ -31,19 +32,22 @@ class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {
         FragmentPlaceBinding.inflate(inflater, container, false)
     }
     private lateinit var adapter: PlacesAdapter
-    private val viewModel: PlaceViewModel by activityViewModels()
+    private val viewModel: PlaceViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.i("PlaceFragment", "onCreate")
         super.onCreate(savedInstanceState)
+        initObserver()
+
         //val inflater = TransitionInflater.from(requireContext())
         //enterTransition = inflater.inflateTransition(R.transition.slide_right)
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
+        Log.i("PlaceFragment", "onViewCreated")
         initLoadingStateObserving()
-        initObserver()
+
         //initOnChangePlaceObserver()
 
         binding.backBtn.setOnClickListener {
@@ -76,17 +80,15 @@ class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {
                 Toast.makeText(requireContext(), getString(R.string.enter_the_city), Toast.LENGTH_SHORT).show()
             }
         }
-
         super.onViewCreated(view, savedInstanceState)
     }
 
     private fun initObserver() {
+        Log.i("PlaceFragment", "initObserver")
         adapter = PlacesAdapter(object : OnPlacesInteractionListener {
             override fun onSetPlace(item: Place) {
                 viewModel.setPlace(item.name, 3)
-
             }
-
             override fun onRemovePlace(item: Place) {
                 viewModel.removePlace(item.id)
             }
@@ -99,6 +101,7 @@ class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {
     }
 
     private fun initLoadingStateObserving(){
+        Log.i("PlaceFragment", "initLoadingStateObserver")
         viewModel.loadingState.observe(viewLifecycleOwner){
             when (it) {
                 is  LoadingState.NetworkError -> {

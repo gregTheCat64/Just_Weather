@@ -18,13 +18,9 @@ import ru.javacat.justweather.ApiError
 import ru.javacat.justweather.NetworkError
 import ru.javacat.justweather.models.Place
 import ru.javacat.justweather.repository.CurrentPlaceRepository
-import ru.javacat.justweather.repository.PlacesRepository
-import ru.javacat.justweather.repository.PlacesRepositorySharedPrefsImpl
+
 import ru.javacat.justweather.repository.Repository
-import ru.javacat.justweather.repository.RepositoryImpl
-import ru.javacat.justweather.response_models.Astro
-import ru.javacat.justweather.response_models.Condition
-import ru.javacat.justweather.response_models.Day
+
 import ru.javacat.justweather.response_models.Forecastday
 import ru.javacat.justweather.response_models.Weather
 import ru.javacat.justweather.ui.LoadingState
@@ -53,7 +49,7 @@ class MainViewModel @Inject constructor(
 
     init {
         Log.i("MyTag", "initing VM")
-        getWeather()
+        //getWeather()
 
 
     }
@@ -88,6 +84,7 @@ class MainViewModel @Inject constructor(
     fun saveCurrentPlace(){
         viewModelScope.launch{
             weatherFlow.value?.location?.let { currentPlaceRepository.saveCurrentPlace(it) }
+
         }
     }
 
@@ -122,7 +119,6 @@ class MainViewModel @Inject constructor(
     }
 
 
-
     fun chooseForecastDay(item: Forecastday) {
         viewModelScope.launch {
             try {
@@ -132,6 +128,4 @@ class MainViewModel @Inject constructor(
             }
         }
     }
-
-
 }

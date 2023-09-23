@@ -36,6 +36,7 @@ import ru.javacat.justweather.R
 import ru.javacat.justweather.base.BaseFragment
 import ru.javacat.justweather.databinding.FragmentStartBinding
 import ru.javacat.justweather.ui.view_models.MainViewModel
+import ru.javacat.justweather.ui.view_models.StartViewModel
 import ru.javacat.justweather.util.isPermissionGranted
 import ru.javacat.justweather.util.snack
 
@@ -49,7 +50,7 @@ class StartFragment: BaseFragment<FragmentStartBinding>() {
 
     private lateinit var pLauncher: ActivityResultLauncher<String>
     private lateinit var fLocationClient: FusedLocationProviderClient
-    private val viewModel: MainViewModel by activityViewModels()
+    private val viewModel: StartViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -181,12 +182,12 @@ class StartFragment: BaseFragment<FragmentStartBinding>() {
         } else getLocation()
     }
 
-    private fun updateTheme(){
-        val weatherCondition = viewModel.weatherFlow.value?.current?.condition?.code
-        if (weatherCondition == 1003 ) run {
-            (requireActivity() as AppCompatActivity).applicationContext.setTheme(R.style.Base_Theme_RainWeather)
-            snack("сегодня дождяра хлещет")
-        }
-    }
+//    private fun updateTheme(){
+//        val weatherCondition = viewModel.weatherFlow.value?.current?.condition?.code
+//        if (weatherCondition == 1003 ) run {
+//            (requireActivity() as AppCompatActivity).applicationContext.setTheme(R.style.Base_Theme_RainWeather)
+//            snack("сегодня дождяра хлещет")
+//        }
+//    }
 
 }
