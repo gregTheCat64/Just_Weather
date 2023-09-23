@@ -29,13 +29,13 @@ class ActivityViewModel @Inject constructor(
             try {
                 val currentLocation = currentPlaceRepository.getCurrentPlace()
                 val coords = currentLocation?.lat.toString() +","+ currentLocation?.lon.toString()
-                repository.loadByName(coords, 3)?: throw NetworkError
+                if (currentLocation != null) {
+                    repository.loadByName(coords, 3)?: throw NetworkError
+                }
 
             } catch (e: ApiError) {
-
                 Log.i("MyTag", "ОШИБКА: ${e.code}")
             } catch (e: NetworkError) {
-
                 Log.i("MyTag", "ОШИБКА: NETWORK")
             }
         }
