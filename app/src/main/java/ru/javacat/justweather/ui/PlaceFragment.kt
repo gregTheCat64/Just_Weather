@@ -37,7 +37,7 @@ class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.i("PlaceFragment", "onCreate")
         super.onCreate(savedInstanceState)
-        initObserver()
+
 
         //val inflater = TransitionInflater.from(requireContext())
         //enterTransition = inflater.inflateTransition(R.transition.slide_right)
@@ -47,7 +47,7 @@ class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.i("PlaceFragment", "onViewCreated")
         initLoadingStateObserving()
-
+        initObserver()
         //initOnChangePlaceObserver()
 
         binding.backBtn.setOnClickListener {

@@ -74,7 +74,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
         super.onCreate(savedInstanceState)
         Log.i("MainFragment", "onCreateFragment")
         //currentTime = LocalTime.now()
-        initDataObserver()
+
 
         requireActivity().onBackPressedDispatcher.addCallback(this) {
             requireActivity().finish()
@@ -116,6 +116,8 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
         viewModel.saveCurrentPlace()
         Log.i("MainFragment", "onCreateView")
 
+        initDataObserver()
+
         return super.onCreateView(inflater, container, savedInstanceState)
     }
 
@@ -143,8 +145,8 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
     private fun initDataObserver() {
         Log.i("MainFragment", "observing data")
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.weatherFlow.collect { weather ->
                     Log.i("MainFragment", "collecting")
                     updateUi(weather)

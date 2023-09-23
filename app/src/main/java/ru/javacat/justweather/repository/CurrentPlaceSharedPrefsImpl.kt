@@ -1,6 +1,7 @@
 package ru.javacat.justweather.repository
 
 import android.content.Context
+import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -32,7 +33,8 @@ class CurrentPlaceSharedPrefsImpl @Inject constructor(
         with(prefs.edit()){
             putString(key, gson.toJson(location))
             apply()
-            println("saving location: ${getCurrentPlace()?.name}")
+            Log.i("CurrentPlaceSharedRepo", "saving location: ${getCurrentPlace()?.name}")
+
         }
     }
 }

@@ -1,6 +1,7 @@
 package ru.javacat.justweather.repository
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
@@ -41,6 +42,7 @@ class PlacesRepositorySharedPrefsImpl @Inject constructor(
         ) + places
 
         data.postValue(places)
+        Log.i("PlacesRepo", "${place.name}")
         sync()
     }
 

@@ -93,8 +93,8 @@ class StartFragment: BaseFragment<FragmentStartBinding>() {
     }
 
     private fun initObserver(){
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED){
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
                 viewModel.weatherFlow.collectLatest {
                     //updateTheme()
                     it?.let {
