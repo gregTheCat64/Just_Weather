@@ -36,10 +36,9 @@ class MainViewModel @Inject constructor(
 ) : ViewModel(){
 
 
-    val weatherFlow: StateFlow<Weather?> = repository.weatherFlow
+    val weatherFlow: LiveData<Weather?> = repository.weatherFlow
 
-    val loadingState = SingleLiveEvent<LoadingState>()
-
+    private val loadingState = SingleLiveEvent<LoadingState>()
 
     private val _forecastData = MutableLiveData<Forecastday>(null)
     val forecastData: LiveData<Forecastday>
@@ -49,44 +48,10 @@ class MainViewModel @Inject constructor(
 
     init {
         Log.i("MyTag", "initing VM")
-        //getWeather()
 
 
     }
 
-    fun getWeather(){
-        viewModelScope.launch {
-            repository.weatherFlow.collect{
-                Log.i("MyTag", "weather!!!: ${it?.location}")
-                //_data.postValue(it)
-
-            }
-        }
-    }
-
-    fun getCurrentPlace(){
-        viewModelScope.launch(Dispatchers.IO){
-            try {
-                val currentLocation = currentPlaceRepository.getCurrentPlace()
-                val coords = currentLocation?.lat.toString() +","+ currentLocation?.lon.toString()
-                repository.loadByName(coords, 3)?: throw NetworkError
-
-            } catch (e: ApiError) {
-
-                Log.i("MyTag", "ОШИБКА: ${e.code}")
-            } catch (e: NetworkError) {
-
-                Log.i("MyTag", "ОШИБКА: NETWORK")
-            }
-        }
-    }
-
-    fun saveCurrentPlace(){
-        viewModelScope.launch{
-            weatherFlow.value?.location?.let { currentPlaceRepository.saveCurrentPlace(it) }
-
-        }
-    }
 
     fun updateWeather(){
         val place = currentPlaceRepository.getCurrentPlace()
@@ -96,17 +61,13 @@ class MainViewModel @Inject constructor(
     }
 
 
-    fun findPlaceByLocation(name: String, daysCount: Int) {
+    private fun findPlaceByLocation(name: String, daysCount: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             loadingState.postValue(LoadingState.Load)
 
             try {
                 repository.loadByName(name, 3)?: throw NetworkError
                 loadingState.postValue(LoadingState.Success)
-//                savePlace(Place(0, weatherFlow.location.name, foundWeather.location.region))
-//                _data.value = foundWeather
-//                _currentPlace.postValue(foundWeather.location.name)
-//                Log.i("MyTag", "found: ${foundWeather.location.name}")
 
             } catch (e: ApiError) {
                 loadingState.postValue(LoadingState.InputError)

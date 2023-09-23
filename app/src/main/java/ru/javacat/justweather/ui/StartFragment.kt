@@ -93,15 +93,18 @@ class StartFragment: BaseFragment<FragmentStartBinding>() {
     }
 
     private fun initObserver(){
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
-                viewModel.weatherFlow.collectLatest {
-                    //updateTheme()
-                    it?.let {
-                        findNavController().navigate(R.id.mainFragment)
-                    }
-                }
-            }
+//        viewLifecycleOwner.lifecycleScope.launch {
+//            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
+//                viewModel.weatherFlow.collectLatest {
+//                    //updateTheme()
+//                    it?.let {
+//                        findNavController().navigate(R.id.mainFragment)
+//                    }
+//                }
+//            }
+//        }
+        viewModel.weatherFlow.observe(viewLifecycleOwner){
+            findNavController().navigate(R.id.mainFragment)
         }
     }
 

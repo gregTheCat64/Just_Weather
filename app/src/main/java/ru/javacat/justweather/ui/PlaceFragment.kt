@@ -44,6 +44,8 @@ class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {
     }
 
 
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.i("PlaceFragment", "onViewCreated")
         initLoadingStateObserving()

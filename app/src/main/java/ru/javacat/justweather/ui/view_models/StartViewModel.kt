@@ -24,10 +24,11 @@ import javax.inject.Inject
 @HiltViewModel
 class StartViewModel @Inject constructor(
     private val repository: Repository,
-    private val placesRepository: PlacesRepository
+    private val placesRepository: PlacesRepository,
+    private val currentPlaceRepository: CurrentPlaceRepository
 ): ViewModel() {
 
-    val weatherFlow: StateFlow<Weather?> = repository.weatherFlow
+    val weatherFlow: LiveData<Weather?> = repository.weatherFlow
     val loadingState = SingleLiveEvent<LoadingState>()
 
     private val _placeData = MutableLiveData<List<Place>>()
@@ -70,10 +71,17 @@ class StartViewModel @Inject constructor(
             println("RESULT_PLACES= $result")
             if (result == null) {
                 placesRepository.save(place)
+                saveCurrentPlace()
                 loadPlaces()
             }
         }
+    }
 
+    fun saveCurrentPlace(){
+        viewModelScope.launch{
+            weatherFlow.value?.location?.let { currentPlaceRepository.saveCurrentPlace(it) }
+
+        }
     }
 
 

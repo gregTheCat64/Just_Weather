@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 import ru.javacat.justweather.ApiError
 import ru.javacat.justweather.NetworkError
 import ru.javacat.justweather.models.Place
+import ru.javacat.justweather.repository.CurrentPlaceRepository
 import ru.javacat.justweather.repository.PlacesRepository
 import ru.javacat.justweather.repository.PlacesRepositorySharedPrefsImpl
 import ru.javacat.justweather.repository.Repository
@@ -26,7 +27,8 @@ import javax.inject.Inject
 @HiltViewModel
 class PlaceViewModel @Inject constructor(
     private val repository: Repository,
-    private val placesRepository: PlacesRepository
+    private val placesRepository: PlacesRepository,
+    private val currentPlaceRepository: CurrentPlaceRepository
 ): ViewModel() {
 
     //private val placesRepository: PlacesRepository = PlacesRepositorySharedPrefsImpl(application)
@@ -91,6 +93,9 @@ class PlaceViewModel @Inject constructor(
 
             try {
                 val weather = repository.loadByName(name, daysCount) ?: throw NetworkError
+                weather.location.let {
+                    currentPlaceRepository.saveCurrentPlace(it)
+                }
                 Log.i("MyTag", "weatherResp: $weather")
                 loadingState.postValue(LoadingState.Success)
 

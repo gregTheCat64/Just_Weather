@@ -95,6 +95,11 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
         //enterTransition = inflater.inflateTransition(R.transition.slide_right)
     }
 
+    override fun onStart() {
+        super.onStart()
+        Log.i("MainFragment", "onStart")
+    }
+
     override fun onResume() {
         super.onResume()
 //        val currentPlace = viewModel.weatherFlow
@@ -113,7 +118,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
 
         val activity = requireActivity() as AppCompatActivity
         fc = activity.findViewById<FragmentContainerView>(R.id.fragmentContainer)
-        viewModel.saveCurrentPlace()
+
         Log.i("MainFragment", "onCreateView")
 
         initDataObserver()
@@ -145,14 +150,17 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
     private fun initDataObserver() {
         Log.i("MainFragment", "observing data")
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.weatherFlow.collect { weather ->
-                    Log.i("MainFragment", "collecting")
-                    updateUi(weather)
-
-                }
-            }
+//        viewLifecycleOwner.lifecycleScope.launch {
+//            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+//                viewModel.weatherFlow.collect { weather ->
+//                    Log.i("MainFragment", "collecting")
+//                    updateUi(weather)
+//
+//                }
+//            }
+//        }
+        viewModel.weatherFlow.observe(viewLifecycleOwner){
+            updateUi(it)
         }
     }
 

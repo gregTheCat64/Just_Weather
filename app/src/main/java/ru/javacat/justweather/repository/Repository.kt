@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.StateFlow
 import ru.javacat.justweather.response_models.Weather
 
 interface Repository {
-    val weatherFlow: StateFlow<Weather?>
+    val weatherFlow: LiveData<Weather?>
     suspend fun loadByName(name: String, daysCount: Int): Weather?
 
     suspend fun findByName(name: String, daysCount: Int): Weather?

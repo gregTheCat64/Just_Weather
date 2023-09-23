@@ -1,6 +1,8 @@
 package ru.javacat.justweather.repository
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import ru.javacat.justweather.api.ApiService
@@ -17,15 +19,15 @@ class RepositoryImpl @Inject constructor(
 //    override val weatherFlow: SharedFlow<Weather?>
 //        get() = _weatherFlow
 
-    private val _weatherFlow = MutableStateFlow<Weather?>(null)
-    override val weatherFlow: StateFlow<Weather?>
+    private val _weatherFlow = MutableLiveData<Weather?>()
+    override val weatherFlow: LiveData<Weather?>
         get() = _weatherFlow
 
     override suspend fun loadByName(name: String, daysCount: Int): Weather? {
        val result =  apiRequest {
             apiService.getByName(name, daysCount)
         }
-        _weatherFlow.emit(result)
+        _weatherFlow.postValue(result)
         Log.i("MyTag", "emiting result: ${result.location}")
         return result
     }

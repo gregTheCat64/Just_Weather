@@ -41,13 +41,13 @@ class ActivityViewModel @Inject constructor(
         }
     }
 
-    fun saveCurrentPlace(){
-        viewModelScope.launch{
-            repository.weatherFlow.collect{
-                it?.location?.let { location -> currentPlaceRepository.saveCurrentPlace(location) }
-            }
-        }
-    }
+//    fun saveCurrentPlace(){
+//        viewModelScope.launch{
+//            repository.weatherFlow.collect{
+//                it?.location?.let { location -> currentPlaceRepository.saveCurrentPlace(location) }
+//            }
+//        }
+//    }
 
     fun setMinimized(state: Boolean){
         _appMinimized.value = state
