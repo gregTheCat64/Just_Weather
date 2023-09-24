@@ -19,15 +19,15 @@ class RepositoryImpl @Inject constructor(
 //    override val weatherFlow: SharedFlow<Weather?>
 //        get() = _weatherFlow
 
-    private val _weatherFlow = MutableLiveData<Weather?>()
-    override val weatherFlow: LiveData<Weather?>
+    private val _weatherFlow = MutableStateFlow<Weather?>(null)
+    override val weatherFlow: StateFlow<Weather?>
         get() = _weatherFlow
 
     override suspend fun loadByName(name: String, daysCount: Int): Weather? {
        val result =  apiRequest {
             apiService.getByName(name, daysCount)
         }
-        _weatherFlow.postValue(result)
+        _weatherFlow.emit(result)
         Log.i("MyTag", "emiting result: ${result.location}")
         return result
     }

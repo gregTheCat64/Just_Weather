@@ -110,6 +110,17 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
         Log.i("MainFragment", "onResume")
     }
 
+    override fun onDestroy() {
+        Log.i("MainFragment", "onDestroy")
+        super.onDestroy()
+
+    }
+
+    override fun onDestroyView() {
+        Log.i("MainFragment", "onDestroyView")
+        super.onDestroyView()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -150,18 +161,18 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
     private fun initDataObserver() {
         Log.i("MainFragment", "observing data")
 
-//        viewLifecycleOwner.lifecycleScope.launch {
-//            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-//                viewModel.weatherFlow.collect { weather ->
-//                    Log.i("MainFragment", "collecting")
-//                    updateUi(weather)
-//
-//                }
-//            }
-//        }
-        viewModel.weatherFlow.observe(viewLifecycleOwner){
-            updateUi(it)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.weatherFlow.collect { weather ->
+                    Log.i("MainFragment", "collecting")
+                    updateUi(weather)
+
+                }
+            }
         }
+//        viewModel.weatherFlow.observe(viewLifecycleOwner){
+//            updateUi(it)
+//        }
     }
 
     private fun updateUi(weather: Weather?){

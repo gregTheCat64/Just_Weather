@@ -36,7 +36,7 @@ class MainViewModel @Inject constructor(
 ) : ViewModel(){
 
 
-    val weatherFlow: LiveData<Weather?> = repository.weatherFlow
+    val weatherFlow: StateFlow<Weather?> = repository.weatherFlow
 
     private val loadingState = SingleLiveEvent<LoadingState>()
 
