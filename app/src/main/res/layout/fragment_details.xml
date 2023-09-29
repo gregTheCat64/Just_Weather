@@ -30,7 +30,7 @@
             android:textColor="?attr/textFillColor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="5 км/ч" />
+             />
 
         <TextView
             android:id="@+id/windDir"
@@ -38,7 +38,7 @@
             android:textColor="?attr/textFillColor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ЮЗ" />
+            />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -66,7 +66,7 @@
             android:textColor="?attr/textFillColor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="10мм" />
+           />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -94,7 +94,7 @@
             android:textColor="?attr/textFillColor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="47%" />
+          />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -122,7 +122,7 @@
             android:textColor="?attr/textFillColor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="30%" />
+            />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -138,7 +138,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="UV:"
+            android:text="UV"
             android:layout_gravity="center"
             android:textSize="18sp"
             android:textColor="?attr/textFillColor"
@@ -151,7 +151,7 @@
             android:textColor="?attr/textFillColor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="5" />
+             />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

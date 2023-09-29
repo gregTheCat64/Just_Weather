@@ -27,7 +27,7 @@
                 android:id="@+id/maxTempTxtView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="23"
+
                 android:textColor="@color/white"
                 android:layout_marginEnd="4dp"
                 android:textSize="16sp"
@@ -37,7 +37,7 @@
                 android:id="@+id/minTempTxtView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="18"
+
                 android:textColor="?android:textColorSecondary"
                 android:textSize="16sp"
                 />
@@ -51,7 +51,7 @@
             android:layout_gravity="center"
             android:layout_weight="5"
 
-            android:text="Чт"
+
             android:textSize="16sp"
             />
 

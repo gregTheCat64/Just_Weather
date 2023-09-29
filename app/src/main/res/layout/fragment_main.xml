@@ -24,7 +24,7 @@
             android:id="@+id/updateTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="12:00"
+
             android:layout_gravity="center_horizontal"
             android:textColor="@color/light_text_secondary"/>
 
@@ -68,7 +68,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginStart="8dp"
-                    android:text="Saratov"
+
                     android:textSize="18sp" />
             </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -92,7 +92,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="15"
+
                         android:textColor="?attr/textFillColor"
                         android:textSize="96sp"
                         android:textStyle="bold" />
@@ -129,6 +129,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="22dp"
+                        android:text="Нажмите обновить"
                         android:layout_marginStart="8dp"
                         android:textColor="?attr/textFillColor" />
 
@@ -161,7 +162,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-
+            android:layout_marginBottom="16dp"
             android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:itemCount="3"

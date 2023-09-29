@@ -170,9 +170,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
                 }
             }
         }
-//        viewModel.weatherFlow.observe(viewLifecycleOwner){
-//            updateUi(it)
-//        }
+
     }
 
     private fun updateUi(weather: Weather?){
@@ -190,10 +188,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
                         fc.background = back5
                         println("back: back5")
                     }
-//                    currentTime.isAfter(LocalTime.of(8,0)) && currentTime.isBefore(LocalTime.of(12,0)) -> {
-//                        fc.background = back8
-//                        println("back: back8")
-//                    }
+
                     currentTime.isAfter(LocalTime.of(12,0)) && currentTime.isBefore(LocalTime.of(18,0)) -> {
                         println("YES")
                         fc.background = back12
@@ -207,7 +202,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
 //                        fc.background = back20
 //                        println("back: back20")
 //                    }
-                    currentTime.isAfter(LocalTime.of(21,0)) || currentTime.isBefore(LocalTime.of(5,0)) -> {
+                    currentTime.isAfter(LocalTime.of(20,0)) || currentTime.isBefore(LocalTime.of(5,0)) -> {
                         fc.background = back22
                         println("back: back22")
                     }

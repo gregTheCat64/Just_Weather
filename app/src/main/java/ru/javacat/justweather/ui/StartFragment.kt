@@ -85,7 +85,6 @@ class StartFragment: BaseFragment<FragmentStartBinding>() {
     }
 
     private fun init(){
-        //getLocation()
 
         checkPermission()
         initObserver()
@@ -96,16 +95,14 @@ class StartFragment: BaseFragment<FragmentStartBinding>() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
                 viewModel.weatherFlow.collectLatest {
-                    //updateTheme()
+
                     it?.let {
                         findNavController().navigate(R.id.mainFragment)
                     }
                 }
             }
         }
-//        viewModel.weatherFlow.observe(viewLifecycleOwner){
-//            findNavController().navigate(R.id.mainFragment)
-//        }
+
     }
 
     private fun initLoadingStateObserving(){
@@ -185,12 +182,5 @@ class StartFragment: BaseFragment<FragmentStartBinding>() {
         } else getLocation()
     }
 
-//    private fun updateTheme(){
-//        val weatherCondition = viewModel.weatherFlow.value?.current?.condition?.code
-//        if (weatherCondition == 1003 ) run {
-//            (requireActivity() as AppCompatActivity).applicationContext.setTheme(R.style.Base_Theme_RainWeather)
-//            snack("сегодня дождяра хлещет")
-//        }
-//    }
 
 }

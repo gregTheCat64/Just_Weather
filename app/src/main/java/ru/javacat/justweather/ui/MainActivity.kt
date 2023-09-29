@@ -1,5 +1,6 @@
 package ru.javacat.justweather.ui
 
+import android.content.pm.ActivityInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.PersistableBundle
@@ -20,6 +21,8 @@ class MainActivity : AppCompatActivity() {
         //viewModel.getCurrentPlace()
         //setTheme(R.style.Base_Theme_RainWeather)
         setContentView(R.layout.activity_main)
+
+        this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
 
 //        if (savedInstanceState == null) {
