@@ -71,9 +71,9 @@ class StartViewModel @Inject constructor(
             println("RESULT_PLACES= $result")
             if (result == null) {
                 placesRepository.save(place)
-                saveCurrentPlace()
                 loadPlaces()
             }
+            saveCurrentPlace()
         }
     }
 
