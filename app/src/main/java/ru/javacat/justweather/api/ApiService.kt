@@ -1,15 +1,10 @@
 package ru.javacat.justweather.api
 
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 import ru.javacat.justweather.API_KEY
 import ru.javacat.justweather.response_models.Weather
-import java.util.concurrent.TimeUnit
 
 
 //private const val name = "London"
