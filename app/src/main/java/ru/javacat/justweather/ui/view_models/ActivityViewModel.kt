@@ -27,10 +27,10 @@ class ActivityViewModel @Inject constructor(
     fun getCurrentPlace(){
         viewModelScope.launch(Dispatchers.IO){
             try {
-                val currentLocation = currentPlaceRepository.getCurrentPlace()
+                val currentLocation = currentPlaceRepository.getFromPlacesList()
                 val coords = currentLocation?.lat.toString() +","+ currentLocation?.lon.toString()
                 if (currentLocation != null) {
-                    repository.loadByName(coords, 3)?: throw NetworkError
+                    repository.fetchLocationDetails(coords, 3)?: throw NetworkError
                 }
 
             } catch (e: ApiError) {

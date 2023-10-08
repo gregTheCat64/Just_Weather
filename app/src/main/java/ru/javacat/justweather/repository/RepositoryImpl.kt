@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import ru.javacat.justweather.api.ApiService
+import ru.javacat.justweather.response_models.SearchLocation
 import ru.javacat.justweather.response_models.Weather
 import ru.javacat.justweather.util.apiRequest
 import javax.inject.Inject
@@ -23,7 +24,7 @@ class RepositoryImpl @Inject constructor(
     override val weatherFlow: StateFlow<Weather?>
         get() = _weatherFlow
 
-    override suspend fun loadByName(name: String, daysCount: Int): Weather? {
+    override suspend fun fetchLocationDetails(name: String, daysCount: Int): Weather? {
        val result =  apiRequest {
             apiService.getByName(name, daysCount)
         }
@@ -32,12 +33,12 @@ class RepositoryImpl @Inject constructor(
         return result
     }
 
-    override suspend fun findByName(name: String, daysCount: Int): Weather {
+    override suspend fun findLocation(name: String): List<SearchLocation> {
         val result =  apiRequest {
-            apiService.getByName(name, daysCount)
+            apiService.findLocation(name)
         }
         //_weatherFlow.emit(result)
-        Log.i("MyTag", "emiting result: ${result.location}")
+        Log.i("MyTag", "emiting result: ${result}")
         return result
     }
 

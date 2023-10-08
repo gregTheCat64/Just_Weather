@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import ru.javacat.justweather.ApiError
@@ -44,7 +43,7 @@ class StartViewModel @Inject constructor(
             loadingState.postValue(LoadingState.Load)
 
             try {
-                val foundWeather = repository.loadByName(name, daysCount)?:throw NetworkError
+                val foundWeather = repository.fetchLocationDetails(name, daysCount)?:throw NetworkError
                 loadingState.postValue(LoadingState.Success)
                 savePlace(Place(0, foundWeather.location.name, foundWeather.location.region))
 
@@ -73,13 +72,13 @@ class StartViewModel @Inject constructor(
                 placesRepository.save(place)
                 loadPlaces()
             }
-            saveCurrentPlace()
+            addToPlacesList()
         }
     }
 
-    fun saveCurrentPlace(){
+    private fun addToPlacesList(){
         viewModelScope.launch{
-            weatherFlow.value?.location?.let { currentPlaceRepository.saveCurrentPlace(it) }
+            weatherFlow.value?.location?.let { currentPlaceRepository.saveToPlacesList(it) }
 
         }
     }

@@ -4,6 +4,7 @@ import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 import ru.javacat.justweather.API_KEY
+import ru.javacat.justweather.response_models.SearchLocation
 import ru.javacat.justweather.response_models.Weather
 
 
@@ -38,6 +39,10 @@ interface ApiService{
         @Query ("lang") lang:String = "ru"
     ): Response<Weather>
 
+    @GET("search.json?key=$API_KEY")
+    suspend fun findLocation(
+        @Query("q") name: String
+    ): Response<List<SearchLocation>>
 }
 
 //object Api {

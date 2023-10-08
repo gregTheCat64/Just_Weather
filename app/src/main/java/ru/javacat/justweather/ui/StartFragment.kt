@@ -1,10 +1,12 @@
 package ru.javacat.justweather.ui
 
 import android.Manifest
-import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationListener
 import android.location.LocationManager
+import android.os.Build
 import android.os.Bundle
 import android.transition.TransitionInflater
 import android.util.Log
@@ -14,18 +16,15 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.material.snackbar.Snackbar
@@ -35,13 +34,12 @@ import kotlinx.coroutines.launch
 import ru.javacat.justweather.R
 import ru.javacat.justweather.base.BaseFragment
 import ru.javacat.justweather.databinding.FragmentStartBinding
-import ru.javacat.justweather.ui.view_models.MainViewModel
 import ru.javacat.justweather.ui.view_models.StartViewModel
 import ru.javacat.justweather.util.isPermissionGranted
 import ru.javacat.justweather.util.snack
 
 @AndroidEntryPoint
-class StartFragment: BaseFragment<FragmentStartBinding>() {
+class StartFragment: BaseFragment<FragmentStartBinding>(), LocationListener {
 
     override val bindingInflater: (LayoutInflater, ViewGroup?) -> FragmentStartBinding = {
         inflater, container ->
@@ -49,6 +47,7 @@ class StartFragment: BaseFragment<FragmentStartBinding>() {
     }
 
     private lateinit var pLauncher: ActivityResultLauncher<String>
+    private lateinit var locationManager: LocationManager
     private lateinit var fLocationClient: FusedLocationProviderClient
     private val viewModel: StartViewModel by viewModels()
 
@@ -66,7 +65,8 @@ class StartFragment: BaseFragment<FragmentStartBinding>() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        fLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+        //fLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+        locationManager = requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
         return super.onCreateView(inflater, container, savedInstanceState)
     }
@@ -131,12 +131,92 @@ class StartFragment: BaseFragment<FragmentStartBinding>() {
         viewModel.findPlaceByLocation("$lat,$long", 3)
     }
 
+    private fun checkPermission(){
+        if (!isPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION)){
+            permissionListener()
+            pLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+        } else getLocation()
+    }
+
     private fun isLocationEnabled(): Boolean{
-        val lm = activity?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        return lm.isProviderEnabled(LocationManager.GPS_PROVIDER)
+        //val lm = requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+    }
+
+
+    private fun permissionListener(){
+        pLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ){
+            if (it == true) {
+                getLocation()
+            } else
+                Toast.makeText(requireContext(), getString(R.string.permission_alarm), Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun getLocation(){
+        when (Build.VERSION.SDK_INT) {
+            in 1..29 -> {
+                getLocationOverGps()
+            }else -> getLocationOverNetwork()
+        }
+    }
+
+    private fun getLocationOverGps(){
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+            snack(getString(R.string.location_disabled))
+            binding.repeatBtn.isVisible = true
+            binding.progressBar.isVisible = false
+            return
+        }
+
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+
+        ) {
+            return
+        }
+
+                locationManager.requestSingleUpdate(
+                    LocationManager.GPS_PROVIDER,
+                    this,
+                    null
+                )
+        }
+
+
+
+    @RequiresApi(Build.VERSION_CODES.R)
+    private fun getLocationOverNetwork(){
+        if (!locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+            snack(getString(R.string.location_disabled))
+            binding.repeatBtn.isVisible = true
+            binding.progressBar.isVisible = false
+            return
+        }
+
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+
+        ) {
+            return
+        }
+        locationManager.getCurrentLocation(
+            LocationManager.NETWORK_PROVIDER,
+            null,
+            requireContext().mainExecutor
+        ) {
+            loadData(it.latitude, it.longitude)
+
+        }
+    }
+
+    private fun getLocationOverGoogle(){
         if (!isLocationEnabled()){
             snack(getString(R.string.location_disabled))
             binding.repeatBtn.isVisible = true
@@ -148,7 +228,8 @@ class StartFragment: BaseFragment<FragmentStartBinding>() {
         if (ActivityCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+            ) != PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
@@ -162,25 +243,14 @@ class StartFragment: BaseFragment<FragmentStartBinding>() {
                 Log.i("MyLog", "getting location")
                 loadData(it.result.latitude, it.result.longitude)
             }
+
     }
 
-    private fun permissionListener(){
-        pLauncher = registerForActivityResult(
-            ActivityResultContracts.RequestPermission()
-        ){
-            if (it == true) {
-                getLocation()
-            } else
-                Toast.makeText(requireContext(), getString(R.string.permission_alarm), Toast.LENGTH_SHORT).show()
-        }
+    override fun onLocationChanged(loc: Location) {
+        loadData(loc.latitude, loc.longitude)
     }
 
-    private fun checkPermission(){
-        if (!isPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION)){
-            permissionListener()
-            pLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-        } else getLocation()
+    override fun onProviderDisabled(provider: String) {
+        snack(getString(R.string.location_disabled))
     }
-
-
 }

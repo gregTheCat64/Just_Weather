@@ -5,7 +5,6 @@ import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.qualifiers.ApplicationContext
-import ru.javacat.justweather.models.Place
 import ru.javacat.justweather.response_models.Location
 import javax.inject.Inject
 
@@ -21,7 +20,7 @@ class CurrentPlaceSharedPrefsImpl @Inject constructor(
     private var place: Location? = null
 
 
-    override fun getCurrentPlace(): Location? {
+    override fun getFromPlacesList(): Location? {
         prefs.getString(key, null)?.let {
             place = gson.fromJson(it, type)
         }
@@ -29,11 +28,11 @@ class CurrentPlaceSharedPrefsImpl @Inject constructor(
         return place
     }
 
-    override fun saveCurrentPlace(location: Location) {
+    override fun saveToPlacesList(location: Location) {
         with(prefs.edit()){
             putString(key, gson.toJson(location))
             apply()
-            Log.i("CurrentPlaceSharedRepo", "saving location: ${getCurrentPlace()?.name}")
+            Log.i("CurrentPlaceSharedRepo", "saving location: ${getFromPlacesList()?.name}")
 
         }
     }
