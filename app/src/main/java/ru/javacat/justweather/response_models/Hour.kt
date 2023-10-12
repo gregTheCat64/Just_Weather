@@ -1,6 +1,7 @@
 package ru.javacat.justweather.response_models
 
 data class Hour(
+    val forecastDate: String,
     val chance_of_rain: Int,
     val chance_of_snow: Int,
     val cloud: Int,
