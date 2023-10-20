@@ -1,13 +1,11 @@
 package ru.javacat.justweather.di
 
-import android.content.Context
 import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import ru.javacat.justweather.repository.PlacesRepository
-import ru.javacat.justweather.repository.PlacesRepositorySharedPrefsImpl
+import ru.javacat.justweather.domain.repos.PlacesRepository
+import ru.javacat.justweather.data.impl.PlacesRepositorySharedPrefsImpl
 import javax.inject.Singleton
 
 @Module

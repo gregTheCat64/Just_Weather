@@ -1,11 +1,12 @@
-package ru.javacat.justweather.api
+package ru.javacat.justweather.data.network
 
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 import ru.javacat.justweather.API_KEY
-import ru.javacat.justweather.response_models.SearchLocation
-import ru.javacat.justweather.response_models.Weather
+import ru.javacat.justweather.data.network.response_models.SearchLocationResponse
+import ru.javacat.justweather.data.network.response_models.WeatherResponse
+import ru.javacat.justweather.domain.models.SearchLocation
 
 
 //private const val name = "London"
@@ -29,15 +30,17 @@ import ru.javacat.justweather.response_models.Weather
 //    .client(okhttp)
 //    .build()
 
+const val DAYS_COUNT = 3
+
 interface ApiService{
     @GET("forecast.json?key=$API_KEY")
     suspend fun getByName (
         @Query ("q") name: String,
-        @Query ("days") daysCount: Int,
+        @Query ("days") daysCount: Int = DAYS_COUNT,
         @Query ("aqi") aqi: String = "no",
         @Query ("alerts") alerts: String = "yes",
         @Query ("lang") lang:String = "ru"
-    ): Response<Weather>
+    ): Response<WeatherResponse>
 
     @GET("search.json?key=$API_KEY")
     suspend fun findLocation(

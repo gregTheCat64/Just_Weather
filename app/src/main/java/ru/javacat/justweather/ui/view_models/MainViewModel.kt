@@ -4,19 +4,21 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.javacat.justweather.ApiError
 import ru.javacat.justweather.NetworkError
-import ru.javacat.justweather.repository.CurrentPlaceRepository
+import ru.javacat.justweather.domain.models.Forecastday
+import ru.javacat.justweather.domain.models.ForecastdayWithHours
+import ru.javacat.justweather.domain.models.Weather
+import ru.javacat.justweather.domain.repos.CurrentPlaceRepository
 
-import ru.javacat.justweather.repository.Repository
+import ru.javacat.justweather.domain.repos.Repository
 
-import ru.javacat.justweather.response_models.Forecastday
-import ru.javacat.justweather.response_models.Weather
 import ru.javacat.justweather.ui.LoadingState
 import ru.javacat.justweather.ui.SingleLiveEvent
 import java.lang.Exception
@@ -30,20 +32,19 @@ class MainViewModel @Inject constructor(
 ) : ViewModel(){
 
 
-    val weatherFlow: StateFlow<Weather?> = repository.weatherFlow
+    val weatherFlow = repository.weatherFlow.asLiveData(viewModelScope.coroutineContext)
+    val forecastFlow = repository.forecastFlow.asLiveData(viewModelScope.coroutineContext)
 
     private val loadingState = SingleLiveEvent<LoadingState>()
 
-    private val _forecastData = MutableLiveData<Forecastday>(null)
-    val forecastData: LiveData<Forecastday>
+    private val _forecastData: MutableLiveData<ForecastdayWithHours>? = null
+    val forecastData: LiveData<ForecastdayWithHours>?
         get() = _forecastData
 
 
 
     init {
         Log.i("MyTag", "initing VM")
-
-
     }
 
 
@@ -51,16 +52,16 @@ class MainViewModel @Inject constructor(
         val place = currentPlaceRepository.getFromPlacesList()
         Log.i("MyTag", "restoring ${place?.name}")
         val coords = place?.lat.toString()+","+place?.lon.toString()
-        findPlaceByLocation(coords, 3)
+        findPlaceByLocation(coords)
     }
 
 
-    private fun findPlaceByLocation(name: String, daysCount: Int) {
+    private fun findPlaceByLocation(name: String) {
         viewModelScope.launch(Dispatchers.IO) {
             loadingState.postValue(LoadingState.Load)
 
             try {
-                repository.fetchLocationDetails(name, 3)?: throw NetworkError
+                repository.fetchLocationDetails(name)?: throw NetworkError
                 loadingState.postValue(LoadingState.Success)
 
             } catch (e: ApiError) {
@@ -74,10 +75,10 @@ class MainViewModel @Inject constructor(
     }
 
 
-    fun chooseForecastDay(item: Forecastday) {
+    fun chooseForecastDay(item: ForecastdayWithHours) {
         viewModelScope.launch {
             try {
-                _forecastData.postValue(item)
+                _forecastData?.postValue(item)
             } catch (e: Exception) {
                 loadingState.postValue(LoadingState.NetworkError)
             }

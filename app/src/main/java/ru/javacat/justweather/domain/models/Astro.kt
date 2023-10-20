@@ -1,4 +1,4 @@
-package ru.javacat.justweather.response_models
+package ru.javacat.justweather.domain.models
 
 data class Astro(
     val is_moon_up: Int,

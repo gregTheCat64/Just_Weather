@@ -4,8 +4,8 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import ru.javacat.justweather.repository.CurrentPlaceRepository
-import ru.javacat.justweather.repository.CurrentPlaceSharedPrefsImpl
+import ru.javacat.justweather.domain.repos.CurrentPlaceRepository
+import ru.javacat.justweather.data.impl.CurrentPlaceSharedPrefsImpl
 import javax.inject.Singleton
 
 @Module

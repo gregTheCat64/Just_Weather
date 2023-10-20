@@ -2,63 +2,39 @@ package ru.javacat.justweather.data.db.entities
 
 import androidx.room.Embedded
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import androidx.room.Relation
-import ru.javacat.justweather.response_models.Astro
-import ru.javacat.justweather.response_models.Condition
-import ru.javacat.justweather.response_models.Day
-import ru.javacat.justweather.response_models.Hour
+import ru.javacat.justweather.domain.models.Astro
+import ru.javacat.justweather.domain.models.Condition
+import ru.javacat.justweather.domain.models.Current
+import ru.javacat.justweather.domain.models.Day
+import ru.javacat.justweather.domain.models.Location
+import java.time.LocalDate
 
-@Entity
+@Entity(
+    tableName = "weathers"
+)
 data class DbWeather(
-    @Embedded val current: DbCurrent,
-    @Embedded val location: DbLocation
+    @PrimaryKey val id: String,
+    @Embedded val current: Current,
+    @Embedded val location: Location
 )
 
-@Entity
-data class DbCurrent(
-    val locationId: String,
-    val cloud: Int,
-    @Embedded val condition: Condition,
-    val feelslike_c: Double,
-    val feelslike_f: Double,
-    val gust_kph: Double,
-    val gust_mph: Double,
-    val humidity: Int,
-    val is_day: Int,
-    val last_updated: String,
-    val last_updated_epoch: Int,
-    val precip_in: Double,
-    val precip_mm: Double,
-    val pressure_in: Double,
-    val pressure_mb: Double,
-    val temp_c: Double,
-    val temp_f: Double,
-    val uv: Double,
-    val vis_km: Double,
-    val vis_miles: Double,
-    val wind_degree: Int,
-    val wind_dir: String,
-    val wind_kph: Double,
-    val wind_mph: Double
-)
 
-@Entity
-data class DbLocation(
-    @PrimaryKey
-    val dbId: String,
-    val country: String,
-    val lat: Double,
-    val localtime: String,
-    val localtime_epoch: Int,
-    val lon: Double,
-    val name: String,
-    val region: String,
+@Entity(
+    tableName = "alerts",
+    foreignKeys = [
+        ForeignKey(
+            entity = DbWeather::class,
+            parentColumns = ["id"],
+            childColumns = ["weatherId"],
+            onDelete = ForeignKey.CASCADE,
+            onUpdate = ForeignKey.CASCADE
+            )
+    ]
 )
-
-@Entity
 data class DbAlert(
-    val locationId: String,
+    @PrimaryKey val weatherId: String,
     val areas: String,
     val category: String,
     val certainty: String,
@@ -73,18 +49,45 @@ data class DbAlert(
     val severity: String,
     val urgency: String
 )
-@Entity
+
+
+
+@Entity(
+    tableName = "forecast_days",
+    foreignKeys = [
+        ForeignKey(
+            entity = DbWeather::class,
+            parentColumns = ["id"],
+            childColumns = ["weatherId"],
+            onDelete = ForeignKey.CASCADE,
+            onUpdate = ForeignKey.CASCADE
+        )
+    ],
+)
 data class DbForecastday(
-    val locationId: String,
+    val weatherId: String,
+    @PrimaryKey val id: String,
     @Embedded val astro: Astro,
     val date: String,
     val date_epoch: Int,
-    val day: Day,
-    val hours: List<Hour>
+    @Embedded val day: Day,
+    //val hours: List<Hour>
 )
 
-@Entity
+@Entity(
+    tableName = "hours",
+    foreignKeys = [
+        ForeignKey(
+            entity = DbForecastday::class,
+            parentColumns = ["id"],
+            childColumns = ["forecastId"],
+            onDelete = ForeignKey.CASCADE,
+            onUpdate = ForeignKey.CASCADE
+        )
+    ]
+)
 data class DbHour(
+    @PrimaryKey val forecastId: String,
     val forecastDate: String,
     val chance_of_rain: Int,
     val chance_of_snow: Int,
@@ -123,43 +126,4 @@ data class DbHour(
 
 
 
-data class DbCurrentWithLocation(
-    val location: DbLocation,
-
-    @Relation(
-        parentColumn = "dbId",
-        entityColumn = "locationId"
-    )
-    @Embedded val current: DbCurrent,
-)
-
-data class DbAlertsWithLocation(
-    val location: DbLocation,
-
-    @Relation(
-        parentColumn = "dbId",
-        entityColumn = "locationId"
-    )
-    val alerts: List<DbAlert>
-)
-
-data class DbForecastsWithLocation(
-    val location: DbLocation,
-
-    @Relation(
-        parentColumn = "dbId",
-        entityColumn = "locationId"
-    )
-    val forecasts: List<DbForecastday>
-)
-
-data class DbHoursWithForecast(
-    @Embedded val forecastday: DbForecastday,
-
-    @Relation(
-        parentColumn = "date",
-        entityColumn = "forecastDate"
-    )
-    val hours: List<Hour>
-)
 

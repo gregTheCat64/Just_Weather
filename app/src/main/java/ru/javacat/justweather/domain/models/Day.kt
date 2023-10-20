@@ -1,4 +1,6 @@
-package ru.javacat.justweather.response_models
+package ru.javacat.justweather.domain.models
+
+import androidx.room.Embedded
 
 data class Day(
     val avghumidity: Double,
@@ -6,6 +8,7 @@ data class Day(
     val avgtemp_f: Double,
     val avgvis_km: Double,
     val avgvis_miles: Double,
+    @Embedded
     val condition: Condition,
     val daily_chance_of_rain: Int,
     val daily_chance_of_snow: Int,

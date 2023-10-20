@@ -1,6 +1,10 @@
-package ru.javacat.justweather.response_models
+package ru.javacat.justweather.data.network.response_models
 
-data class Hour(
+import ru.javacat.justweather.domain.models.Condition
+import java.time.LocalDate
+import java.time.LocalDateTime
+
+data class HourResponse (
     val forecastDate: String,
     val chance_of_rain: Int,
     val chance_of_snow: Int,

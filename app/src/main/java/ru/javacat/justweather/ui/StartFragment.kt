@@ -24,12 +24,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.Priority
-import com.google.android.gms.tasks.CancellationTokenSource
+
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import ru.javacat.justweather.R
 import ru.javacat.justweather.base.BaseFragment
@@ -48,7 +45,7 @@ class StartFragment: BaseFragment<FragmentStartBinding>(), LocationListener {
 
     private lateinit var pLauncher: ActivityResultLauncher<String>
     private lateinit var locationManager: LocationManager
-    private lateinit var fLocationClient: FusedLocationProviderClient
+    //private lateinit var fLocationClient: FusedLocationProviderClient
     private val viewModel: StartViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -94,7 +91,7 @@ class StartFragment: BaseFragment<FragmentStartBinding>(), LocationListener {
     private fun initObserver(){
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
-                viewModel.weatherFlow.collectLatest {
+                viewModel.weatherFlow.observe(viewLifecycleOwner) {
 
                     it?.let {
                         findNavController().navigate(R.id.mainFragment)
@@ -128,7 +125,7 @@ class StartFragment: BaseFragment<FragmentStartBinding>(), LocationListener {
 
     private fun loadData(lat: Double, long: Double){
         Log.i("MyLog", "Loading data")
-        viewModel.findPlaceByLocation("$lat,$long", 3)
+        viewModel.findPlaceByLocation("$lat,$long")
     }
 
     private fun checkPermission(){
@@ -216,35 +213,35 @@ class StartFragment: BaseFragment<FragmentStartBinding>(), LocationListener {
         }
     }
 
-    private fun getLocationOverGoogle(){
-        if (!isLocationEnabled()){
-            snack(getString(R.string.location_disabled))
-            binding.repeatBtn.isVisible = true
-            binding.progressBar.isVisible = false
-            return
-
-        }
-        val ct = CancellationTokenSource()
-        if (ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED &&
-            ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            //checkPermission()
-            return
-        }
-        fLocationClient
-            .getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, ct.token)
-            .addOnCompleteListener{
-                Log.i("MyLog", "getting location")
-                loadData(it.result.latitude, it.result.longitude)
-            }
-
-    }
+//    private fun getLocationOverGoogle(){
+//        if (!isLocationEnabled()){
+//            snack(getString(R.string.location_disabled))
+//            binding.repeatBtn.isVisible = true
+//            binding.progressBar.isVisible = false
+//            return
+//
+//        }
+//        val ct = CancellationTokenSource()
+//        if (ActivityCompat.checkSelfPermission(
+//                requireContext(),
+//                Manifest.permission.ACCESS_FINE_LOCATION
+//            ) != PackageManager.PERMISSION_GRANTED &&
+//            ActivityCompat.checkSelfPermission(
+//                requireContext(),
+//                Manifest.permission.ACCESS_COARSE_LOCATION
+//            ) != PackageManager.PERMISSION_GRANTED
+//        ) {
+//            //checkPermission()
+//            return
+//        }
+//        fLocationClient
+//            .getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, ct.token)
+//            .addOnCompleteListener{
+//                Log.i("MyLog", "getting location")
+//                loadData(it.result.latitude, it.result.longitude)
+//            }
+//
+//    }
 
     override fun onLocationChanged(loc: Location) {
         loadData(loc.latitude, loc.longitude)

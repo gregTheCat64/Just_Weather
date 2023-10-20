@@ -1,6 +1,6 @@
-package ru.javacat.justweather.repository
+package ru.javacat.justweather.domain.repos
 
-import ru.javacat.justweather.response_models.Location
+import ru.javacat.justweather.domain.models.Location
 
 interface CurrentPlaceRepository {
     fun getFromPlacesList(): Location?

@@ -1,19 +1,16 @@
 package ru.javacat.justweather.ui.adapters
 
-import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ru.javacat.justweather.R
 import ru.javacat.justweather.databinding.HourItemBinding
-import ru.javacat.justweather.response_models.Hour
+import ru.javacat.justweather.domain.models.Hour
 import ru.javacat.justweather.util.asHour
 import ru.javacat.justweather.util.load
-import ru.javacat.justweather.util.toLocalDateTime
 import kotlin.math.roundToInt
 
 
@@ -36,7 +33,7 @@ class ForecastAdapter(): ListAdapter<Hour, ForecastAdapter.Holder>(Comparator())
         fun bind(item: Hour) {
             binding.apply {
                 conditionImgView.load("${item.condition.icon}")
-                hourValue.text = item.time.toLocalDateTime().asHour()
+                hourValue.text = item.time.asHour()
                 tempTxtView.text = item.temp_c.roundToInt().toString() + "\u00B0"
             }
         }

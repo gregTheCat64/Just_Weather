@@ -1,39 +1,29 @@
 package ru.javacat.justweather.ui
 
-import android.app.Activity
-import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.transition.TransitionInflater
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
-import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.content.res.ResourcesCompat
-import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import ru.javacat.justweather.R
 import ru.javacat.justweather.base.BaseFragment
 import ru.javacat.justweather.databinding.FragmentMainBinding
-import ru.javacat.justweather.response_models.Forecastday
-import ru.javacat.justweather.response_models.Weather
+import ru.javacat.justweather.domain.models.ForecastdayWithHours
+import ru.javacat.justweather.domain.models.Weather
+import ru.javacat.justweather.ui.adapters.MainAdapter
+import ru.javacat.justweather.ui.adapters.OnInteractionListener
 import ru.javacat.justweather.ui.view_models.MainViewModel
 import ru.javacat.justweather.util.changeColorOnPush
 import ru.javacat.justweather.util.load
@@ -41,7 +31,6 @@ import ru.javacat.justweather.util.refreshAnimation
 import ru.javacat.justweather.util.toLocalDateTime
 
 import ru.javacat.justweather.util.toWindRus
-import java.time.LocalDateTime
 import java.time.LocalTime
 import kotlin.math.roundToInt
 
@@ -163,17 +152,24 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.weatherFlow.collect { weather ->
+                viewModel.weatherFlow.observe(viewLifecycleOwner) { weather ->
                     Log.i("MainFragment", "collecting")
-                    updateUi(weather)
+                    updateWeather(weather)
+                }
+            }
+        }
 
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.forecastFlow.observe(viewLifecycleOwner) {
+                    updateForecast(it)
                 }
             }
         }
 
     }
 
-    private fun updateUi(weather: Weather?){
+    private fun updateWeather(weather: Weather?){
         Log.i("MainFragment", "updateUI")
         binding.apply {
             alarmCard.visibility = View.INVISIBLE
@@ -233,7 +229,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
                 detailsLayout.humidity.text =
                     it.current.humidity.toString() + getString(R.string.percent)
                 detailsLayout.uvIndex.text = it.current.uv.toString()
-                val alerts = it.alerts.alert
+                val alerts = it.alerts
                 for (element in alerts) {
                     if (element.desc.isNotEmpty()) {
                         alarmCard.visibility = View.VISIBLE
@@ -242,22 +238,24 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
                         alarmCard.visibility = View.INVISIBLE
                     }
                 }
-
-                adapter = MainAdapter(object : OnInteractionListener {
-                    override fun onForecastItem(item: Forecastday, view: View) {
-                        //val color = context!!.resources.getColor(R.color.md_theme_light_primary)
-                        view.changeColorOnPush(requireContext())
-                        viewModel.chooseForecastDay(item)
-                        findNavController().navigate(R.id.action_mainFragment_to_forecastFragment)
-                    }
-                })
-                binding.daysRecView.adapter = adapter
-                val list = weather.forecast.forecastday
-                adapter.submitList(list)
             }
             //it.forecast.forecastday.get(0).astro.is_moon_up
 
         }
+    }
+
+    private fun updateForecast(forecastdayWithHours: List<ForecastdayWithHours>){
+        adapter = MainAdapter(object : OnInteractionListener {
+            override fun onForecastItem(item: ForecastdayWithHours, view: View) {
+                //val color = context!!.resources.getColor(R.color.md_theme_light_primary)
+                view.changeColorOnPush(requireContext())
+                viewModel.chooseForecastDay(item)
+                findNavController().navigate(R.id.action_mainFragment_to_forecastFragment)
+            }
+        })
+        binding.daysRecView.adapter = adapter
+        val list = forecastdayWithHours
+        adapter.submitList(list)
     }
 
 }

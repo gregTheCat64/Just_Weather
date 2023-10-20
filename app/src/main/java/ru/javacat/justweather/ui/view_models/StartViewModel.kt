@@ -4,18 +4,17 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import ru.javacat.justweather.ApiError
 import ru.javacat.justweather.NetworkError
 import ru.javacat.justweather.models.Place
-import ru.javacat.justweather.repository.CurrentPlaceRepository
-import ru.javacat.justweather.repository.PlacesRepository
-import ru.javacat.justweather.repository.Repository
-import ru.javacat.justweather.response_models.Weather
+import ru.javacat.justweather.domain.repos.CurrentPlaceRepository
+import ru.javacat.justweather.domain.repos.PlacesRepository
+import ru.javacat.justweather.domain.repos.Repository
 import ru.javacat.justweather.ui.LoadingState
 import ru.javacat.justweather.ui.SingleLiveEvent
 import javax.inject.Inject
@@ -27,7 +26,7 @@ class StartViewModel @Inject constructor(
     private val currentPlaceRepository: CurrentPlaceRepository
 ): ViewModel() {
 
-    val weatherFlow: StateFlow<Weather?> = repository.weatherFlow
+    val weatherFlow = repository.weatherFlow.asLiveData(viewModelScope.coroutineContext)
     val loadingState = SingleLiveEvent<LoadingState>()
 
     private val _placeData = MutableLiveData<List<Place>>()
@@ -38,14 +37,15 @@ class StartViewModel @Inject constructor(
         loadPlaces()
     }
 
-    fun findPlaceByLocation(name: String, daysCount: Int) {
+    fun findPlaceByLocation(name: String) {
         viewModelScope.launch(Dispatchers.IO) {
             loadingState.postValue(LoadingState.Load)
 
             try {
-                val foundWeather = repository.fetchLocationDetails(name, daysCount)?:throw NetworkError
+                val foundWeather = repository.fetchLocationDetails(name)?:throw NetworkError
                 loadingState.postValue(LoadingState.Success)
-                savePlace(Place(0, foundWeather.location.name, foundWeather.location.region))
+                //savePlace(Place(0, weatherFlow.location.name, foundWeather.location.region))
+                //TODO: fix saving
 
             } catch (e: ApiError) {
                 loadingState.postValue(LoadingState.InputError)

@@ -53,11 +53,11 @@ class ForecastFragment : BaseFragment<FragmentForecastBinding>() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun initForecastObserver() {
         lifecycleScope.launch {
-            viewModel.forecastData.observe(viewLifecycleOwner) {
+            viewModel.forecastData?.observe(viewLifecycleOwner) {
                 binding.apply {
                     conditionImage.load(it.day.condition.icon)
                     conditionValue.text = it.day.condition.text
-                    dateTxtView.text = it.date.toLocalDate().asLocalDate()
+                    dateTxtView.text = it.date.asLocalDate()
                     avgTempValue.text = it.day.avgtemp_c.toString() + "°"
                     maxTempValue.text = it.day.maxtemp_c.toString()
                     minTempValue.text = it.day.mintemp_c.toString()
@@ -95,7 +95,7 @@ class ForecastFragment : BaseFragment<FragmentForecastBinding>() {
         //viewModel.chooseForecastData(Forecastday())
 
         binding.hoursRecView.adapter = forecastAdapter
-        val list = viewModel.forecastData.value?.hour
+        val list = viewModel.forecastData?.value?.hour
         forecastAdapter.submitList(list)
 
         binding.hoursRecView.scrollToPosition(6)

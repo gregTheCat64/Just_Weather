@@ -4,8 +4,8 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import ru.javacat.justweather.repository.Repository
-import ru.javacat.justweather.repository.RepositoryImpl
+import ru.javacat.justweather.domain.repos.Repository
+import ru.javacat.justweather.data.impl.RepositoryImpl
 import javax.inject.Singleton
 
 @Module

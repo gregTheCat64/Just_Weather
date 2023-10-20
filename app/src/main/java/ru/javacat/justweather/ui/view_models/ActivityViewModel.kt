@@ -10,8 +10,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.javacat.justweather.ApiError
 import ru.javacat.justweather.NetworkError
-import ru.javacat.justweather.repository.CurrentPlaceRepository
-import ru.javacat.justweather.repository.Repository
+import ru.javacat.justweather.domain.repos.CurrentPlaceRepository
+import ru.javacat.justweather.domain.repos.Repository
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,7 +30,7 @@ class ActivityViewModel @Inject constructor(
                 val currentLocation = currentPlaceRepository.getFromPlacesList()
                 val coords = currentLocation?.lat.toString() +","+ currentLocation?.lon.toString()
                 if (currentLocation != null) {
-                    repository.fetchLocationDetails(coords, 3)?: throw NetworkError
+                    repository.fetchLocationDetails(coords)?: throw NetworkError
                 }
 
             } catch (e: ApiError) {

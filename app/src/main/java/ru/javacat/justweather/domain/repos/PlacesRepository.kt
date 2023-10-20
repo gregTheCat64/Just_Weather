@@ -1,4 +1,4 @@
-package ru.javacat.justweather.repository
+package ru.javacat.justweather.domain.repos
 
 import androidx.lifecycle.LiveData
 import ru.javacat.justweather.models.Place

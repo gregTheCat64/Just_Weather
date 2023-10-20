@@ -4,17 +4,18 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.javacat.justweather.ApiError
 import ru.javacat.justweather.NetworkError
+import ru.javacat.justweather.domain.models.SearchLocation
 import ru.javacat.justweather.models.Place
-import ru.javacat.justweather.repository.CurrentPlaceRepository
-import ru.javacat.justweather.repository.PlacesRepository
-import ru.javacat.justweather.repository.Repository
-import ru.javacat.justweather.response_models.SearchLocation
+import ru.javacat.justweather.domain.repos.CurrentPlaceRepository
+import ru.javacat.justweather.domain.repos.PlacesRepository
+import ru.javacat.justweather.domain.repos.Repository
 import ru.javacat.justweather.ui.LoadingState
 import ru.javacat.justweather.ui.SingleLiveEvent
 import javax.inject.Inject
@@ -26,7 +27,7 @@ class PlaceViewModel @Inject constructor(
     private val currentPlaceRepository: CurrentPlaceRepository
 ) : ViewModel() {
 
-
+    val weatherFlow = repository.weatherFlow.asLiveData(viewModelScope.coroutineContext)
 
     private val _placeData = MutableLiveData<List<Place>>()
     val placeData: LiveData<List<Place>>
@@ -91,11 +92,13 @@ class PlaceViewModel @Inject constructor(
             loadingState.postValue(LoadingState.Load)
 
             try {
-                val weather = repository.fetchLocationDetails(name, daysCount) ?: throw NetworkError
-                weather.location.let {
-                    currentPlaceRepository.saveToPlacesList(it)
+                repository.fetchLocationDetails(name) ?: throw NetworkError
+                weatherFlow.value?.location.let {
+                    if (it != null) {
+                        currentPlaceRepository.saveToPlacesList(it)
+                    }
                 }
-                Log.i("MyTag", "weatherResp: $weather")
+                //Log.i("MyTag", "weatherResp: $weather")
                 loadingState.postValue(LoadingState.Success)
 
             } catch (e: ApiError) {

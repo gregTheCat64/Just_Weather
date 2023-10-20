@@ -1,36 +1,26 @@
 package ru.javacat.justweather.ui
 
 import android.os.Bundle
-import android.transition.TransitionInflater
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
 import android.widget.SearchView
-import android.widget.SearchView.OnCloseListener
 import android.widget.SearchView.OnQueryTextListener
 import android.widget.Toast
-import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
-import ru.javacat.justweather.NetworkError
-import ru.javacat.justweather.R
 import ru.javacat.justweather.base.BaseFragment
 import ru.javacat.justweather.databinding.FragmentPlaceBinding
+import ru.javacat.justweather.domain.models.SearchLocation
 import ru.javacat.justweather.models.Place
-import ru.javacat.justweather.response_models.SearchLocation
 import ru.javacat.justweather.ui.adapters.OnPlacesInteractionListener
 import ru.javacat.justweather.ui.adapters.OnSearchPlacesInteractionListener
 import ru.javacat.justweather.ui.adapters.PlacesAdapter
 import ru.javacat.justweather.ui.adapters.SearchPlacesAdapter
-import ru.javacat.justweather.ui.view_models.MainViewModel
 import ru.javacat.justweather.ui.view_models.PlaceViewModel
-import ru.javacat.justweather.util.AndroidUtils
 
 @AndroidEntryPoint
 class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {

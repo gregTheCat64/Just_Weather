@@ -8,8 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ru.javacat.justweather.R
 import ru.javacat.justweather.databinding.FoundItemBinding
-import ru.javacat.justweather.databinding.PlaceItemBinding
-import ru.javacat.justweather.response_models.SearchLocation
+import ru.javacat.justweather.domain.models.SearchLocation
 import ru.javacat.justweather.util.pushAnimation
 
 interface OnSearchPlacesInteractionListener{

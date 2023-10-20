@@ -1,4 +1,4 @@
-package ru.javacat.justweather.response_models
+package ru.javacat.justweather.domain.models
 
 data class Condition(
     val code: Int,

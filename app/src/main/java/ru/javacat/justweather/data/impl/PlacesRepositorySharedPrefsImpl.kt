@@ -1,4 +1,4 @@
-package ru.javacat.justweather.repository
+package ru.javacat.justweather.data.impl
 
 import android.content.Context
 import android.util.Log
@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.qualifiers.ApplicationContext
+import ru.javacat.justweather.domain.repos.PlacesRepository
 import ru.javacat.justweather.models.Place
 import javax.inject.Inject
 
