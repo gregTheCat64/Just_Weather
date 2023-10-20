@@ -7,7 +7,6 @@ import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 import ru.javacat.justweather.data.db.entities.DbAlert
 import ru.javacat.justweather.data.db.entities.DbWeatherWithForecastsAndAlerts
-import ru.javacat.justweather.data.db.entities.DbForecastWithHours
 import ru.javacat.justweather.data.db.entities.DbForecastday
 import ru.javacat.justweather.data.db.entities.DbHour
 import ru.javacat.justweather.data.db.entities.DbWeather
@@ -21,16 +20,18 @@ interface WeatherDao {
         weather: DbWeather,
         alerts: List<DbAlert>,
         forecasts: List<DbForecastday>,
-        hours: List<DbHour>,
+        //hours: List<DbHour>,
     )
 
-    @Query("SELECT * FROM weathers "
+    @Transaction
+    @Query("SELECT * FROM weathers_table "
             //"WHERE id = :locId"
             )
-    fun getCurrent(): Flow<DbWeatherWithForecastsAndAlerts>
+    fun getCurrent(): Flow<DbWeatherWithForecastsAndAlerts>?
 
-    @Query("SELECT * FROM forecast_days "
+    @Transaction
+    @Query("SELECT * FROM weathers_table "
     //        "WHERE weatherId = :locId AND date = :forecastDate"
     )
-    fun getForecast(): Flow<List<DbForecastWithHours>>
+    fun getForecast(): Flow<List<DbWeatherWithForecastsAndAlerts>>
 }

@@ -13,7 +13,7 @@ import ru.javacat.justweather.ui.view_models.ActivityViewModel
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    private val viewModel: ActivityViewModel by viewModels()
+   // private val viewModel: ActivityViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.i("Life", "Activity Create, savedInstState: $savedInstanceState")
@@ -38,24 +38,24 @@ class MainActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         Log.i("Life", "Activity onPause")
-        //viewModel.saveCurrentPlace()
-        viewModel.setMinimized(true)
+
+        //viewModel.setMinimized(true)
     }
 
     override fun onResume() {
         super.onResume()
         Log.i("Life", "Activity onResume")
-        val appMinimized = viewModel.appMinimized.value
-        if (appMinimized == true){
-            viewModel.getCurrentPlace()
-        }
+//        val appMinimized = viewModel.appMinimized.value
+//        if (appMinimized == true){
+//            viewModel.getCurrentPlace()
+//        }
 
     }
 
     override fun onDestroy() {
         //viewModel.saveCurrentPlace()
         Log.i("Life", "Activity OnDestroy")
-        viewModel.setMinimized(false)
+        //viewModel.setMinimized(false)
         super.onDestroy()
     }
 

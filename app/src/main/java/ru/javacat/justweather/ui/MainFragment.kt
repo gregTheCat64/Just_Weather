@@ -20,6 +20,7 @@ import kotlinx.coroutines.launch
 import ru.javacat.justweather.R
 import ru.javacat.justweather.base.BaseFragment
 import ru.javacat.justweather.databinding.FragmentMainBinding
+import ru.javacat.justweather.domain.models.Forecastday
 import ru.javacat.justweather.domain.models.ForecastdayWithHours
 import ru.javacat.justweather.domain.models.Weather
 import ru.javacat.justweather.ui.adapters.MainAdapter
@@ -152,20 +153,20 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.weatherFlow.observe(viewLifecycleOwner) { weather ->
+                viewModel.weatherFlow?.observe(viewLifecycleOwner) { weather ->
                     Log.i("MainFragment", "collecting")
                     updateWeather(weather)
                 }
             }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.forecastFlow.observe(viewLifecycleOwner) {
-                    updateForecast(it)
-                }
-            }
-        }
+//        viewLifecycleOwner.lifecycleScope.launch {
+//            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+//                viewModel.forecastFlow.observe(viewLifecycleOwner) {
+//                    updateForecast(it)
+//                }
+//            }
+//        }
 
     }
 
@@ -244,7 +245,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
         }
     }
 
-    private fun updateForecast(forecastdayWithHours: List<ForecastdayWithHours>){
+    private fun updateForecast(forecastdays: List<ForecastdayWithHours>){
         adapter = MainAdapter(object : OnInteractionListener {
             override fun onForecastItem(item: ForecastdayWithHours, view: View) {
                 //val color = context!!.resources.getColor(R.color.md_theme_light_primary)
@@ -254,7 +255,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
             }
         })
         binding.daysRecView.adapter = adapter
-        val list = forecastdayWithHours
+        val list = forecastdays
         adapter.submitList(list)
     }
 

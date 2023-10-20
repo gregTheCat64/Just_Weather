@@ -4,6 +4,7 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import ru.javacat.justweather.data.network.response_models.ConditionResponse
 import ru.javacat.justweather.domain.models.Astro
 import ru.javacat.justweather.domain.models.Condition
 import ru.javacat.justweather.domain.models.Current
@@ -12,7 +13,7 @@ import ru.javacat.justweather.domain.models.Location
 import java.time.LocalDate
 
 @Entity(
-    tableName = "weathers"
+    tableName = "weathers_table"
 )
 data class DbWeather(
     @PrimaryKey val id: String,
@@ -20,9 +21,8 @@ data class DbWeather(
     @Embedded val location: Location
 )
 
-
 @Entity(
-    tableName = "alerts",
+    tableName = "alerts_table",
     foreignKeys = [
         ForeignKey(
             entity = DbWeather::class,
@@ -53,7 +53,7 @@ data class DbAlert(
 
 
 @Entity(
-    tableName = "forecast_days",
+    tableName = "forecast_days_table",
     foreignKeys = [
         ForeignKey(
             entity = DbWeather::class,
@@ -63,31 +63,36 @@ data class DbAlert(
             onUpdate = ForeignKey.CASCADE
         )
     ],
+    primaryKeys = ["weatherId", "date"]
 )
 data class DbForecastday(
     val weatherId: String,
-    @PrimaryKey val id: String,
-    @Embedded val astro: Astro,
     val date: String,
+
+    @Embedded val astro: DbAstro,
     val date_epoch: Int,
-    @Embedded val day: Day,
+    @Embedded val day: DbDay,
     //val hours: List<Hour>
 )
 
 @Entity(
-    tableName = "hours",
+    tableName = "hours_table",
     foreignKeys = [
         ForeignKey(
             entity = DbForecastday::class,
-            parentColumns = ["id"],
-            childColumns = ["forecastId"],
+            parentColumns = ["weatherId", "date"],
+            childColumns = ["weatherId", "forecastDate"],
             onDelete = ForeignKey.CASCADE,
             onUpdate = ForeignKey.CASCADE
         )
-    ]
+    ],
+    primaryKeys = ["weatherId", "forecastDate"]
 )
+
+
 data class DbHour(
-    @PrimaryKey val forecastId: String,
+    //@PrimaryKey val forecastId: String,
+    val weatherId: String,
     val forecastDate: String,
     val chance_of_rain: Int,
     val chance_of_snow: Int,
@@ -124,6 +129,36 @@ data class DbHour(
     val windchill_f: Double
 )
 
+data class DbDay(
+    val avghumidity: Double,
+    val avgtemp_c: Double,
+    val avgtemp_f: Double,
+    val avgvis_km: Double,
+    val avgvis_miles: Double,
+    @Embedded val condition: Condition,
+    val daily_chance_of_rain: Int,
+    val daily_chance_of_snow: Int,
+    val daily_will_it_rain: Int,
+    val daily_will_it_snow: Int,
+    val maxtemp_c: Double,
+    val maxtemp_f: Double,
+    val maxwind_kph: Double,
+    val maxwind_mph: Double,
+    val mintemp_c: Double,
+    val mintemp_f: Double,
+    val totalprecip_in: Double,
+    val totalprecip_mm: Double,
+    val totalsnow_cm: Double,
+    val uv: Double
+)
 
-
-
+data class DbAstro(
+    val is_moon_up: Int,
+    val is_sun_up: Int,
+    val moon_illumination: String,
+    val moon_phase: String,
+    val moonrise: String,
+    val moonset: String,
+    val sunrise: String,
+    val sunset: String
+)

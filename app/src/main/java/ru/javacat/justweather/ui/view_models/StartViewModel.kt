@@ -26,7 +26,7 @@ class StartViewModel @Inject constructor(
     private val currentPlaceRepository: CurrentPlaceRepository
 ): ViewModel() {
 
-    val weatherFlow = repository.weatherFlow.asLiveData(viewModelScope.coroutineContext)
+    val weatherFlow = repository.weatherFlow?.asLiveData(viewModelScope.coroutineContext)
     val loadingState = SingleLiveEvent<LoadingState>()
 
     private val _placeData = MutableLiveData<List<Place>>()
@@ -38,11 +38,12 @@ class StartViewModel @Inject constructor(
     }
 
     fun findPlaceByLocation(name: String) {
+        Log.i("StartFrag", "loadingData")
         viewModelScope.launch(Dispatchers.IO) {
             loadingState.postValue(LoadingState.Load)
 
             try {
-                val foundWeather = repository.fetchLocationDetails(name)?:throw NetworkError
+                repository.fetchLocationDetails(name)?:throw NetworkError
                 loadingState.postValue(LoadingState.Success)
                 //savePlace(Place(0, weatherFlow.location.name, foundWeather.location.region))
                 //TODO: fix saving
@@ -52,7 +53,7 @@ class StartViewModel @Inject constructor(
                 Log.i("MyTag", "ОШИБКА: ${e.code}")
             } catch (e: NetworkError) {
                 loadingState.postValue(LoadingState.NetworkError)
-                Log.i("MyTag", "ОШИБКА: NETWORK")
+                Log.i("MyTag", "ОШИБКА: NETWORK ${e.message}")
             }
         }
     }
@@ -78,7 +79,7 @@ class StartViewModel @Inject constructor(
 
     private fun addToPlacesList(){
         viewModelScope.launch{
-            weatherFlow.value?.location?.let { currentPlaceRepository.saveToPlacesList(it) }
+            weatherFlow?.value?.location?.let { currentPlaceRepository.saveToPlacesList(it) }
 
         }
     }

@@ -8,13 +8,10 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.javacat.justweather.ApiError
 import ru.javacat.justweather.NetworkError
-import ru.javacat.justweather.domain.models.Forecastday
 import ru.javacat.justweather.domain.models.ForecastdayWithHours
-import ru.javacat.justweather.domain.models.Weather
 import ru.javacat.justweather.domain.repos.CurrentPlaceRepository
 
 import ru.javacat.justweather.domain.repos.Repository
@@ -32,8 +29,8 @@ class MainViewModel @Inject constructor(
 ) : ViewModel(){
 
 
-    val weatherFlow = repository.weatherFlow.asLiveData(viewModelScope.coroutineContext)
-    val forecastFlow = repository.forecastFlow.asLiveData(viewModelScope.coroutineContext)
+    val weatherFlow = repository.weatherFlow?.asLiveData(viewModelScope.coroutineContext)
+    //val forecastFlow = repository.forecastFlow.asLiveData(viewModelScope.coroutineContext)
 
     private val loadingState = SingleLiveEvent<LoadingState>()
 

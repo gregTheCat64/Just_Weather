@@ -1,13 +1,15 @@
 package ru.javacat.justweather.data.mapper
 
 import ru.javacat.justweather.data.db.entities.DbAlert
-import ru.javacat.justweather.data.db.entities.DbForecastWithHours
+import ru.javacat.justweather.data.db.entities.DbAstro
+import ru.javacat.justweather.data.db.entities.DbDay
 import ru.javacat.justweather.data.db.entities.DbForecastday
 import ru.javacat.justweather.data.db.entities.DbHour
 import ru.javacat.justweather.data.db.entities.DbWeatherWithForecastsAndAlerts
 import ru.javacat.justweather.domain.models.Alert
+import ru.javacat.justweather.domain.models.Astro
+import ru.javacat.justweather.domain.models.Day
 import ru.javacat.justweather.domain.models.Forecastday
-import ru.javacat.justweather.domain.models.ForecastdayWithHours
 import ru.javacat.justweather.domain.models.Hour
 import ru.javacat.justweather.domain.models.Weather
 import ru.javacat.justweather.util.toLocalDate
@@ -16,9 +18,9 @@ import ru.javacat.justweather.util.toLocalDateTime
 fun DbWeatherWithForecastsAndAlerts.toModel(): Weather {
     return Weather(
         alerts.map { it.toModel() },
-        this.weather.current,
+        weather.current,
         forecasts.map { it.toModel() },
-        this.weather.location
+        weather.location
     )
 }
 
@@ -29,16 +31,24 @@ fun DbAlert.toModel(): Alert {
 }
 fun DbForecastday.toModel(): Forecastday {
     return Forecastday(
-        astro, date.toLocalDate(), date_epoch, day
+        astro.toModel(), date.toLocalDate(), date_epoch, day.toModel()
     )
 }
 
-fun DbForecastWithHours.toModel() :ForecastdayWithHours {
-    return ForecastdayWithHours(
-        this.forecastday.astro, this.forecastday.date.toLocalDate(), this.forecastday.date_epoch,
-        this.forecastday.day, this.hours.map { it.toModel() }
-    )
-}
+fun DbAstro.toModel(): Astro = Astro(
+    is_moon_up, is_sun_up, moon_illumination, moon_phase, moonrise, moonset, sunrise, sunset
+)
+
+
+fun DbDay.toModel(): Day = Day(
+    avghumidity, avgtemp_c, avgtemp_f, avgvis_km, avgvis_miles, condition, daily_chance_of_rain, daily_chance_of_snow, daily_will_it_rain, daily_will_it_snow, maxtemp_c, maxtemp_f, maxwind_kph, maxwind_mph, mintemp_c, mintemp_f, totalprecip_in, totalprecip_mm, totalsnow_cm, uv
+)
+//fun DbForecastWithHours.toModel() :ForecastdayWithHours {
+//    return ForecastdayWithHours(
+//        forecastday.astro, forecastday.date.toLocalDate(), forecastday.date_epoch,
+//        forecastday.day, hours.map { it.toModel() }
+//    )
+//}
 
 fun DbHour.toModel(): Hour = Hour(
     forecastDate.toLocalDate(), chance_of_rain, chance_of_snow, cloud, condition, dewpoint_c, dewpoint_f, feelslike_c,

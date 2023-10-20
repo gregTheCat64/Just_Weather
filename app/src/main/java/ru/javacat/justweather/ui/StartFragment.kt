@@ -49,7 +49,7 @@ class StartFragment: BaseFragment<FragmentStartBinding>(), LocationListener {
     private val viewModel: StartViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
+        Log.i("StartFrag", "onCreate")
         super.onCreate(savedInstanceState)
 
         val inflater = TransitionInflater.from(requireContext())
@@ -62,6 +62,7 @@ class StartFragment: BaseFragment<FragmentStartBinding>(), LocationListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        Log.i("StartFrag", "onCreateView")
         //fLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
         locationManager = requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
@@ -70,7 +71,7 @@ class StartFragment: BaseFragment<FragmentStartBinding>(), LocationListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        Log.i("StartFrag", "onViewCreated")
         initLoadingStateObserving()
         init()
 
@@ -82,16 +83,17 @@ class StartFragment: BaseFragment<FragmentStartBinding>(), LocationListener {
     }
 
     private fun init(){
-
+        Log.i("StartFrag", "init")
         checkPermission()
         initObserver()
 
     }
 
     private fun initObserver(){
+        Log.i("StartFrag", "initObserver")
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
-                viewModel.weatherFlow.observe(viewLifecycleOwner) {
+                viewModel.weatherFlow?.observe(viewLifecycleOwner) {
 
                     it?.let {
                         findNavController().navigate(R.id.mainFragment)
@@ -153,6 +155,7 @@ class StartFragment: BaseFragment<FragmentStartBinding>(), LocationListener {
     }
 
     private fun getLocation(){
+        Log.i("StartFrag", "getLocation")
         when (Build.VERSION.SDK_INT) {
             in 1..29 -> {
                 getLocationOverGps()

@@ -11,7 +11,6 @@ import ru.javacat.justweather.data.mapper.toDbWeather
 import ru.javacat.justweather.data.mapper.toModel
 import ru.javacat.justweather.data.network.ApiService
 import ru.javacat.justweather.data.toBase64
-import ru.javacat.justweather.domain.models.ForecastdayWithHours
 import ru.javacat.justweather.domain.models.SearchLocation
 import ru.javacat.justweather.domain.repos.Repository
 import ru.javacat.justweather.domain.models.Weather
@@ -25,39 +24,60 @@ class RepositoryImpl @Inject constructor(
     private val dao: WeatherDao
 ) : Repository {
 
-//    private val _weatherFlow = MutableSharedFlow<Weather?>(1,1,BufferOverflow.SUSPEND)
-//    override val weatherFlow: SharedFlow<Weather?>
-//        get() = _weatherFlow
 
-    //private val _weatherFlow = MutableStateFlow<Weather?>(null)
-    override val weatherFlow: Flow<Weather?> = dao.getCurrent().map { it.toModel() }
-        //.map { it.toModel() }
-        //get() = _weatherFlow
 
-    override val forecastFlow: Flow<List<ForecastdayWithHours>>
-        get() = dao.getForecast().map { it.map { it.toModel() } }
+    override var weatherFlow: Flow<Weather>? = null
+//        dao.getCurrent()
+//        ?.map {
+//        it.toModel()
+//    }
+
+    init {
+        updateWeather()
+    }
+
+
+    fun updateWeather(){
+        val daoRes = dao.getCurrent()
+        //println(daoRes)
+        if (daoRes!= null) {
+            weatherFlow = daoRes.map { it.toModel() }
+        }
+    }
+//    override val forecastFlow: Flow<List<ForecastdayWithHours>>
+//        get() = dao.getForecast().map { it.map { it.toModel() } }
 
     override suspend fun fetchLocationDetails(name: String) {
+        Log.i("Repo", "loadingData")
         val weatherResponse = apiRequest {
             apiService.getByName(name)
         }
-        //_weatherFlow.emit(result.toDb())
-        //Log.i("MyTag", "emiting result: ${result.location}")
+        Log.i("MyTag","weather: ${weatherResponse.location}")
         val name = weatherResponse.location.name
         val region = weatherResponse.location.region
         val weatherId = (name + region).toBase64()
-        val alerts = weatherResponse.alerts.map { it.toDbAlert(weatherId) }
+        val alerts = weatherResponse.alerts.alert.map {
+            it.toDbAlert(weatherId) }
 
-        val forecastDate = weatherResponse.forecasts[0].date
-        val forecastId = (name + forecastDate).toBase64()
-        val forecasts = weatherResponse.forecasts.map { it.toDbForecastday(weatherId, forecastId) }
+        val forecasts = weatherResponse.forecast.forecastday.map {
+            it.toDbForecastday(weatherId)
+        }
 
-        val weather = weatherResponse.toDbWeather()
-        val hours = weatherResponse.forecasts.map { it.hour.map { it.toDbHour(forecastId) } }.flatten()
+        val weather = weatherResponse.toDbWeather(weatherId)
+        val hours = weatherResponse.forecast
+            .forecastday.map {
+                it.hour.map { it.toDbHour(weatherId, weather.current.last_updated) }
+            }.flatten()
 
-        dao.insert(weather, alerts, forecasts, hours)
+
+        dao.insert(weather,
+            alerts, forecasts
+            //hours
+        )
 
     }
+
+
 
     override suspend fun findLocation(name: String): List<SearchLocation> {
         val result = apiRequest {

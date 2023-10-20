@@ -4,7 +4,6 @@ import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 import ru.javacat.justweather.API_KEY
-import ru.javacat.justweather.data.network.response_models.SearchLocationResponse
 import ru.javacat.justweather.data.network.response_models.WeatherResponse
 import ru.javacat.justweather.domain.models.SearchLocation
 

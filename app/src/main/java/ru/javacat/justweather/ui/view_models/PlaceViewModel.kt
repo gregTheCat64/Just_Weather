@@ -27,7 +27,7 @@ class PlaceViewModel @Inject constructor(
     private val currentPlaceRepository: CurrentPlaceRepository
 ) : ViewModel() {
 
-    val weatherFlow = repository.weatherFlow.asLiveData(viewModelScope.coroutineContext)
+    val weatherFlow = repository.weatherFlow?.asLiveData(viewModelScope.coroutineContext)
 
     private val _placeData = MutableLiveData<List<Place>>()
     val placeData: LiveData<List<Place>>
@@ -93,7 +93,7 @@ class PlaceViewModel @Inject constructor(
 
             try {
                 repository.fetchLocationDetails(name) ?: throw NetworkError
-                weatherFlow.value?.location.let {
+                weatherFlow?.value?.location.let {
                     if (it != null) {
                         currentPlaceRepository.saveToPlacesList(it)
                     }
