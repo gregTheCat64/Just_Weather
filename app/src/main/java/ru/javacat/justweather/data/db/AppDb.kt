@@ -15,7 +15,7 @@ import ru.javacat.justweather.data.db.entities.DbWeather
         DbForecastday::class,
         DbHour::class
     ],
-    version = 1
+    version = 1, exportSchema = false
 )
 
 abstract class AppDb : RoomDatabase() {

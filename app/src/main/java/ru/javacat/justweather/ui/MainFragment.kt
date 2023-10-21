@@ -156,6 +156,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
                 viewModel.weatherFlow?.observe(viewLifecycleOwner) { weather ->
                     Log.i("MainFragment", "collecting")
                     updateWeather(weather)
+                    updateForecast(forecastdays = weather.forecasts)
                 }
             }
         }
@@ -245,9 +246,9 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
         }
     }
 
-    private fun updateForecast(forecastdays: List<ForecastdayWithHours>){
+    private fun updateForecast(forecastdays: List<Forecastday>){
         adapter = MainAdapter(object : OnInteractionListener {
-            override fun onForecastItem(item: ForecastdayWithHours, view: View) {
+            override fun onForecastItem(item: Forecastday, view: View) {
                 //val color = context!!.resources.getColor(R.color.md_theme_light_primary)
                 view.changeColorOnPush(requireContext())
                 viewModel.chooseForecastDay(item)

@@ -95,10 +95,10 @@ class ForecastFragment : BaseFragment<FragmentForecastBinding>() {
         //viewModel.chooseForecastData(Forecastday())
 
         binding.hoursRecView.adapter = forecastAdapter
-        val list = viewModel.forecastData?.value?.hour
-        forecastAdapter.submitList(list)
-
-        binding.hoursRecView.scrollToPosition(6)
+//        val list = viewModel.forecastData?.value?.hour
+//        forecastAdapter.submitList(list)
+//
+//        binding.hoursRecView.scrollToPosition(6)
     }
 
 

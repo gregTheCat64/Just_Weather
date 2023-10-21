@@ -24,23 +24,21 @@ class RepositoryImpl @Inject constructor(
     private val dao: WeatherDao
 ) : Repository {
 
-
-
-    override var weatherFlow: Flow<Weather>? = null
-//        dao.getCurrent()
-//        ?.map {
-//        it.toModel()
-//    }
+    override var weatherFlow: Flow<Weather>? =
+        dao.getCurrent()
+        ?.map {
+        it.toModel()
+    }
 
     init {
-        updateWeather()
+        //updateWeather()
     }
 
 
-    fun updateWeather(){
+    fun updateWeather() {
         val daoRes = dao.getCurrent()
         //println(daoRes)
-        if (daoRes!= null) {
+        if (daoRes != null) {
             weatherFlow = daoRes.map { it.toModel() }
         }
     }
@@ -52,31 +50,34 @@ class RepositoryImpl @Inject constructor(
         val weatherResponse = apiRequest {
             apiService.getByName(name)
         }
-        Log.i("MyTag","weather: ${weatherResponse.location}")
-        val name = weatherResponse.location.name
+        Log.i("MyTag", "weather: ${weatherResponse.location}")
+        val locationName = weatherResponse.location.name
         val region = weatherResponse.location.region
-        val weatherId = (name + region).toBase64()
+        val weatherId = (locationName + region).toBase64()
         val alerts = weatherResponse.alerts.alert.map {
-            it.toDbAlert(weatherId) }
+            it.toDbAlert(weatherId)
+        }
 
         val forecasts = weatherResponse.forecast.forecastday.map {
             it.toDbForecastday(weatherId)
         }
 
         val weather = weatherResponse.toDbWeather(weatherId)
-        val hours = weatherResponse.forecast
-            .forecastday.map {
-                it.hour.map { it.toDbHour(weatherId, weather.current.last_updated) }
-            }.flatten()
 
 
-        dao.insert(weather,
-            alerts, forecasts
-            //hours
+        val hours = weatherResponse.forecast.forecastday.map { forecastdays ->
+            forecastdays.hour.map {
+                it.toDbHour(weatherId, forecastdays.date)
+            }
+        }.flatten()
+
+
+        dao.insert(
+            weather,
+            alerts, forecasts,
+            hours
         )
-
     }
-
 
 
     override suspend fun findLocation(name: String): List<SearchLocation> {

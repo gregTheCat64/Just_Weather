@@ -9,6 +9,7 @@ import ru.javacat.justweather.domain.models.Astro
 import ru.javacat.justweather.domain.models.Condition
 import ru.javacat.justweather.domain.models.Current
 import ru.javacat.justweather.domain.models.Day
+import ru.javacat.justweather.domain.models.Hour
 import ru.javacat.justweather.domain.models.Location
 import java.time.LocalDate
 
@@ -72,7 +73,7 @@ data class DbForecastday(
     @Embedded val astro: DbAstro,
     val date_epoch: Int,
     @Embedded val day: DbDay,
-    //val hours: List<Hour>
+    //@Embedded val hours: List<DbHour>
 )
 
 @Entity(
@@ -86,7 +87,7 @@ data class DbForecastday(
             onUpdate = ForeignKey.CASCADE
         )
     ],
-    primaryKeys = ["weatherId", "forecastDate"]
+    primaryKeys = ["weatherId", "forecastDate", "time"]
 )
 
 

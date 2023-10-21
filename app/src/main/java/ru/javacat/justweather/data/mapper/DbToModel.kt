@@ -20,7 +20,8 @@ fun DbWeatherWithForecastsAndAlerts.toModel(): Weather {
         alerts.map { it.toModel() },
         weather.current,
         forecasts.map { it.toModel() },
-        weather.location
+        weather.location,
+        //hours.map { it.toModel() }
     )
 }
 
@@ -31,7 +32,7 @@ fun DbAlert.toModel(): Alert {
 }
 fun DbForecastday.toModel(): Forecastday {
     return Forecastday(
-        astro.toModel(), date.toLocalDate(), date_epoch, day.toModel()
+        astro.toModel(), date.toLocalDate(), date_epoch, day.toModel(),
     )
 }
 

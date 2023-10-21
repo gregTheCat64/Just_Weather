@@ -16,18 +16,18 @@ import ru.javacat.justweather.util.load
 import kotlin.math.roundToInt
 
 interface OnInteractionListener {
-    fun onForecastItem(item: ForecastdayWithHours, view: View)
+    fun onForecastItem(item: Forecastday, view: View)
 }
 
 class MainAdapter(
     private val onInteractionListener: OnInteractionListener
-): ListAdapter<ForecastdayWithHours, MainAdapter.Holder>(Comparator()) {
+): ListAdapter<Forecastday, MainAdapter.Holder>(Comparator()) {
 
     class Holder(view: View, private val onInteractionListener: OnInteractionListener): RecyclerView.ViewHolder(view){
         private val binding = DayItemBinding.bind(view)
 
 
-        fun bind(item: ForecastdayWithHours)  {
+        fun bind(item: Forecastday)  {
             binding.apply {
                 val image = item.day.condition.icon
                 dayOfWeek.text = item.date.asLocalDate()
@@ -54,12 +54,12 @@ class MainAdapter(
         holder.bind(getItem(position))
     }
 
-    class Comparator: DiffUtil.ItemCallback<ForecastdayWithHours>(){
-        override fun areItemsTheSame(oldItem: ForecastdayWithHours, newItem: ForecastdayWithHours): Boolean {
+    class Comparator: DiffUtil.ItemCallback<Forecastday>(){
+        override fun areItemsTheSame(oldItem: Forecastday, newItem: Forecastday): Boolean {
             return oldItem.date == newItem.date
         }
 
-        override fun areContentsTheSame(oldItem: ForecastdayWithHours, newItem: ForecastdayWithHours): Boolean {
+        override fun areContentsTheSame(oldItem: Forecastday, newItem: Forecastday): Boolean {
             return oldItem == newItem
         }
     }

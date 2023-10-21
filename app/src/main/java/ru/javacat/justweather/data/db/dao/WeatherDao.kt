@@ -13,14 +13,13 @@ import ru.javacat.justweather.data.db.entities.DbWeather
 
 @Dao
 interface WeatherDao {
-
     @Transaction
     @Upsert
     suspend fun insert(
         weather: DbWeather,
         alerts: List<DbAlert>,
         forecasts: List<DbForecastday>,
-        //hours: List<DbHour>,
+        hours: List<DbHour>,
     )
 
     @Transaction

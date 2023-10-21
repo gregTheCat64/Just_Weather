@@ -11,6 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.javacat.justweather.ApiError
 import ru.javacat.justweather.NetworkError
+import ru.javacat.justweather.domain.models.Forecastday
 import ru.javacat.justweather.domain.models.ForecastdayWithHours
 import ru.javacat.justweather.domain.repos.CurrentPlaceRepository
 
@@ -34,8 +35,8 @@ class MainViewModel @Inject constructor(
 
     private val loadingState = SingleLiveEvent<LoadingState>()
 
-    private val _forecastData: MutableLiveData<ForecastdayWithHours>? = null
-    val forecastData: LiveData<ForecastdayWithHours>?
+    private val _forecastData: MutableLiveData<Forecastday>? = null
+    val forecastData: LiveData<Forecastday>?
         get() = _forecastData
 
 
@@ -72,7 +73,7 @@ class MainViewModel @Inject constructor(
     }
 
 
-    fun chooseForecastDay(item: ForecastdayWithHours) {
+    fun chooseForecastDay(item: Forecastday) {
         viewModelScope.launch {
             try {
                 _forecastData?.postValue(item)

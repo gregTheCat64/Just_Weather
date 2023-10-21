@@ -4,5 +4,6 @@ data class Weather(
     val alerts: List<Alert>,
     val current: Current,
     val forecasts: List<Forecastday>,
-    val location: Location
+    val location: Location,
+    //val hours: List<Hour>
 )
