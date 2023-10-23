@@ -23,14 +23,20 @@ interface WeatherDao {
     )
 
     @Transaction
-    @Query("SELECT * FROM weathers_table "
-            //"WHERE id = :locId"
-            )
-    fun getCurrent(): Flow<DbWeatherWithForecastsAndAlerts>?
+    @Query("SELECT * FROM weathers_table WHERE id = :locId"
 
-    @Transaction
-    @Query("SELECT * FROM weathers_table "
-    //        "WHERE weatherId = :locId AND date = :forecastDate"
+            )
+    fun getCurrent(locId: String): Flow<List<DbWeatherWithForecastsAndAlerts>>
+
+//    @Transaction
+//    @Query("SELECT * FROM weathers_table WHERE id = :locId AND date = :forecastDate"
+//
+//    )
+//    fun getForecast(locId: String, forecastDate: String): Flow<List<DbWeatherWithForecastsAndAlerts>>
+
+
+    @Query("SELECT * FROM hours_table WHERE forecastDate = :date "
     )
-    fun getForecast(): Flow<List<DbWeatherWithForecastsAndAlerts>>
+    suspend fun getHours(date: String): List<DbHour>
+
 }

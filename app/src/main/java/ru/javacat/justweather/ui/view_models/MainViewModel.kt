@@ -12,15 +12,13 @@ import kotlinx.coroutines.launch
 import ru.javacat.justweather.ApiError
 import ru.javacat.justweather.NetworkError
 import ru.javacat.justweather.domain.models.Forecastday
-import ru.javacat.justweather.domain.models.ForecastdayWithHours
+import ru.javacat.justweather.domain.models.Hour
 import ru.javacat.justweather.domain.repos.CurrentPlaceRepository
-
 import ru.javacat.justweather.domain.repos.Repository
-
 import ru.javacat.justweather.ui.LoadingState
 import ru.javacat.justweather.ui.SingleLiveEvent
-import java.lang.Exception
 import javax.inject.Inject
+import kotlin.Exception
 
 
 @HiltViewModel
@@ -30,21 +28,22 @@ class MainViewModel @Inject constructor(
 ) : ViewModel(){
 
 
-    val weatherFlow = repository.weatherFlow?.asLiveData(viewModelScope.coroutineContext)
+    val weatherFlow = repository.weatherFlow.asLiveData(viewModelScope.coroutineContext)
     //val forecastFlow = repository.forecastFlow.asLiveData(viewModelScope.coroutineContext)
 
     private val loadingState = SingleLiveEvent<LoadingState>()
 
-    private val _forecastData: MutableLiveData<Forecastday>? = null
-    val forecastData: LiveData<Forecastday>?
+    private val _forecastData: MutableLiveData<Forecastday> = MutableLiveData()
+    val forecastData: LiveData<Forecastday>
         get() = _forecastData
 
+    private var _hoursData: MutableLiveData<List<Hour>> = MutableLiveData()
+    var hoursData: LiveData<List<Hour>>? = _hoursData
 
 
     init {
         Log.i("MyTag", "initing VM")
     }
-
 
     fun updateWeather(){
         val place = currentPlaceRepository.getFromPlacesList()
@@ -76,10 +75,26 @@ class MainViewModel @Inject constructor(
     fun chooseForecastDay(item: Forecastday) {
         viewModelScope.launch {
             try {
-                _forecastData?.postValue(item)
+                _forecastData.postValue(item)
+                Log.i("MyTag", "forecast: ${_forecastData.value}")
             } catch (e: Exception) {
                 loadingState.postValue(LoadingState.NetworkError)
             }
         }
+    }
+
+    fun getHours(date: String) {
+        viewModelScope.launch {
+            try {
+                println("getting hours in vm")
+                _hoursData.value = repository.getHours(date)
+                //Log.i("HOURS", "${hoursData.value}")
+            } catch (e: Exception) {
+                loadingState.postValue(LoadingState.NetworkError)
+            }
+        }
+
+
+
     }
 }

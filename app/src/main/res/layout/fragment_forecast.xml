@@ -13,6 +13,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_margin="16dp"
+            android:contentDescription="@string/backbtn"
             style="@style/Widget.Material3.Button.IconButton.Filled"
             app:icon="@drawable/baseline_keyboard_backspace_48"
             android:drawableTint="@color/white"
@@ -37,7 +38,7 @@
         android:layout_height="match_parent">
 
         <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"

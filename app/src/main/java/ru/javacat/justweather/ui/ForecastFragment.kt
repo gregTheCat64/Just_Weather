@@ -1,14 +1,9 @@
 package ru.javacat.justweather.ui
 
-import android.os.Build
 import android.os.Bundle
-import android.transition.TransitionInflater
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -20,7 +15,6 @@ import ru.javacat.justweather.ui.adapters.ForecastAdapter
 import ru.javacat.justweather.ui.view_models.MainViewModel
 import ru.javacat.justweather.util.asLocalDate
 import ru.javacat.justweather.util.load
-import ru.javacat.justweather.util.toLocalDate
 import kotlin.math.roundToInt
 
 class ForecastFragment : BaseFragment<FragmentForecastBinding>() {
@@ -39,21 +33,22 @@ class ForecastFragment : BaseFragment<FragmentForecastBinding>() {
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.O)
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.backBtn.setOnClickListener {
             //parentFragmentManager.popBackStack()
             findNavController().navigateUp()
         }
         initForecastObserver()
+        initHoursObserver()
 
         super.onViewCreated(view, savedInstanceState)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+
     private fun initForecastObserver() {
         lifecycleScope.launch {
-            viewModel.forecastData?.observe(viewLifecycleOwner) {
+            viewModel.forecastData.observe(viewLifecycleOwner) {
                 binding.apply {
                     conditionImage.load(it.day.condition.icon)
                     conditionValue.text = it.day.condition.text
@@ -84,9 +79,14 @@ class ForecastFragment : BaseFragment<FragmentForecastBinding>() {
                     }
                 }
 
-
-                initForecastRecView()
+                //initForecastRecView()
             }
+        }
+    }
+
+    private fun initHoursObserver() {
+        viewModel.hoursData?.observe(viewLifecycleOwner){
+            initForecastRecView()
         }
     }
 
@@ -95,10 +95,10 @@ class ForecastFragment : BaseFragment<FragmentForecastBinding>() {
         //viewModel.chooseForecastData(Forecastday())
 
         binding.hoursRecView.adapter = forecastAdapter
-//        val list = viewModel.forecastData?.value?.hour
-//        forecastAdapter.submitList(list)
-//
-//        binding.hoursRecView.scrollToPosition(6)
+        val list = viewModel.hoursData?.value
+        forecastAdapter.submitList(list)
+
+        binding.hoursRecView.scrollToPosition(6)
     }
 
 

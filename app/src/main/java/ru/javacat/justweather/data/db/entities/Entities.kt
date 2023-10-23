@@ -78,16 +78,20 @@ data class DbForecastday(
 
 @Entity(
     tableName = "hours_table",
-    foreignKeys = [
-        ForeignKey(
-            entity = DbForecastday::class,
-            parentColumns = ["weatherId", "date"],
-            childColumns = ["weatherId", "forecastDate"],
-            onDelete = ForeignKey.CASCADE,
-            onUpdate = ForeignKey.CASCADE
-        )
-    ],
-    primaryKeys = ["weatherId", "forecastDate", "time"]
+//    foreignKeys = [
+//        ForeignKey(
+//            entity = DbForecastday::class,
+//            parentColumns = ["weatherId", "date"],
+//            childColumns = ["weatherId", "forecastDate"],
+//            onDelete = ForeignKey.CASCADE,
+//            onUpdate = ForeignKey.CASCADE
+//        )
+//    ],
+    primaryKeys = [
+        "weatherId",
+        "forecastDate",
+        "time"
+        ]
 )
 
 

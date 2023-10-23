@@ -156,7 +156,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
                 viewModel.weatherFlow?.observe(viewLifecycleOwner) { weather ->
                     Log.i("MainFragment", "collecting")
                     updateWeather(weather)
-                    updateForecast(forecastdays = weather.forecasts)
+                    weather?.forecasts?.let { updateForecast(forecastdays = it) }
                 }
             }
         }
@@ -251,6 +251,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
             override fun onForecastItem(item: Forecastday, view: View) {
                 //val color = context!!.resources.getColor(R.color.md_theme_light_primary)
                 view.changeColorOnPush(requireContext())
+                viewModel.getHours(item.date.toString())
                 viewModel.chooseForecastDay(item)
                 findNavController().navigate(R.id.action_mainFragment_to_forecastFragment)
             }

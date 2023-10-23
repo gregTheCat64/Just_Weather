@@ -4,8 +4,7 @@ import androidx.room.Embedded
 
 data class Current(
     val cloud: Int,
-    @Embedded
-    val condition: Condition,
+    @Embedded val condition: Condition,
     val feelslike_c: Double,
     val feelslike_f: Double,
     val gust_kph: Double,

@@ -11,6 +11,7 @@ import ru.javacat.justweather.data.mapper.toDbWeather
 import ru.javacat.justweather.data.mapper.toModel
 import ru.javacat.justweather.data.network.ApiService
 import ru.javacat.justweather.data.toBase64
+import ru.javacat.justweather.domain.models.Hour
 import ru.javacat.justweather.domain.models.SearchLocation
 import ru.javacat.justweather.domain.repos.Repository
 import ru.javacat.justweather.domain.models.Weather
@@ -18,32 +19,24 @@ import ru.javacat.justweather.util.apiRequest
 import javax.inject.Inject
 import javax.inject.Singleton
 
+
+
 @Singleton
 class RepositoryImpl @Inject constructor(
     private val apiService: ApiService,
-    private val dao: WeatherDao
+    private val dao: WeatherDao,
 ) : Repository {
 
-    override var weatherFlow: Flow<Weather>? =
-        dao.getCurrent()
-        ?.map {
-        it.toModel()
-    }
+    //override var hoursFlow: Flow<List<Hour>>? = null
 
-    init {
-        //updateWeather()
-    }
-
-
-    fun updateWeather() {
-        val daoRes = dao.getCurrent()
-        //println(daoRes)
-        if (daoRes != null) {
-            weatherFlow = daoRes.map { it.toModel() }
+    override val weatherFlow: Flow<Weather?> =
+        dao.getCurrent().map {
+            it.firstOrNull()
+        }.map {
+            it?.toModel()
         }
-    }
-//    override val forecastFlow: Flow<List<ForecastdayWithHours>>
-//        get() = dao.getForecast().map { it.map { it.toModel() } }
+
+
 
     override suspend fun fetchLocationDetails(name: String) {
         Log.i("Repo", "loadingData")
@@ -87,6 +80,16 @@ class RepositoryImpl @Inject constructor(
         //_weatherFlow.emit(result)
         Log.i("MyTag", "emiting result: ${result}")
         return result
+    }
+
+    override suspend fun getHours(date: String): List<Hour> {
+        println("getting hours")
+        val daores = dao.getHours(date)
+        val result = dao.getHours(date).map {list->
+          list.toModel()
+        }
+        Log.i("HOURSINREPO", "$daores")
+        return  result
     }
 
 

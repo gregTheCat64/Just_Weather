@@ -7,3 +7,4 @@ data class Weather(
     val location: Location,
     //val hours: List<Hour>
 )
+
