@@ -13,6 +13,7 @@ import ru.javacat.justweather.models.Place
 import ru.javacat.justweather.util.changeColorOnPush
 import ru.javacat.justweather.util.load
 import ru.javacat.justweather.util.pushAnimation
+import kotlin.math.roundToInt
 
 interface OnPlacesInteractionListener {
     fun onSetPlace(item: Weather)
@@ -39,9 +40,9 @@ class PlacesAdapter(
         fun bind(item: Weather) {
             val image = item.current.condition.icon
             binding.apply {
-                placeId.text = item.location.name
-                nameValue.text = item.location.region +", "+item.location.region
-                tempValue.text = item.current.temp_c.toString()
+                conditionValue.text = item.current.condition.text
+                nameValue.text = item.location.name +", "+item.location.region
+                tempValue.text = item.current.temp_c.roundToInt().toString() + "°"
                 conditionImage.load(image)
                 root.setOnClickListener {
                     it.pushAnimation(binding.root.context)
