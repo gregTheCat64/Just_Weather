@@ -13,6 +13,7 @@ import ru.javacat.justweather.ApiError
 import ru.javacat.justweather.NetworkError
 import ru.javacat.justweather.domain.models.Forecastday
 import ru.javacat.justweather.domain.models.Hour
+import ru.javacat.justweather.domain.models.Weather
 import ru.javacat.justweather.domain.repos.CurrentPlaceRepository
 import ru.javacat.justweather.domain.repos.Repository
 import ru.javacat.justweather.ui.LoadingState
@@ -28,10 +29,14 @@ class MainViewModel @Inject constructor(
 ) : ViewModel(){
 
 
-    val weatherFlow = repository.weatherFlow.asLiveData(viewModelScope.coroutineContext)
+    val currentWeatherFlow = repository.currentWeatherFlow.asLiveData(viewModelScope.coroutineContext)
     //val forecastFlow = repository.forecastFlow.asLiveData(viewModelScope.coroutineContext)
 
     private val loadingState = SingleLiveEvent<LoadingState>()
+
+    private val _weatherData: MutableLiveData<Weather> = MutableLiveData()
+    val weatherData: LiveData<Weather>
+        get() = _weatherData
 
     private val _forecastData: MutableLiveData<Forecastday> = MutableLiveData()
     val forecastData: LiveData<Forecastday>
@@ -59,6 +64,7 @@ class MainViewModel @Inject constructor(
 
             try {
                 repository.fetchLocationDetails(name)?: throw NetworkError
+                //_weatherData.postValue(repository.getCurrentWeather(name))
                 loadingState.postValue(LoadingState.Success)
 
             } catch (e: ApiError) {

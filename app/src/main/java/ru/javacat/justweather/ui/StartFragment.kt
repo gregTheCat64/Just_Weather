@@ -84,8 +84,9 @@ class StartFragment: BaseFragment<FragmentStartBinding>(), LocationListener {
 
     private fun init(){
         Log.i("StartFrag", "init")
-        checkPermission()
         initObserver()
+        checkPermission()
+
 
     }
 
@@ -93,8 +94,7 @@ class StartFragment: BaseFragment<FragmentStartBinding>(), LocationListener {
         Log.i("StartFrag", "initObserver")
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
-                viewModel.weatherFlow?.observe(viewLifecycleOwner) {
-
+                viewModel.currentWeatherFlow?.observe(viewLifecycleOwner) {
                     it?.let {
                         findNavController().navigate(R.id.mainFragment)
                     }
@@ -119,6 +119,11 @@ class StartFragment: BaseFragment<FragmentStartBinding>(), LocationListener {
                 is LoadingState.Load -> {
                     binding.progressBar.isVisible = true
                     binding.repeatBtn.isVisible = false
+                }
+                is LoadingState.Success -> {
+                    binding.progressBar.isVisible = false
+                    binding.repeatBtn.isVisible = false
+                    //findNavController().navigate(R.id.mainFragment)
                 }
                 else ->  binding.progressBar.isVisible = false
             }

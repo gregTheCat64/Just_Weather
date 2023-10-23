@@ -17,6 +17,7 @@ import ru.javacat.justweather.util.toLocalDateTime
 
 fun DbWeatherWithForecastsAndAlerts.toModel(): Weather {
     return Weather(
+        weather.id,
         alerts.map { it.toModel() },
         weather.current,
         forecasts.map { it.toModel() },

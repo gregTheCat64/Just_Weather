@@ -8,9 +8,11 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ru.javacat.justweather.ApiError
 import ru.javacat.justweather.NetworkError
+import ru.javacat.justweather.domain.models.Weather
 import ru.javacat.justweather.models.Place
 import ru.javacat.justweather.domain.repos.CurrentPlaceRepository
 import ru.javacat.justweather.domain.repos.PlacesRepository
@@ -25,8 +27,12 @@ class StartViewModel @Inject constructor(
     private val placesRepository: PlacesRepository,
     private val currentPlaceRepository: CurrentPlaceRepository
 ): ViewModel() {
+    private val _weatherData: MutableLiveData<Weather> = MutableLiveData()
+    val weatherData: LiveData<Weather>
+        get() = _weatherData
 
-    val weatherFlow = repository.weatherFlow?.asLiveData(viewModelScope.coroutineContext)
+    val currentWeatherFlow = repository.currentWeatherFlow.asLiveData(viewModelScope.coroutineContext)
+
     val loadingState = SingleLiveEvent<LoadingState>()
 
     private val _placeData = MutableLiveData<List<Place>>()
@@ -45,6 +51,10 @@ class StartViewModel @Inject constructor(
             try {
                 repository.fetchLocationDetails(name)?:throw NetworkError
                 loadingState.postValue(LoadingState.Success)
+
+                //delay(5000)
+                val foundWeatherName = repository.fetchLocationDetails(name)
+                //_weatherData.postValue(repository.getCurrentWeather(foundWeatherName!!))
                 //savePlace(Place(0, weatherFlow.location.name, foundWeather.location.region))
                 //TODO: fix saving
 
@@ -79,7 +89,7 @@ class StartViewModel @Inject constructor(
 
     private fun addToPlacesList(){
         viewModelScope.launch{
-            weatherFlow?.value?.location?.let { currentPlaceRepository.saveToPlacesList(it) }
+            weatherData?.value?.location?.let { currentPlaceRepository.saveToPlacesList(it) }
 
         }
     }

@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 import ru.javacat.justweather.ApiError
 import ru.javacat.justweather.NetworkError
 import ru.javacat.justweather.domain.models.SearchLocation
+import ru.javacat.justweather.domain.models.Weather
 import ru.javacat.justweather.models.Place
 import ru.javacat.justweather.domain.repos.CurrentPlaceRepository
 import ru.javacat.justweather.domain.repos.PlacesRepository
@@ -23,11 +24,13 @@ import javax.inject.Inject
 @HiltViewModel
 class PlaceViewModel @Inject constructor(
     private val repository: Repository,
-    private val placesRepository: PlacesRepository,
-    private val currentPlaceRepository: CurrentPlaceRepository
+    //private val placesRepository: PlacesRepository,
+    //private val currentPlaceRepository: CurrentPlaceRepository
 ) : ViewModel() {
 
-    val weatherFlow = repository.weatherFlow?.asLiveData(viewModelScope.coroutineContext)
+    private val _weatherData: MutableLiveData<Weather> = MutableLiveData()
+    val weatherData: LiveData<Weather>
+        get() = _weatherData
 
     private val _placeData = MutableLiveData<List<Place>>()
     val placeData: LiveData<List<Place>>
@@ -37,17 +40,15 @@ class PlaceViewModel @Inject constructor(
     val foundLocations: LiveData<List<SearchLocation>>
         get() = _foundLocations
 
+    val allWeathers = repository.allWeathers.asLiveData(viewModelScope.coroutineContext)
+
     val loadingState = SingleLiveEvent<LoadingState>()
 
     init {
-        loadPlaces()
+
     }
 
-    private fun loadPlaces() {
-        viewModelScope.launch(Dispatchers.IO) {
-            _placeData.postValue(placesRepository.getPlaces().value)
-        }
-    }
+
 
 
     fun savePlace(place: Place) {
@@ -55,8 +56,9 @@ class PlaceViewModel @Inject constructor(
             val places = placeData.value
             val result = places?.find { it.name == place.name }
             if (result == null) {
-                placesRepository.save(place)
-                loadPlaces()
+//                placesRepository.save(place)
+//                loadPlaces()
+
             }
         }
 
@@ -87,17 +89,13 @@ class PlaceViewModel @Inject constructor(
 
 
 
-    fun setPlace(name: String, daysCount: Int) {
+    fun setPlace(name: String) {
         viewModelScope.launch(Dispatchers.IO) {
             loadingState.postValue(LoadingState.Load)
 
             try {
                 repository.fetchLocationDetails(name) ?: throw NetworkError
-                weatherFlow?.value?.location.let {
-                    if (it != null) {
-                        currentPlaceRepository.saveToPlacesList(it)
-                    }
-                }
+
                 //Log.i("MyTag", "weatherResp: $weather")
                 loadingState.postValue(LoadingState.Success)
 
@@ -112,10 +110,11 @@ class PlaceViewModel @Inject constructor(
     }
 
 
-    fun removePlace(id: Int) {
+    fun removePlace(id: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            placesRepository.removeById(id)
-            loadPlaces()
+            //placesRepository.removeById(id)
+            //loadPlaces()
+            repository.removeById(id)
         }
 
     }

@@ -18,6 +18,7 @@ import java.time.LocalDate
 )
 data class DbWeather(
     @PrimaryKey val id: String,
+    var isCurrent: Boolean,
     @Embedded val current: Current,
     @Embedded val location: Location
 )

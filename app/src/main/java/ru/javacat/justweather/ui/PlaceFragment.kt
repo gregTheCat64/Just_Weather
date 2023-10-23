@@ -15,6 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import ru.javacat.justweather.base.BaseFragment
 import ru.javacat.justweather.databinding.FragmentPlaceBinding
 import ru.javacat.justweather.domain.models.SearchLocation
+import ru.javacat.justweather.domain.models.Weather
 import ru.javacat.justweather.models.Place
 import ru.javacat.justweather.ui.adapters.OnPlacesInteractionListener
 import ru.javacat.justweather.ui.adapters.OnSearchPlacesInteractionListener
@@ -90,15 +91,15 @@ class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {
     private fun initObserver() {
         Log.i("PlaceFragment", "initObserver")
         adapter = PlacesAdapter(object : OnPlacesInteractionListener {
-            override fun onSetPlace(item: Place) {
-                viewModel.setPlace(item.name, 3)
+            override fun onSetPlace(item: Weather) {
+                viewModel.setPlace(item.location.lat.toString()+","+item.location.lon.toString())
             }
-            override fun onRemovePlace(item: Place) {
+            override fun onRemovePlace(item: Weather) {
                 viewModel.removePlace(item.id)
             }
         })
         binding.placesList.adapter = adapter
-        viewModel.placeData.observe(viewLifecycleOwner) {
+        viewModel.allWeathers.observe(viewLifecycleOwner) {
             adapter.submitList(it)
             Log.i("MyLog", it.toString())
         }
@@ -134,7 +135,7 @@ class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {
         searchAdapter = SearchPlacesAdapter(object : OnSearchPlacesInteractionListener{
             override fun onSetPlace(item: SearchLocation) {
                 viewModel.savePlace(Place(0, item.name, item.region))
-                viewModel.setPlace(item.url, 3)
+                viewModel.setPlace(item.url)
             }
 
         })

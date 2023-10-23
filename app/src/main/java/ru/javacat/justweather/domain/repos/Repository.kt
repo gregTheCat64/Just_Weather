@@ -6,7 +6,8 @@ import ru.javacat.justweather.domain.models.SearchLocation
 import ru.javacat.justweather.domain.models.Weather
 
 interface Repository {
-    val weatherFlow: Flow<Weather?>
+    val allWeathers: Flow<List<Weather?>>
+    val currentWeatherFlow: Flow<Weather?>
     //val hoursFlow: Flow<List<Hour>>?
 
     //val forecastFlow: Flow<List<ForecastdayWithHours>>
@@ -14,7 +15,11 @@ interface Repository {
 
     suspend fun findLocation(name: String): List<SearchLocation>
 
+    suspend fun getCurrentWeather(name: String): Weather?
+
     suspend fun getHours(date: String): List<Hour>
+
+    suspend fun removeById(id: String)
 
 
 }

@@ -2,6 +2,7 @@ package ru.javacat.justweather.data.impl
 
 import android.util.Log
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import ru.javacat.justweather.data.db.dao.WeatherDao
 import ru.javacat.justweather.data.mapper.toDbAlert
@@ -29,24 +30,46 @@ class RepositoryImpl @Inject constructor(
 
     //override var hoursFlow: Flow<List<Hour>>? = null
 
-    override val weatherFlow: Flow<Weather?> =
+//    override val weatherFlow: Flow<Weather?> =
+//        dao.getCurrent().map {
+//            it.firstOrNull()
+//        }.map {
+//            it?.toModel()
+//        }
+
+    override val allWeathers: Flow<List<Weather?>> =
+        dao.getAll().map { it.map { it.toModel() } }
+
+
+    override val currentWeatherFlow: Flow<Weather?> =
         dao.getCurrent().map {
             it.firstOrNull()
         }.map {
             it?.toModel()
         }
 
-
+    override suspend fun getCurrentWeather(name: String): Weather? {
+        Log.i("MyTag", "Getting weahter in repo")
+        val daores = dao.getByName(name).firstOrNull()?.toModel()
+        Log.i("daores:", "daores: ${daores?.location}")
+        return daores
+    }
 
     override suspend fun fetchLocationDetails(name: String) {
         Log.i("Repo", "loadingData")
         val weatherResponse = apiRequest {
             apiService.getByName(name)
         }
+
         Log.i("MyTag", "weather: ${weatherResponse.location}")
         val locationName = weatherResponse.location.name
         val region = weatherResponse.location.region
         val weatherId = (locationName + region).toBase64()
+
+        //анчекаем текущий город
+        dao.unCheckCurrents()
+
+        //получаем таблички:
         val alerts = weatherResponse.alerts.alert.map {
             it.toDbAlert(weatherId)
         }
@@ -56,7 +79,7 @@ class RepositoryImpl @Inject constructor(
         }
 
         val weather = weatherResponse.toDbWeather(weatherId)
-
+        weather.isCurrent = true
 
         val hours = weatherResponse.forecast.forecastday.map { forecastdays ->
             forecastdays.hour.map {
@@ -67,7 +90,8 @@ class RepositoryImpl @Inject constructor(
 
         dao.insert(
             weather,
-            alerts, forecasts,
+            alerts,
+            forecasts,
             hours
         )
     }
@@ -84,13 +108,15 @@ class RepositoryImpl @Inject constructor(
 
     override suspend fun getHours(date: String): List<Hour> {
         println("getting hours")
-        val daores = dao.getHours(date)
+
         val result = dao.getHours(date).map {list->
           list.toModel()
         }
-        Log.i("HOURSINREPO", "$daores")
+
         return  result
     }
 
-
+    override suspend fun removeById(id: String) {
+        dao.removeById(id)
+    }
 }

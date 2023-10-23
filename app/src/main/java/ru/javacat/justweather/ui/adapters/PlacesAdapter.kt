@@ -8,19 +8,20 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ru.javacat.justweather.R
 import ru.javacat.justweather.databinding.PlaceItemBinding
+import ru.javacat.justweather.domain.models.Weather
 import ru.javacat.justweather.models.Place
 import ru.javacat.justweather.util.changeColorOnPush
 import ru.javacat.justweather.util.pushAnimation
 
 interface OnPlacesInteractionListener {
-    fun onSetPlace(item: Place)
+    fun onSetPlace(item: Weather)
 
-    fun onRemovePlace(item: Place)
+    fun onRemovePlace(item: Weather)
 
 }
 class PlacesAdapter(
     private val onInteractionListener: OnPlacesInteractionListener
-): ListAdapter<Place, PlacesAdapter.Holder>(Comparator()) {
+): ListAdapter<Weather, PlacesAdapter.Holder>(Comparator()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.place_item, parent, false)
@@ -34,10 +35,10 @@ class PlacesAdapter(
     class Holder(view: View, private val onInteractionListener: OnPlacesInteractionListener): RecyclerView.ViewHolder(view){
         private val binding = PlaceItemBinding.bind(view)
 
-        fun bind(item: Place) {
+        fun bind(item: Weather) {
             binding.apply {
-                placeId.text = item.id.toString()
-                nameValue.text = item.region +", "+item.name
+                placeId.text = item.location.name
+                nameValue.text = item.location.region +", "+item.location.region
                 root.setOnClickListener {
                     it.pushAnimation(binding.root.context)
                     onInteractionListener.onSetPlace(item)
@@ -51,12 +52,12 @@ class PlacesAdapter(
         }
     }
 
-    class Comparator: DiffUtil.ItemCallback<Place>(){
-        override fun areItemsTheSame(oldItem: Place, newItem: Place): Boolean {
-            return oldItem.id == newItem.id
+    class Comparator: DiffUtil.ItemCallback<Weather>(){
+        override fun areItemsTheSame(oldItem: Weather, newItem: Weather): Boolean {
+            return oldItem.location == newItem.location
         }
 
-        override fun areContentsTheSame(oldItem: Place, newItem: Place): Boolean {
+        override fun areContentsTheSame(oldItem: Weather, newItem: Weather): Boolean {
             return oldItem == newItem
         }
     }

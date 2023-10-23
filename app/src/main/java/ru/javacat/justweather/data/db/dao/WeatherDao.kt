@@ -10,6 +10,7 @@ import ru.javacat.justweather.data.db.entities.DbWeatherWithForecastsAndAlerts
 import ru.javacat.justweather.data.db.entities.DbForecastday
 import ru.javacat.justweather.data.db.entities.DbHour
 import ru.javacat.justweather.data.db.entities.DbWeather
+import ru.javacat.justweather.domain.models.Weather
 
 @Dao
 interface WeatherDao {
@@ -22,11 +23,14 @@ interface WeatherDao {
         hours: List<DbHour>,
     )
 
+    @Query("UPDATE weathers_table SET isCurrent = 0")
+    fun unCheckCurrents()
+
     @Transaction
-    @Query("SELECT * FROM weathers_table WHERE id = :locId"
+    @Query("SELECT * FROM weathers_table WHERE name = :locId"
 
             )
-    fun getCurrent(locId: String): Flow<List<DbWeatherWithForecastsAndAlerts>>
+    suspend fun getByName(locId: String): List<DbWeatherWithForecastsAndAlerts>
 
 //    @Transaction
 //    @Query("SELECT * FROM weathers_table WHERE id = :locId AND date = :forecastDate"
@@ -34,9 +38,18 @@ interface WeatherDao {
 //    )
 //    fun getForecast(locId: String, forecastDate: String): Flow<List<DbWeatherWithForecastsAndAlerts>>
 
+    @Query("SELECT * FROM weathers_table")
+    fun getAll(): Flow<List<DbWeatherWithForecastsAndAlerts>>
+
+    @Query("SELECT * FROM weathers_table WHERE isCurrent = 1")
+    fun getCurrent(): Flow<List<DbWeatherWithForecastsAndAlerts>>
 
     @Query("SELECT * FROM hours_table WHERE forecastDate = :date "
     )
     suspend fun getHours(date: String): List<DbHour>
+
+
+    @Query("DELETE FROM weathers_table WHERE id = :id")
+    suspend fun removeById(id: String)
 
 }

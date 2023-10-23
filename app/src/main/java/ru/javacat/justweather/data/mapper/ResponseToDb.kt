@@ -26,6 +26,7 @@ fun WeatherResponse.toDbWeather(weatherId: String): DbWeather {
 
     return DbWeather(
         weatherId,
+        false,
         current.toDb(),
         location.toDb()
     )

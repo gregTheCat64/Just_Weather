@@ -153,7 +153,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.weatherFlow?.observe(viewLifecycleOwner) { weather ->
+                viewModel.currentWeatherFlow.observe(viewLifecycleOwner) { weather ->
                     Log.i("MainFragment", "collecting")
                     updateWeather(weather)
                     weather?.forecasts?.let { updateForecast(forecastdays = it) }
