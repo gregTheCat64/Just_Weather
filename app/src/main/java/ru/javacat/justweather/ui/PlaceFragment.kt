@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
-import android.widget.SearchView.OnQueryTextListener
 import android.widget.Toast
+
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,6 +22,7 @@ import ru.javacat.justweather.ui.adapters.OnSearchPlacesInteractionListener
 import ru.javacat.justweather.ui.adapters.PlacesAdapter
 import ru.javacat.justweather.ui.adapters.SearchPlacesAdapter
 import ru.javacat.justweather.ui.view_models.PlaceViewModel
+import ru.javacat.justweather.util.AndroidUtils
 
 @AndroidEntryPoint
 class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {
@@ -143,12 +144,13 @@ class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {
         binding.searchList?.layoutManager = LinearLayoutManager(requireContext())
         binding.searchList?.adapter = searchAdapter
 
-//        searchview.setOnCloseListener {
-//            AndroidUtils.hideKeyboard(requireView())
-//            false
-//        }
+        searchview.setOnCloseListener {
+            AndroidUtils.hideKeyboard(requireView())
+            false
+        }
 
-        searchview.setOnQueryTextListener(object : OnQueryTextListener{
+
+        searchview.setOnQueryTextListener(object : android.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(location: String?): Boolean {
                 return false
             }
