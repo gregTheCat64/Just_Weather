@@ -11,6 +11,7 @@ import ru.javacat.justweather.databinding.PlaceItemBinding
 import ru.javacat.justweather.domain.models.Weather
 import ru.javacat.justweather.models.Place
 import ru.javacat.justweather.util.changeColorOnPush
+import ru.javacat.justweather.util.load
 import ru.javacat.justweather.util.pushAnimation
 
 interface OnPlacesInteractionListener {
@@ -36,9 +37,12 @@ class PlacesAdapter(
         private val binding = PlaceItemBinding.bind(view)
 
         fun bind(item: Weather) {
+            val image = item.current.condition.icon
             binding.apply {
                 placeId.text = item.location.name
                 nameValue.text = item.location.region +", "+item.location.region
+                tempValue.text = item.current.temp_c.toString()
+                conditionImage.load(image)
                 root.setOnClickListener {
                     it.pushAnimation(binding.root.context)
                     onInteractionListener.onSetPlace(item)

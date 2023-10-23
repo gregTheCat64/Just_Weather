@@ -251,7 +251,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
             override fun onForecastItem(item: Forecastday, view: View) {
                 //val color = context!!.resources.getColor(R.color.md_theme_light_primary)
                 view.changeColorOnPush(requireContext())
-                viewModel.getHours(item.date.toString())
+                viewModel.getHours(item.weatherId, item.date.toString())
                 viewModel.chooseForecastDay(item)
                 findNavController().navigate(R.id.action_mainFragment_to_forecastFragment)
             }

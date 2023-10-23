@@ -106,10 +106,10 @@ class RepositoryImpl @Inject constructor(
         return result
     }
 
-    override suspend fun getHours(date: String): List<Hour> {
+    override suspend fun getHours(weatherId: String, date: String): List<Hour> {
         println("getting hours")
 
-        val result = dao.getHours(date).map {list->
+        val result = dao.getHours(weatherId, date).map {list->
           list.toModel()
         }
 

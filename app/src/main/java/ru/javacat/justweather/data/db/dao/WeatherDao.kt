@@ -44,9 +44,9 @@ interface WeatherDao {
     @Query("SELECT * FROM weathers_table WHERE isCurrent = 1")
     fun getCurrent(): Flow<List<DbWeatherWithForecastsAndAlerts>>
 
-    @Query("SELECT * FROM hours_table WHERE forecastDate = :date "
+    @Query("SELECT * FROM hours_table WHERE forecastDate = :date AND weatherId = :weatherId "
     )
-    suspend fun getHours(date: String): List<DbHour>
+    suspend fun getHours(weatherId: String, date: String): List<DbHour>
 
 
     @Query("DELETE FROM weathers_table WHERE id = :id")

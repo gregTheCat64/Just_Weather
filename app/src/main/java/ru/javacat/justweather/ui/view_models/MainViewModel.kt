@@ -89,17 +89,16 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun getHours(date: String) {
+    fun getHours(weatherId: String, date: String) {
         viewModelScope.launch {
             try {
                 println("getting hours in vm")
-                _hoursData.value = repository.getHours(date)
+                _hoursData.value = repository.getHours(weatherId, date)
                 //Log.i("HOURS", "${hoursData.value}")
             } catch (e: Exception) {
                 loadingState.postValue(LoadingState.NetworkError)
             }
         }
-
 
 
     }

@@ -33,7 +33,7 @@ fun DbAlert.toModel(): Alert {
 }
 fun DbForecastday.toModel(): Forecastday {
     return Forecastday(
-        astro.toModel(), date.toLocalDate(), date_epoch, day.toModel(),
+       weatherId, astro.toModel(), date.toLocalDate(), date_epoch, day.toModel(),
     )
 }
 

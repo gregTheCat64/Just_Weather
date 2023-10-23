@@ -17,7 +17,7 @@ interface Repository {
 
     suspend fun getCurrentWeather(name: String): Weather?
 
-    suspend fun getHours(date: String): List<Hour>
+    suspend fun getHours(weatherId: String, date: String): List<Hour>
 
     suspend fun removeById(id: String)
 
