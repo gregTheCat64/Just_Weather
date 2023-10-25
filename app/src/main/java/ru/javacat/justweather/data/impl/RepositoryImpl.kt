@@ -1,7 +1,10 @@
 package ru.javacat.justweather.data.impl
 
 import android.util.Log
+import androidx.lifecycle.asLiveData
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import ru.javacat.justweather.data.db.dao.WeatherDao
@@ -17,6 +20,7 @@ import ru.javacat.justweather.domain.models.SearchLocation
 import ru.javacat.justweather.domain.repos.Repository
 import ru.javacat.justweather.domain.models.Weather
 import ru.javacat.justweather.util.apiRequest
+import ru.javacat.justweather.util.dbQuery
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -37,25 +41,33 @@ class RepositoryImpl @Inject constructor(
 //            it?.toModel()
 //        }
 
-    override val allWeathers: Flow<List<Weather?>> =
-        dao.getAll().map { it.map { it.toModel() } }
+//    override val allWeathers: Flow<List<Weather?>> =
+//        dao.getAll().map { it.map { it.toModel() } }
 
 
     override val currentWeatherFlow: Flow<Weather?> =
-        dao.getCurrent().map {
+        dao.getCurrentFlow().map {
             it.firstOrNull()
         }.map {
             it?.toModel()
         }
 
-    override suspend fun getCurrentWeather(name: String): Weather? {
-        Log.i("MyTag", "Getting weahter in repo")
-        val daores = dao.getByName(name).firstOrNull()?.toModel()
-        Log.i("daores:", "daores: ${daores?.location}")
-        return daores
+    override suspend fun getAllWeathers(): List<Weather>? {
+        return dbQuery { dao.getAll()?.map { it.toModel() } }
     }
 
-    override suspend fun fetchLocationDetails(name: String) {
+    override suspend fun getCurrentWeather(name: String): Weather? {
+        Log.i("MyTag", "Getting weahter in repo")
+//        val daores =
+//        Log.i("daores:", "daores: ${daores?.location}")
+        return dbQuery { dao.getByName(name).firstOrNull()?.toModel() }
+    }
+
+    override suspend fun setCurrentWeather(weather: Weather) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun fetchLocationDetails(name: String, currentId: String) {
         Log.i("Repo", "loadingData")
         val weatherResponse = apiRequest {
             apiService.getByName(name)
@@ -66,8 +78,8 @@ class RepositoryImpl @Inject constructor(
         val region = weatherResponse.location.region
         val weatherId = (locationName + region).toBase64()
 
-        //анчекаем текущий город
-        dao.unCheckCurrents()
+        //анчекаем текущие города
+        dbQuery { dao.unCheckCurrents() }
 
         //получаем таблички:
         val alerts = weatherResponse.alerts.alert.map {
@@ -79,7 +91,9 @@ class RepositoryImpl @Inject constructor(
         }
 
         val weather = weatherResponse.toDbWeather(weatherId)
-        weather.isCurrent = true
+        Log.i("MyTag", "$currentId and $weatherId")
+        weather.isCurrent = currentId == weatherId || currentId == "newCurrent"
+        Log.i("MyTag", "isCurrent: ${weather.isCurrent}")
 
         val hours = weatherResponse.forecast.forecastday.map { forecastdays ->
             forecastdays.hour.map {
@@ -87,13 +101,13 @@ class RepositoryImpl @Inject constructor(
             }
         }.flatten()
 
-
-        dao.insert(
+        dbQuery { dao.insert(
             weather,
             alerts,
             forecasts,
             hours
-        )
+        ) }
+
     }
 
 
@@ -119,4 +133,32 @@ class RepositoryImpl @Inject constructor(
     override suspend fun removeById(id: String) {
         dao.removeById(id)
     }
+
+    override suspend fun updateDb() {
+        //получаем координаты всех городов в БД
+        val lats:List<Double>? = getAllWeathers()?.map { it.location.lat }
+        val longs: List<Double>? = getAllWeathers()?.map { it.location.lon }
+
+        Log.i("lats:", "${lats?.size}")
+        Log.i("longs:", "${longs?.size}")
+
+        //получаем Id текущего города
+        val previousCurrentId = dao.getCurrent().firstOrNull()?.weather?.id
+        val previousCurrentName = dao.getCurrent().firstOrNull()?.weather?.location?.name
+        Log.i("MyTag", "ГОРОД: $previousCurrentName")
+
+        //обновляем табличку:
+        if (!lats.isNullOrEmpty() && !longs.isNullOrEmpty()){
+            val pairList = lats.zip(longs)
+            dao.clearDb()
+            dao.clearHoursDb()
+
+            for (pair in pairList){
+                //добавляем в параметр айди текущего города, чтобы в обновлении городов снова его вставить
+                    fetchLocationDetails("${pair.first},${pair.second}", previousCurrentId.toString())
+            }
+        }
+
+    }
+
 }

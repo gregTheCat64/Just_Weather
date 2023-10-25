@@ -30,7 +30,7 @@ class ActivityViewModel @Inject constructor(
                 val currentLocation = currentPlaceRepository.getFromPlacesList()
                 val coords = currentLocation?.lat.toString() +","+ currentLocation?.lon.toString()
                 if (currentLocation != null) {
-                    repository.fetchLocationDetails(coords)?: throw NetworkError
+                    repository.fetchLocationDetails(coords, "newCurrent")?: throw NetworkError
                 }
 
             } catch (e: ApiError) {

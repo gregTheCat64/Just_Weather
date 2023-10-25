@@ -50,6 +50,12 @@ class MainViewModel @Inject constructor(
         Log.i("MyTag", "initing VM")
     }
 
+    suspend fun updateDb(){
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.updateDb()
+        }
+    }
+
     fun updateWeather(){
         val place = currentPlaceRepository.getFromPlacesList()
         Log.i("MyTag", "restoring ${place?.name}")
@@ -63,7 +69,7 @@ class MainViewModel @Inject constructor(
             loadingState.postValue(LoadingState.Load)
 
             try {
-                repository.fetchLocationDetails(name)?: throw NetworkError
+                repository.fetchLocationDetails(name, "newCurrent")?: throw NetworkError
                 //_weatherData.postValue(repository.getCurrentWeather(name))
                 loadingState.postValue(LoadingState.Success)
 

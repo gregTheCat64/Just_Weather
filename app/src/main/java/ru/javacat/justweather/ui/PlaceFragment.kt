@@ -9,9 +9,14 @@ import android.widget.SearchView
 import android.widget.Toast
 
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import ru.javacat.justweather.base.BaseFragment
 import ru.javacat.justweather.databinding.FragmentPlaceBinding
 import ru.javacat.justweather.domain.models.SearchLocation
@@ -39,19 +44,20 @@ class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {
         super.onCreate(savedInstanceState)
 
 
+
         //val inflater = TransitionInflater.from(requireContext())
         //enterTransition = inflater.inflateTransition(R.transition.slide_right)
     }
 
-
-
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.i("PlaceFragment", "onViewCreated")
+        updateDb()
         initLoadingStateObserving()
         initObserver()
         initSearchBar()
         initSearchListObserver()
+
+
 
         binding.backBtn.setOnClickListener {
             findNavController().navigateUp()
@@ -94,6 +100,7 @@ class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {
         adapter = PlacesAdapter(object : OnPlacesInteractionListener {
             override fun onSetPlace(item: Weather) {
                 viewModel.setPlace(item.location.lat.toString()+","+item.location.lon.toString())
+
             }
             override fun onRemovePlace(item: Weather) {
                 viewModel.removePlace(item.id)
@@ -104,6 +111,26 @@ class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {
             adapter.submitList(it)
             Log.i("MyLog", it.toString())
         }
+
+        ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
+            0, ItemTouchHelper.LEFT
+        ){
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                TODO("Not yet implemented")
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                //viewModel.removePlace(adapter.getItemId(viewHolder.adapterPosition))
+                val item = adapter.getItemAt(viewHolder.adapterPosition)
+                viewModel.removePlace(item.id)
+                Toast.makeText(requireContext(), "Deleted", Toast.LENGTH_SHORT).show()
+            }
+        }
+        ).attachToRecyclerView(binding.placesList)
     }
 
     private fun initLoadingStateObserving(){
@@ -135,7 +162,7 @@ class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {
         val searchview: SearchView = binding.placeInput as SearchView
         searchAdapter = SearchPlacesAdapter(object : OnSearchPlacesInteractionListener{
             override fun onSetPlace(item: SearchLocation) {
-                viewModel.savePlace(Place(0, item.name, item.region))
+                //viewModel.savePlace(Place(0, item.name, item.region))
                 viewModel.setPlace(item.url)
             }
 
@@ -167,6 +194,12 @@ class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {
     private fun initSearchListObserver() {
         viewModel.foundLocations.observe(viewLifecycleOwner){
             searchAdapter.submitList(it)
+        }
+    }
+
+    private fun updateDb(){
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO){
+            viewModel.updateDb()
         }
     }
 

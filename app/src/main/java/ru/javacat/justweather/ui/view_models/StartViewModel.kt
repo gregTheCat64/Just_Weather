@@ -40,7 +40,15 @@ class StartViewModel @Inject constructor(
         get() = _placeData
 
     init {
-        loadPlaces()
+        //loadPlaces()
+        //viewModelScope.launch(Dispatchers.IO) {  repository.updateDb() }
+
+    }
+
+    suspend fun updateDb(){
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.updateDb()
+        }
     }
 
     fun findPlaceByLocation(name: String) {
@@ -49,11 +57,11 @@ class StartViewModel @Inject constructor(
             loadingState.postValue(LoadingState.Load)
 
             try {
-                repository.fetchLocationDetails(name)?:throw NetworkError
+                repository.fetchLocationDetails(name, "newCurrent")?:throw NetworkError
                 loadingState.postValue(LoadingState.Success)
 
                 //delay(5000)
-                val foundWeatherName = repository.fetchLocationDetails(name)
+                //val foundWeatherName = repository.fetchLocationDetails(name)
                 //_weatherData.postValue(repository.getCurrentWeather(foundWeatherName!!))
                 //savePlace(Place(0, weatherFlow.location.name, foundWeather.location.region))
                 //TODO: fix saving
@@ -81,9 +89,9 @@ class StartViewModel @Inject constructor(
             println("RESULT_PLACES= $result")
             if (result == null) {
                 placesRepository.save(place)
-                loadPlaces()
+                //loadPlaces()
             }
-            addToPlacesList()
+            //addToPlacesList()
         }
     }
 

@@ -27,6 +27,7 @@ import androidx.navigation.fragment.findNavController
 
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.javacat.justweather.R
 import ru.javacat.justweather.base.BaseFragment
@@ -84,6 +85,7 @@ class StartFragment: BaseFragment<FragmentStartBinding>(), LocationListener {
 
     private fun init(){
         Log.i("StartFrag", "init")
+        //updateDb()
         initObserver()
         checkPermission()
 
@@ -94,7 +96,7 @@ class StartFragment: BaseFragment<FragmentStartBinding>(), LocationListener {
         Log.i("StartFrag", "initObserver")
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
-                viewModel.currentWeatherFlow?.observe(viewLifecycleOwner) {
+                viewModel.currentWeatherFlow.observe(viewLifecycleOwner) {
                     it?.let {
                         findNavController().navigate(R.id.mainFragment)
                     }
@@ -102,6 +104,12 @@ class StartFragment: BaseFragment<FragmentStartBinding>(), LocationListener {
             }
         }
 
+    }
+
+    private fun updateDb(){
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO){
+            viewModel.updateDb()
+        }
     }
 
     private fun initLoadingStateObserving(){

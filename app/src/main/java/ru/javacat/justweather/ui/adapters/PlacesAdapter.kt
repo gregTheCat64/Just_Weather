@@ -3,6 +3,7 @@ package ru.javacat.justweather.ui.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.constraintlayout.motion.widget.OnSwipe
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -34,6 +35,11 @@ class PlacesAdapter(
         holder.bind(getItem(position))
     }
 
+
+    fun getItemAt(position: Int): Weather {
+        return super.getItem(position)
+    }
+
     class Holder(view: View, private val onInteractionListener: OnPlacesInteractionListener): RecyclerView.ViewHolder(view){
         private val binding = PlaceItemBinding.bind(view)
 
@@ -41,16 +47,15 @@ class PlacesAdapter(
             val image = item.current.condition.icon
             binding.apply {
                 conditionValue.text = item.current.condition.text
-                nameValue.text = item.location.name +", "+item.location.region
+                nameValue.text = item.location.name
+                regionValue.text = item.location.region + ", "+ item.location.country
                 tempValue.text = item.current.temp_c.roundToInt().toString() + "°"
+                updateTime.text = item.location.localtime
                 conditionImage.load(image)
                 root.setOnClickListener {
                     it.pushAnimation(binding.root.context)
                     onInteractionListener.onSetPlace(item)
 
-                }
-               removeBtn.setOnClickListener {
-                    onInteractionListener.onRemovePlace(item)
                 }
             }
 

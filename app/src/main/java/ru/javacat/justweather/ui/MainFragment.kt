@@ -16,6 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.javacat.justweather.R
 import ru.javacat.justweather.base.BaseFragment
@@ -130,10 +131,11 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.i("MainFragment", "onViewCreated")
-
+        //updateDb()
 
         binding.placeLayout.setOnClickListener {
             it.changeColorOnPush(requireContext())
+            //updateDb()
             findNavController().navigate(R.id.action_mainFragment_to_placeFragment)
 //            parentFragmentManager
 //                .beginTransaction()
@@ -169,6 +171,12 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
 //            }
 //        }
 
+    }
+
+    private fun updateDb() {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+            viewModel.updateDb()
+        }
     }
 
     private fun updateWeather(weather: Weather?){

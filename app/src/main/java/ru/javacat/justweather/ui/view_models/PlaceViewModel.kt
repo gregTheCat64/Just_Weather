@@ -24,45 +24,55 @@ import javax.inject.Inject
 @HiltViewModel
 class PlaceViewModel @Inject constructor(
     private val repository: Repository,
-    //private val placesRepository: PlacesRepository,
-    //private val currentPlaceRepository: CurrentPlaceRepository
 ) : ViewModel() {
 
-    private val _weatherData: MutableLiveData<Weather> = MutableLiveData()
-    val weatherData: LiveData<Weather>
-        get() = _weatherData
-
-    private val _placeData = MutableLiveData<List<Place>>()
-    val placeData: LiveData<List<Place>>
-        get() = _placeData
 
     private var _foundLocations = MutableLiveData<List<SearchLocation>>()
     val foundLocations: LiveData<List<SearchLocation>>
         get() = _foundLocations
 
-    val allWeathers = repository.allWeathers.asLiveData(viewModelScope.coroutineContext)
+    private var _allWeathers = MutableLiveData<List<Weather>?>()
+    val allWeathers: LiveData<List<Weather>?>
+        get() = _allWeathers
 
     val loadingState = SingleLiveEvent<LoadingState>()
 
     init {
 
+        getAllWeathers()
     }
 
-
-
-
-    fun savePlace(place: Place) {
+    private fun getAllWeathers() {
         viewModelScope.launch(Dispatchers.IO) {
-            val places = placeData.value
-            val result = places?.find { it.name == place.name }
-            if (result == null) {
-//                placesRepository.save(place)
-//                loadPlaces()
-
+            try {
+                val result = repository.getAllWeathers()
+                _allWeathers.postValue(result)
+            } catch (e: ApiError) {
+                loadingState.postValue(LoadingState.InputError)
             }
         }
-
     }
+
+    suspend fun updateDb(){
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.updateDb()
+        }
+    }
+
+
+//    fun savePlace(place: Place) {
+//        viewModelScope.launch(Dispatchers.IO) {
+//            val places = placeData.value
+//            val result = places?.find { it.name == place.name }
+//            if (result == null) {
+////                placesRepository.save(place)
+////                loadPlaces()
+//
+//            }
+//        }
+//
+//    }
+
 
     fun getLocations(query: String){
         //var searchLocations = emptyList<SearchLocation>()
@@ -94,7 +104,7 @@ class PlaceViewModel @Inject constructor(
             loadingState.postValue(LoadingState.Load)
 
             try {
-                repository.fetchLocationDetails(name) ?: throw NetworkError
+                repository.fetchLocationDetails(name, "newCurrent") ?: throw NetworkError
 
                 //Log.i("MyTag", "weatherResp: $weather")
                 loadingState.postValue(LoadingState.Success)
