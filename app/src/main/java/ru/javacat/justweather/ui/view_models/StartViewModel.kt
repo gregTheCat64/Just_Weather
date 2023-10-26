@@ -45,11 +45,11 @@ class StartViewModel @Inject constructor(
 
     }
 
-    suspend fun updateDb(){
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.updateDb()
-        }
-    }
+//    suspend fun updateDb(){
+//        viewModelScope.launch(Dispatchers.IO) {
+//            repository.updateDb()
+//        }
+//    }
 
     fun findPlaceByLocation(name: String) {
         Log.i("StartFrag", "loadingData")

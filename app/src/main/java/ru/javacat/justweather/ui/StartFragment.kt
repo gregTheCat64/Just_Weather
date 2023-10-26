@@ -106,11 +106,11 @@ class StartFragment: BaseFragment<FragmentStartBinding>(), LocationListener {
 
     }
 
-    private fun updateDb(){
-        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO){
-            viewModel.updateDb()
-        }
-    }
+//    private fun updateDb(){
+//        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO){
+//            viewModel.updateDb()
+//        }
+//    }
 
     private fun initLoadingStateObserving(){
         viewModel.loadingState.observe(viewLifecycleOwner){

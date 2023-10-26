@@ -70,7 +70,7 @@ fun LocationResponse.toDb(): Location =
 
 fun AlertResponse.toDbAlert(weatherId: String): DbAlert {
     return DbAlert(
-        weatherId, areas, category, certainty, desc, effective, event, expires, headline, instruction, msgtype, note, severity, urgency
+        0L, weatherId, areas, category, certainty, desc, effective, event, expires, headline, instruction, msgtype, note, severity, urgency
     )
 }
 

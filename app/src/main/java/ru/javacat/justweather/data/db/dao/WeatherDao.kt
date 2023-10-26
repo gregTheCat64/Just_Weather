@@ -1,10 +1,13 @@
 package ru.javacat.justweather.data.db.dao
 
 import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import ru.javacat.justweather.data.db.entities.DbAlert
 import ru.javacat.justweather.data.db.entities.DbWeatherWithForecastsAndAlerts
 import ru.javacat.justweather.data.db.entities.DbForecastday
@@ -15,7 +18,7 @@ import ru.javacat.justweather.domain.models.Weather
 @Dao
 interface WeatherDao {
     @Transaction
-    @Upsert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(
         weather: DbWeather,
         alerts: List<DbAlert>,
@@ -27,19 +30,14 @@ interface WeatherDao {
     fun unCheckCurrents()
 
     @Transaction
-    @Query("SELECT * FROM weathers_table WHERE name = :locId"
-
-            )
+    @Query("SELECT * FROM weathers_table WHERE name = :locId")
     suspend fun getByName(locId: String): List<DbWeatherWithForecastsAndAlerts>
 
-//    @Transaction
-//    @Query("SELECT * FROM weathers_table WHERE id = :locId AND date = :forecastDate"
-//
-//    )
-//    fun getForecast(locId: String, forecastDate: String): Flow<List<DbWeatherWithForecastsAndAlerts>>
+    @Query("SELECT * FROM weathers_table")
+    fun getAll(): Flow<List<DbWeatherWithForecastsAndAlerts>>
 
     @Query("SELECT * FROM weathers_table")
-    suspend fun getAll(): List<DbWeatherWithForecastsAndAlerts>?
+    fun getAllWeathers(): List<DbWeatherWithForecastsAndAlerts>
 
     @Query("SELECT * FROM weathers_table WHERE isCurrent = 1")
     fun getCurrentFlow(): Flow<List<DbWeatherWithForecastsAndAlerts>>

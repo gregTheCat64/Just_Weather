@@ -33,10 +33,12 @@ data class DbWeather(
             onDelete = ForeignKey.CASCADE,
             onUpdate = ForeignKey.CASCADE
             )
-    ]
+    ],
+
 )
 data class DbAlert(
-    @PrimaryKey val weatherId: String,
+    @PrimaryKey(autoGenerate = true) val id: Long,
+    val weatherId: String,
     val areas: String,
     val category: String,
     val certainty: String,

@@ -51,7 +51,7 @@ class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.i("PlaceFragment", "onViewCreated")
-        updateDb()
+        //updateDb()
         initLoadingStateObserving()
         initObserver()
         initSearchBar()
@@ -61,6 +61,10 @@ class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {
 
         binding.backBtn.setOnClickListener {
             findNavController().navigateUp()
+        }
+
+        binding.refreshBtn.setOnClickListener {
+            updateDb()
         }
 
 //        binding.placeInput.setOnEditorActionListener { _, actionId, _ ->
@@ -107,7 +111,7 @@ class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {
             }
         })
         binding.placesList.adapter = adapter
-        viewModel.allWeathers.observe(viewLifecycleOwner) {
+        viewModel.allWeathersFlow.observe(viewLifecycleOwner) {
             adapter.submitList(it)
             Log.i("MyLog", it.toString())
         }

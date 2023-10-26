@@ -52,7 +52,26 @@ class MainViewModel @Inject constructor(
 
     suspend fun updateDb(){
         viewModelScope.launch(Dispatchers.IO) {
-            repository.updateDb()
+            //получаем координаты всех городов в БД
+            val lats:List<Double>? = repository.getAllWeathers()?.map { it.location.lat }
+            val longs: List<Double>? = repository.getAllWeathers()?.map { it.location.lon }
+
+            Log.i("lats:", "${lats?.size}")
+            Log.i("longs:", "${longs?.size}")
+
+            //получаем Id текущего города
+            val previousCurrentId = repository.getCurrentWeather()?.id
+            val previousCurrentName = repository.getCurrentWeather()?.location?.name
+            Log.i("MyTag", "ГОРОД: $previousCurrentName")
+
+            if (!lats.isNullOrEmpty() && !longs.isNullOrEmpty()){
+                val pairList = lats.zip(longs)
+                repository.clearDbs()
+                for (pair in pairList){
+                    //добавляем в параметр айди текущего города, чтобы в обновлении городов снова его вставить
+                    repository.fetchLocationDetails("${pair.first},${pair.second}", previousCurrentId.toString())
+                }
+            }
         }
     }
 

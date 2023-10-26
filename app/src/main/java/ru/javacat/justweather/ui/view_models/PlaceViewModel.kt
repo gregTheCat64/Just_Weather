@@ -8,6 +8,8 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import ru.javacat.justweather.ApiError
 import ru.javacat.justweather.NetworkError
@@ -26,36 +28,59 @@ class PlaceViewModel @Inject constructor(
     private val repository: Repository,
 ) : ViewModel() {
 
+    val allWeathersFlow = repository.allWeathers.asLiveData(viewModelScope.coroutineContext)
+
+    //val currentWeatherFlow = repository.currentWeatherFlow.asLiveData(viewModelScope.coroutineContext)
 
     private var _foundLocations = MutableLiveData<List<SearchLocation>>()
     val foundLocations: LiveData<List<SearchLocation>>
         get() = _foundLocations
 
-    private var _allWeathers = MutableLiveData<List<Weather>?>()
-    val allWeathers: LiveData<List<Weather>?>
-        get() = _allWeathers
+//    private var _allWeathers = MutableLiveData<List<Weather>?>()
+//    val allWeathers: LiveData<List<Weather>?>
+//        get() = _allWeathers
 
     val loadingState = SingleLiveEvent<LoadingState>()
 
     init {
 
-        getAllWeathers()
+        //getAllWeathers()
     }
 
-    private fun getAllWeathers() {
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val result = repository.getAllWeathers()
-                _allWeathers.postValue(result)
-            } catch (e: ApiError) {
-                loadingState.postValue(LoadingState.InputError)
-            }
-        }
-    }
+//    private fun getAllWeathers() {
+//        viewModelScope.launch(Dispatchers.IO) {
+//            try {
+//                val result = repository.getAllWeathers()
+//                _allWeathers.postValue(result)
+//            } catch (e: ApiError) {
+//                loadingState.postValue(LoadingState.InputError)
+//            }
+//        }
+//    }
 
     suspend fun updateDb(){
         viewModelScope.launch(Dispatchers.IO) {
-            repository.updateDb()
+            //получаем координаты всех городов в БД
+            val lats:List<Double>? = repository.getAllWeathers()?.map { it.location.lat }
+            val longs: List<Double>? = repository.getAllWeathers()?.map { it.location.lon }
+
+            Log.i("MyTag:", "lats: ${lats?.size}")
+            Log.i("MyTag:", "longs: ${longs?.size}")
+
+            //получаем Id текущего города
+            val previousCurrentId = repository.getCurrentWeather()?.id
+            val previousCurrentName = repository.getCurrentWeather()?.location?.name
+            Log.i("MyTag", "ГОРОД: $previousCurrentName")
+            Log.i("MyTag", "id: $previousCurrentId")
+
+            if (!lats.isNullOrEmpty() && !longs.isNullOrEmpty()){
+                val pairList = lats.zip(longs)
+                repository.clearDbs()
+                for (pair in pairList){
+                    //добавляем в параметр айди текущего города, чтобы в обновлении городов снова его вставить
+                    repository.fetchLocationDetails("${pair.first},${pair.second}", previousCurrentId.toString())
+                }
+            }
         }
     }
 
