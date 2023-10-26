@@ -4,14 +4,7 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import ru.javacat.justweather.data.network.response_models.ConditionResponse
-import ru.javacat.justweather.domain.models.Astro
-import ru.javacat.justweather.domain.models.Condition
-import ru.javacat.justweather.domain.models.Current
-import ru.javacat.justweather.domain.models.Day
-import ru.javacat.justweather.domain.models.Hour
-import ru.javacat.justweather.domain.models.Location
-import java.time.LocalDate
+
 
 @Entity(
     tableName = "weathers_table"
@@ -19,8 +12,8 @@ import java.time.LocalDate
 data class DbWeather(
     @PrimaryKey val id: String,
     var isCurrent: Boolean,
-    @Embedded val current: Current,
-    @Embedded val location: Location
+    @Embedded val current: DbCurrent,
+    @Embedded val location: DbLocation
 )
 
 @Entity(
@@ -105,7 +98,7 @@ data class DbHour(
     val chance_of_rain: Int,
     val chance_of_snow: Int,
     val cloud: Int,
-    @Embedded val condition: Condition,
+    @Embedded val condition: DbCondition,
     val dewpoint_c: Double,
     val dewpoint_f: Double,
     val feelslike_c: Double,
@@ -143,7 +136,7 @@ data class DbDay(
     val avgtemp_f: Double,
     val avgvis_km: Double,
     val avgvis_miles: Double,
-    @Embedded val condition: Condition,
+    @Embedded val condition: DbCondition,
     val daily_chance_of_rain: Int,
     val daily_chance_of_snow: Int,
     val daily_will_it_rain: Int,

@@ -102,6 +102,7 @@ class RepositoryImpl @Inject constructor(
             }
         }.flatten()
 
+         Log.i("MyTag", "INSERTING TO DB")
         dbQuery { dao.insert(
             weather,
             alerts,

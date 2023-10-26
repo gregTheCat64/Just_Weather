@@ -8,14 +8,12 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ru.javacat.justweather.ApiError
 import ru.javacat.justweather.NetworkError
 import ru.javacat.justweather.domain.models.Weather
 import ru.javacat.justweather.models.Place
 import ru.javacat.justweather.domain.repos.CurrentPlaceRepository
-import ru.javacat.justweather.domain.repos.PlacesRepository
 import ru.javacat.justweather.domain.repos.Repository
 import ru.javacat.justweather.ui.LoadingState
 import ru.javacat.justweather.ui.SingleLiveEvent
@@ -24,7 +22,6 @@ import javax.inject.Inject
 @HiltViewModel
 class StartViewModel @Inject constructor(
     private val repository: Repository,
-    private val placesRepository: PlacesRepository,
     private val currentPlaceRepository: CurrentPlaceRepository
 ): ViewModel() {
     private val _weatherData: MutableLiveData<Weather> = MutableLiveData()
@@ -76,24 +73,24 @@ class StartViewModel @Inject constructor(
         }
     }
 
-    private fun loadPlaces() {
-        viewModelScope.launch(Dispatchers.IO) {
-            _placeData.postValue(placesRepository.getPlaces().value)
-        }
-    }
-
-    private suspend fun savePlace(place: Place) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val places = placeData.value
-            val result = places?.find { it.name == place.name }
-            println("RESULT_PLACES= $result")
-            if (result == null) {
-                placesRepository.save(place)
-                //loadPlaces()
-            }
-            //addToPlacesList()
-        }
-    }
+//    private fun loadPlaces() {
+//        viewModelScope.launch(Dispatchers.IO) {
+//            _placeData.postValue(placesRepository.getPlaces().value)
+//        }
+//    }
+//
+//    private suspend fun savePlace(place: Place) {
+//        viewModelScope.launch(Dispatchers.IO) {
+//            val places = placeData.value
+//            val result = places?.find { it.name == place.name }
+//            println("RESULT_PLACES= $result")
+//            if (result == null) {
+//                placesRepository.save(place)
+//                //loadPlaces()
+//            }
+//            //addToPlacesList()
+//        }
+//    }
 
     private fun addToPlacesList(){
         viewModelScope.launch{

@@ -2,9 +2,12 @@ package ru.javacat.justweather.data.mapper
 
 import ru.javacat.justweather.data.db.entities.DbAlert
 import ru.javacat.justweather.data.db.entities.DbAstro
+import ru.javacat.justweather.data.db.entities.DbCondition
+import ru.javacat.justweather.data.db.entities.DbCurrent
 import ru.javacat.justweather.data.db.entities.DbDay
 import ru.javacat.justweather.data.db.entities.DbForecastday
 import ru.javacat.justweather.data.db.entities.DbHour
+import ru.javacat.justweather.data.db.entities.DbLocation
 import ru.javacat.justweather.data.db.entities.DbWeather
 import ru.javacat.justweather.data.network.response_models.AlertResponse
 import ru.javacat.justweather.data.network.response_models.AstroResponse
@@ -32,8 +35,8 @@ fun WeatherResponse.toDbWeather(weatherId: String): DbWeather {
     )
 }
 
-fun CurrentResponse.toDb(): Current =
-    Current(
+fun CurrentResponse.toDb(): DbCurrent =
+    DbCurrent(
         cloud,
         condition.toDb(),
         feelslike_c,
@@ -59,11 +62,11 @@ fun CurrentResponse.toDb(): Current =
         wind_mph
     )
 
-fun ConditionResponse.toDb(): Condition =
-    Condition(code, icon, text)
+fun ConditionResponse.toDb(): DbCondition =
+    DbCondition(code, icon, text)
 
-fun LocationResponse.toDb(): Location =
-    Location(
+fun LocationResponse.toDb(): DbLocation =
+    DbLocation(
         country, lat, localtime, localtime_epoch, lon, name, region, tz_id
     )
 

@@ -8,7 +8,6 @@ data class Day(
     val avgtemp_f: Double,
     val avgvis_km: Double,
     val avgvis_miles: Double,
-    @Embedded
     val condition: Condition,
     val daily_chance_of_rain: Int,
     val daily_chance_of_snow: Int,

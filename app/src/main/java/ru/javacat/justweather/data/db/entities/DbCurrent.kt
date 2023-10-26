@@ -1,10 +1,11 @@
-package ru.javacat.justweather.domain.models
+package ru.javacat.justweather.data.db.entities
 
 import androidx.room.Embedded
+import ru.javacat.justweather.domain.models.Condition
 
-data class Current(
+data class DbCurrent(
     val cloud: Int,
-    val condition: Condition,
+    @Embedded val condition: DbCondition,
     val feelslike_c: Double,
     val feelslike_f: Double,
     val gust_kph: Double,

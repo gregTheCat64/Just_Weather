@@ -8,16 +8,10 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import ru.javacat.justweather.ApiError
 import ru.javacat.justweather.NetworkError
 import ru.javacat.justweather.domain.models.SearchLocation
-import ru.javacat.justweather.domain.models.Weather
-import ru.javacat.justweather.models.Place
-import ru.javacat.justweather.domain.repos.CurrentPlaceRepository
-import ru.javacat.justweather.domain.repos.PlacesRepository
 import ru.javacat.justweather.domain.repos.Repository
 import ru.javacat.justweather.ui.LoadingState
 import ru.javacat.justweather.ui.SingleLiveEvent
