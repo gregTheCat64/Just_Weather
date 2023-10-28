@@ -14,3 +14,7 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Just Weather"
 include ':app'
+include ':domain'
+include ':data'
+include ':ui'
+include ':common'
