@@ -50,7 +50,7 @@ class StartFragment: BaseFragment<FragmentStartBinding>(), LocationListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.i("StartFrag", "onCreate")
         super.onCreate(savedInstanceState)
-
+        permissionListener()
         val inflater = TransitionInflater.from(requireContext())
         exitTransition = inflater.inflateTransition(R.transition.fade)
     }
@@ -63,6 +63,7 @@ class StartFragment: BaseFragment<FragmentStartBinding>(), LocationListener {
     ): View? {
         Log.i("StartFrag", "onCreateView")
         //fLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+
         locationManager = requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
         return super.onCreateView(inflater, container, savedInstanceState)
@@ -77,7 +78,8 @@ class StartFragment: BaseFragment<FragmentStartBinding>(), LocationListener {
         binding.repeatBtn.setOnClickListener {
             it.isVisible = false
             binding.progressBar.isVisible = true
-            init()
+            pLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+
         }
     }
 
@@ -95,8 +97,9 @@ class StartFragment: BaseFragment<FragmentStartBinding>(), LocationListener {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
                 viewModel.currentWeatherFlow.observe(viewLifecycleOwner) {
+                    println("currentflow: ${it?.location}")
                     it?.let {
-                        findNavController().navigate(R.id.mainFragment)
+                        //findNavController().navigate(R.id.mainFragment)
                     }
                 }
             }
@@ -129,7 +132,7 @@ class StartFragment: BaseFragment<FragmentStartBinding>(), LocationListener {
                 is LoadingState.Success -> {
                     binding.progressBar.isVisible = false
                     binding.repeatBtn.isVisible = false
-                    //findNavController().navigate(R.id.mainFragment)
+                    findNavController().navigate(R.id.mainFragment)
                 }
                 else ->  binding.progressBar.isVisible = false
             }
@@ -137,13 +140,13 @@ class StartFragment: BaseFragment<FragmentStartBinding>(), LocationListener {
     }
 
     private fun loadData(lat: Double, long: Double){
-        Log.i("MyLog", "Loading data")
+        //Log.i("MyLog", "Loading data")
         viewModel.findPlaceByLocation("$lat,$long")
     }
 
     private fun checkPermission(){
         if (!isPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION)){
-            permissionListener()
+            //permissionListener()
             pLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         } else getLocation()
     }
@@ -160,8 +163,15 @@ class StartFragment: BaseFragment<FragmentStartBinding>(), LocationListener {
         ){
             if (it == true) {
                 getLocation()
-            } else
-                Toast.makeText(requireContext(), getString(R.string.permission_alarm), Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.permission_alarm),
+                    Toast.LENGTH_SHORT
+                ).show()
+                binding.repeatBtn.isVisible = true
+                binding.progressBar.isVisible = false
+            }
         }
     }
 
@@ -175,6 +185,7 @@ class StartFragment: BaseFragment<FragmentStartBinding>(), LocationListener {
     }
 
     private fun getLocationOverGps(){
+        Log.i("StartFrag", "getLocationOverGPS")
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
             snack(getString(R.string.location_disabled))
             binding.repeatBtn.isVisible = true
@@ -188,9 +199,12 @@ class StartFragment: BaseFragment<FragmentStartBinding>(), LocationListener {
             ) != PackageManager.PERMISSION_GRANTED
 
         ) {
+            Log.i("StartFrag", "access fine is not permited")
+            snack(getString(R.string.location_disabled))
+            binding.repeatBtn.isVisible = true
+            binding.progressBar.isVisible = false
             return
         }
-
                 locationManager.requestSingleUpdate(
                     LocationManager.GPS_PROVIDER,
                     this,
@@ -202,6 +216,7 @@ class StartFragment: BaseFragment<FragmentStartBinding>(), LocationListener {
 
     @RequiresApi(Build.VERSION_CODES.R)
     private fun getLocationOverNetwork(){
+        Log.i("StartFrag", "getLocationOverNetwork")
         if (!locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
             snack(getString(R.string.location_disabled))
             binding.repeatBtn.isVisible = true
@@ -258,10 +273,17 @@ class StartFragment: BaseFragment<FragmentStartBinding>(), LocationListener {
 //    }
 
     override fun onLocationChanged(loc: Location) {
+        Log.i("StartFrag", "location changed")
         loadData(loc.latitude, loc.longitude)
     }
 
     override fun onProviderDisabled(provider: String) {
+        Log.i("StartFrag", "provoder disabled")
         snack(getString(R.string.location_disabled))
+    }
+
+    override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
+        Log.i("StartFrag", "status changed")
+        //snack("status changed")
     }
 }

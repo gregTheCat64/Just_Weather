@@ -103,7 +103,10 @@ class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {
 
             }
             override fun onRemovePlace(item: ru.javacat.justweather.domain.models.Weather) {
-                viewModel.removePlace(item.id)
+                if (!item.isCurrent ){
+                    viewModel.removePlace(item.id) 
+                } else Toast.makeText(requireContext(), "Невозможно удалить текущий город", Toast.LENGTH_SHORT).show()
+               
             }
         })
         binding.placesList.adapter = adapter
@@ -126,8 +129,9 @@ class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 //viewModel.removePlace(adapter.getItemId(viewHolder.adapterPosition))
                 val item = adapter.getItemAt(viewHolder.adapterPosition)
-                viewModel.removePlace(item.id)
-                Toast.makeText(requireContext(), "Deleted", Toast.LENGTH_SHORT).show()
+                if (!item.isCurrent ){
+                    viewModel.removePlace(item.id)
+                }
             }
         }
         ).attachToRecyclerView(binding.placesList)

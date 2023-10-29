@@ -1,5 +1,7 @@
 package ru.javacat.justweather.data.mapper
 
+import ru.javacat.justweather.common.util.toLocalDate
+import ru.javacat.justweather.common.util.toLocalDateTime
 import ru.javacat.justweather.data.db.entities.DbAlert
 import ru.javacat.justweather.data.db.entities.DbAstro
 import ru.javacat.justweather.data.db.entities.DbCondition
@@ -9,8 +11,6 @@ import ru.javacat.justweather.data.db.entities.DbForecastday
 import ru.javacat.justweather.data.db.entities.DbHour
 import ru.javacat.justweather.data.db.entities.DbLocation
 import ru.javacat.justweather.data.db.entities.DbWeatherWithForecastsAndAlerts
-import ru.javacat.justweather.common.util.toLocalDateTime
-import ru.javacat.justweather.common.util.toLocalDate
 
 fun DbWeatherWithForecastsAndAlerts.toModel(): ru.javacat.justweather.domain.models.Weather {
     return ru.javacat.justweather.domain.models.Weather(
@@ -19,6 +19,7 @@ fun DbWeatherWithForecastsAndAlerts.toModel(): ru.javacat.justweather.domain.mod
         weather.current.toModel(),
         forecasts.map { it.toModel() },
         weather.location.toModel(),
+        weather.isCurrent
         //hours.map { it.toModel() }
     )
 }

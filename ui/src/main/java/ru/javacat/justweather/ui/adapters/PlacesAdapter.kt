@@ -6,6 +6,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import ru.javacat.justweather.common.util.asTime
+import ru.javacat.justweather.common.util.toLocalDateTime
 import ru.javacat.justweather.ui.util.load
 import ru.javacat.justweather.ui.util.pushAnimation
 import ru.javacat.ui.R
@@ -46,7 +48,7 @@ class PlacesAdapter(
                 nameValue.text = item.location.name
                 regionValue.text = item.location.region + ", "+ item.location.country
                 tempValue.text = item.current.temp_c.roundToInt().toString() + "°"
-                updateTime.text = item.location.localtime
+                updateTime.text = item.location.localtime.toLocalDateTime().asTime()
                 conditionImage.load(image)
                 root.setOnClickListener {
                     it.pushAnimation(binding.root.context)
