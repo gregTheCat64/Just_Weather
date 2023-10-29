@@ -3,14 +3,13 @@ package ru.javacat.justweather.common.util
 
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
 
 fun LocalDate.asDayOfWeek(): String = format(DateTimeFormatter.ofPattern("EEE"))
 
 
-fun LocalDate.asLocalDate(): String = format(DateTimeFormatter.ofPattern("dd MMMM"))
+fun LocalDate.asLocalDate(): String = format(DateTimeFormatter.ofPattern("dd MMM"))
 
 
 
