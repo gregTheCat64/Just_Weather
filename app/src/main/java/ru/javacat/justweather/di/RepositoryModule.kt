@@ -14,5 +14,5 @@ interface RepositoryModule {
 
     @Singleton
     @Binds
-    fun bindsRepository(impl: RepositoryImpl): Repository
+    fun bindsRepository(impl: RepositoryImpl): ru.javacat.justweather.domain.repos.Repository
 }

@@ -14,5 +14,5 @@ interface CurrentPlaceRepositoryModule {
 
     @Singleton
     @Binds
-    fun bindsCurrentPlaceRepository(impl: CurrentPlaceSharedPrefsImpl): CurrentPlaceRepository
+    fun bindsCurrentPlaceRepository(impl: CurrentPlaceSharedPrefsImpl): ru.javacat.justweather.domain.repos.CurrentPlaceRepository
 }
