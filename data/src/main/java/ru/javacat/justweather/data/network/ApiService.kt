@@ -42,13 +42,15 @@ interface ApiService{
 
     @GET("search.json?key=$API_KEY")
     suspend fun findLocation(
-        @Query("q") name: String
+        @Query("q") name: String,
+
     ): Response<List<ru.javacat.justweather.domain.models.SearchLocation>>
 
     @GET("https://suggest-maps.yandex.ru/v1/suggest?apikey=$GEO_SUGGEST_API_KEY")
     suspend fun suggestLocation(
         @Query ("text") name: String,
-        @Query ("types") types: String = "province,locality"
+        @Query ("types") types: String = "province,locality",
+        @Query ("print_address") print_address: String = "1"
     ): Response<SuggestResponse>
 
 }
