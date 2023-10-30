@@ -4,7 +4,7 @@ import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 import ru.javacat.justweather.data.network.response_models.WeatherResponse
-import ru.javacat.justweather.data.network.response_models.suggestModels.SuggestResponse
+import ru.javacat.justweather.domain.models.suggestModels.SuggestLocationList
 
 
 //private const val name = "London"
@@ -48,7 +48,7 @@ interface ApiService{
     @GET("https://suggest-maps.yandex.ru/v1/suggest?apikey=$GEO_SUGGEST_API_KEY")
     suspend fun suggestLocation(
         @Query ("text") name: String
-    ): SuggestResponse
+    ): Response<SuggestLocationList>
 
 }
 
