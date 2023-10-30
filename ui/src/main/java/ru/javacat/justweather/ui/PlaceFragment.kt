@@ -100,6 +100,7 @@ class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {
         adapter = PlacesAdapter(object : OnPlacesInteractionListener {
             override fun onSetPlace(item: ru.javacat.justweather.domain.models.Weather) {
                 viewModel.setPlace(item.location.lat.toString()+","+item.location.lon.toString())
+                //viewModel.setPlace(item.location.region+","+item.location.name)
 
 
             }
@@ -168,7 +169,7 @@ class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {
         searchAdapter = SearchPlacesAdapter(object : OnSearchPlacesInteractionListener{
             override fun onSetPlace(item: ru.javacat.justweather.domain.models.SearchLocation) {
                 //viewModel.savePlace(Place(0, item.name, item.region))
-                viewModel.setPlace(item.url)
+                viewModel.setPlace(item.lat.toString()+","+item.lon.toString())
             }
 
         })

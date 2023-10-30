@@ -148,6 +148,6 @@ class PlaceViewModel @Inject constructor(
     }
 
     fun clearPlace(){
-        //_foundLocations.value = emptyList()
+        _foundLocations.value = emptyList()
     }
 }
