@@ -54,8 +54,8 @@ class ForecastFragment : BaseFragment<FragmentForecastBinding>() {
                     conditionValue.text = it.day.condition.text
                     dateTxtView.text = it.date.asLocalDate()
                     avgTempValue.text = it.day.avgtemp_c.toString() + "°"
-                    maxTempValue.text = it.day.maxtemp_c.toString()
-                    minTempValue.text = it.day.mintemp_c.toString()
+                    maxTempValue.text = it.day.maxtemp_c.roundToInt().toString()
+                    minTempValue.text = it.day.mintemp_c.roundToInt().toString()
                     maxWindSpeedValue.text = it.day.maxwind_kph.roundToInt().toString() + "км/ч"
                     totalPrecipValue.text = it.day.totalprecip_mm.toString() + "мм"
                     avgHumidityValue.text = it.day.avghumidity.toString() + "%"
@@ -65,7 +65,12 @@ class ForecastFragment : BaseFragment<FragmentForecastBinding>() {
                     sunSetValue.text = it.astro.sunset
                     moonRiseValue.text = it.astro.moonrise
                     moonSetValue.text = it.astro.moonset
-
+                    val precipChance = StringBuffer()
+                    if (it.day.daily_chance_of_rain>0 ||it.day.daily_chance_of_snow>0) {
+                        precipChance.append("дождь: ${it.day.daily_chance_of_rain} % \n")
+                        precipChance.append("снег: ${it.day.daily_chance_of_snow} %")
+                        precipChanceValue.text = precipChance
+                    } else  precipChanceValue.text = "0%"
 
                     moonPhaseValue.text = when (it.astro.moon_phase) {
                         "New Moon" -> getString(R.string.Full_Moon)

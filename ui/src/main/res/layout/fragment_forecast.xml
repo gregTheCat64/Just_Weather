@@ -625,6 +625,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
+                        android:layout_margin="16dp"
                         android:layout_gravity="center"
                         android:orientation="horizontal"
                         >
@@ -634,7 +635,7 @@
                             android:layout_width="32dp"
                             android:layout_height="32dp"
                             android:layout_gravity="center"
-                            android:src="@drawable/icon_visibility"
+                            android:src="@drawable/icon_raining"
                             app:tint="?attr/colorPrimary" />
 
                         <androidx.appcompat.widget.LinearLayoutCompat
@@ -644,19 +645,21 @@
                             android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/pressureTxtView"
+                                android:id="@+id/precipChanceTxtView"
                                 style="@style/TextAppearance.Material3.BodyMedium"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Ср. видимость" />
+                                android:lines="2"
+                                android:ellipsize="end"
+                                android:text="Вероятность осадков" />
 
                             <TextView
-                                android:id="@+id/pressureValue"
+                                android:id="@+id/precipChanceValue"
                                 style="@style/TextAppearance.Material3.BodyLarge"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
-                                android:text="15" />
+                                android:text="15%" />
                         </androidx.appcompat.widget.LinearLayoutCompat>
 
 
@@ -687,7 +690,7 @@
                                 android:layout_width="32dp"
                                 android:layout_height="32dp"
                                 android:layout_gravity="center"
-                                android:src="@drawable/icon_pressure"
+                                android:src="@drawable/icon_visibility"
                                 app:tint="?attr/colorPrimary" />
 
                             <androidx.appcompat.widget.LinearLayoutCompat
