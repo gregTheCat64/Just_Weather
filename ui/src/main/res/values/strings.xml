@@ -19,4 +19,5 @@
     <string name="permission_alarm">We need location permission to continue</string>
     <string name="network_error">Network error</string>
     <string name="backbtn" translatable="false">backBtn</string>
+    <string name="uv_index">UV index:</string>
 </resources>

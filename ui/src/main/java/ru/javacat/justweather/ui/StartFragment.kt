@@ -35,22 +35,25 @@ import ru.javacat.ui.R
 import ru.javacat.ui.databinding.FragmentStartBinding
 
 @AndroidEntryPoint
-class StartFragment: BaseFragment<FragmentStartBinding>(), LocationListener {
+class StartFragment : BaseFragment<FragmentStartBinding>(), LocationListener {
 
-    override val bindingInflater: (LayoutInflater, ViewGroup?) -> FragmentStartBinding = {
-        inflater, container ->
-        FragmentStartBinding.inflate(inflater, container, false)
-    }
+    override val bindingInflater: (LayoutInflater, ViewGroup?) -> FragmentStartBinding =
+        { inflater, container ->
+            FragmentStartBinding.inflate(inflater, container, false)
+        }
 
     private lateinit var pLauncher: ActivityResultLauncher<String>
     private lateinit var locationManager: LocationManager
+
     //private lateinit var fLocationClient: FusedLocationProviderClient
     private val viewModel: StartViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.i("StartFrag", "onCreate")
         super.onCreate(savedInstanceState)
+
         permissionListener()
+
         val inflater = TransitionInflater.from(requireContext())
         exitTransition = inflater.inflateTransition(R.transition.fade)
     }
@@ -64,7 +67,8 @@ class StartFragment: BaseFragment<FragmentStartBinding>(), LocationListener {
         Log.i("StartFrag", "onCreateView")
         //fLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
 
-        locationManager = requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        locationManager =
+            requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
         return super.onCreateView(inflater, container, savedInstanceState)
     }
@@ -83,19 +87,21 @@ class StartFragment: BaseFragment<FragmentStartBinding>(), LocationListener {
         }
     }
 
-    private fun init(){
+    private fun init() {
         Log.i("StartFrag", "init")
         //updateDb()
         initObserver()
-        checkPermission()
+
+            checkPermission()
+
 
 
     }
 
-    private fun initObserver(){
+    private fun initObserver() {
         Log.i("StartFrag", "initObserver")
         viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.currentWeatherFlow.observe(viewLifecycleOwner) {
                     println("currentflow: ${it?.location}")
                     it?.let {
@@ -113,11 +119,15 @@ class StartFragment: BaseFragment<FragmentStartBinding>(), LocationListener {
 //        }
 //    }
 
-    private fun initLoadingStateObserving(){
-        viewModel.loadingState.observe(viewLifecycleOwner){
+    private fun initLoadingStateObserving() {
+        viewModel.loadingState.observe(viewLifecycleOwner) {
             when (it) {
-                is LoadingState.NetworkError ->  {
-                    Snackbar.make(requireView(), getString(R.string.network_error), Snackbar.LENGTH_LONG)
+                is LoadingState.NetworkError -> {
+                    Snackbar.make(
+                        requireView(),
+                        getString(R.string.network_error),
+                        Snackbar.LENGTH_LONG
+                    )
 //                        .setAction("Повторить") {
 //                            init()
 //                        }
@@ -125,44 +135,50 @@ class StartFragment: BaseFragment<FragmentStartBinding>(), LocationListener {
                     binding.progressBar.isVisible = false
                     binding.repeatBtn.isVisible = true
                 }
+
                 is LoadingState.Load -> {
                     binding.progressBar.isVisible = true
                     binding.repeatBtn.isVisible = false
                 }
+
                 is LoadingState.Success -> {
                     binding.progressBar.isVisible = false
                     binding.repeatBtn.isVisible = false
                     findNavController().navigate(R.id.mainFragment)
                 }
-                else ->  binding.progressBar.isVisible = false
+
+                else -> binding.progressBar.isVisible = false
             }
         }
     }
 
-    private fun loadData(lat: Double, long: Double){
+    private fun loadData(lat: Double, long: Double) {
         //Log.i("MyLog", "Loading data")
         viewModel.findPlaceByLocation("$lat,$long")
     }
 
-    private fun checkPermission(){
-        if (!isPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION)){
+    private fun checkPermission() {
+        if (!isPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION)) {
             //permissionListener()
             pLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         } else getLocation()
     }
 
-    private fun isLocationEnabled(): Boolean{
+    private fun isLocationEnabled(): Boolean {
         //val lm = requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
+            LocationManager.NETWORK_PROVIDER
+        )
     }
 
 
-    private fun permissionListener(){
+    private fun permissionListener() {
         pLauncher = registerForActivityResult(
             ActivityResultContracts.RequestPermission()
-        ){
+        ) {
             if (it == true) {
-                getLocation()
+                    getLocation()
+
             } else {
                 Toast.makeText(
                     requireContext(),
@@ -175,18 +191,21 @@ class StartFragment: BaseFragment<FragmentStartBinding>(), LocationListener {
         }
     }
 
-    private fun getLocation(){
+    private fun getLocation()  {
         Log.i("StartFrag", "getLocation")
         when (Build.VERSION.SDK_INT) {
             in 1..29 -> {
                 getLocationOverGps()
-            }else -> getLocationOverNetwork()
+            }
+            else -> {
+                getLocationOverNetwork()
+            }
         }
     }
 
-    private fun getLocationOverGps(){
+    private fun getLocationOverGps() {
         Log.i("StartFrag", "getLocationOverGPS")
-        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             snack(getString(R.string.location_disabled))
             binding.repeatBtn.isVisible = true
             binding.progressBar.isVisible = false
@@ -205,19 +224,18 @@ class StartFragment: BaseFragment<FragmentStartBinding>(), LocationListener {
             binding.progressBar.isVisible = false
             return
         }
-                locationManager.requestSingleUpdate(
-                    LocationManager.GPS_PROVIDER,
-                    this,
-                    null
-                )
-        }
-
+        locationManager.requestSingleUpdate(
+            LocationManager.GPS_PROVIDER,
+            this,
+            null
+        )
+    }
 
 
     @RequiresApi(Build.VERSION_CODES.R)
-    private fun getLocationOverNetwork(){
+    private fun getLocationOverNetwork() {
         Log.i("StartFrag", "getLocationOverNetwork")
-        if (!locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+        if (!locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
             snack(getString(R.string.location_disabled))
             binding.repeatBtn.isVisible = true
             binding.progressBar.isVisible = false
