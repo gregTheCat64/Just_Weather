@@ -21,11 +21,14 @@ import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.javacat.justweather.ui.base.BaseFragment
 import ru.javacat.justweather.ui.util.isPermissionGranted
@@ -44,6 +47,7 @@ class StartFragment : BaseFragment<FragmentStartBinding>(), LocationListener {
 
     private lateinit var pLauncher: ActivityResultLauncher<String>
     private lateinit var locationManager: LocationManager
+    private lateinit var dispatcher: CoroutineDispatcher
 
     //private lateinit var fLocationClient: FusedLocationProviderClient
     private val viewModel: StartViewModel by viewModels()
@@ -51,6 +55,8 @@ class StartFragment : BaseFragment<FragmentStartBinding>(), LocationListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.i("StartFrag", "onCreate")
         super.onCreate(savedInstanceState)
+
+        dispatcher = Dispatchers.IO
 
         permissionListener()
 
@@ -142,8 +148,8 @@ class StartFragment : BaseFragment<FragmentStartBinding>(), LocationListener {
                 }
 
                 is LoadingState.Success -> {
-                    binding.progressBar.isVisible = false
-                    binding.repeatBtn.isVisible = false
+                    //binding.progressBar.isVisible = false
+                    //binding.repeatBtn.isVisible = false
                     findNavController().navigate(R.id.mainFragment)
                 }
 
@@ -195,69 +201,82 @@ class StartFragment : BaseFragment<FragmentStartBinding>(), LocationListener {
         Log.i("StartFrag", "getLocation")
         when (Build.VERSION.SDK_INT) {
             in 1..29 -> {
-                getLocationOverGps()
+                viewLifecycleOwner.lifecycleScope.launch(dispatcher){
+                    println("getLocationThread: ${Thread.currentThread().name}")
+                    getLocationOverGps()
+                }
             }
             else -> {
-                getLocationOverNetwork()
+                viewLifecycleOwner.lifecycleScope.launch(dispatcher) {
+                    println("getLocationThread: ${Thread.currentThread().name}")
+                    getLocationOverNetwork()
+                }
             }
         }
     }
 
     private fun getLocationOverGps() {
-        Log.i("StartFrag", "getLocationOverGPS")
-        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            snack(getString(R.string.location_disabled))
-            binding.repeatBtn.isVisible = true
-            binding.progressBar.isVisible = false
-            return
+        lifecycle.coroutineScope.launch() {
+            Log.i("StartFrag", "getLocationOverGPS")
+            println("getLocationOverGPSThread: ${Thread.currentThread().name}")
+            if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                snack(getString(R.string.location_disabled))
+                binding.repeatBtn.isVisible = true
+                binding.progressBar.isVisible = false
+                return@launch
+            }
+
+            if (ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+
+            ) {
+                Log.i("StartFrag", "access fine is not permited")
+                snack(getString(R.string.location_disabled))
+                binding.repeatBtn.isVisible = true
+                binding.progressBar.isVisible = false
+                return@launch
+            }
+            locationManager.requestSingleUpdate(
+                LocationManager.GPS_PROVIDER,
+                this@StartFragment,
+                null
+            )
         }
 
-        if (ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-
-        ) {
-            Log.i("StartFrag", "access fine is not permited")
-            snack(getString(R.string.location_disabled))
-            binding.repeatBtn.isVisible = true
-            binding.progressBar.isVisible = false
-            return
-        }
-        locationManager.requestSingleUpdate(
-            LocationManager.GPS_PROVIDER,
-            this,
-            null
-        )
     }
 
 
     @RequiresApi(Build.VERSION_CODES.R)
     private fun getLocationOverNetwork() {
-        Log.i("StartFrag", "getLocationOverNetwork")
-        if (!locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            snack(getString(R.string.location_disabled))
-            binding.repeatBtn.isVisible = true
-            binding.progressBar.isVisible = false
-            return
+        lifecycle.coroutineScope.launch(){
+            println("getLocationOverNetworkThread: ${Thread.currentThread().name}")
+            Log.i("StartFrag", "getLocationOverNetwork")
+            if (!locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                snack(getString(R.string.location_disabled))
+                binding.repeatBtn.isVisible = true
+                binding.progressBar.isVisible = false
+                return@launch
+            }
+
+            if (ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+
+            ) {
+                return@launch
+            }
+            locationManager.getCurrentLocation(
+                LocationManager.NETWORK_PROVIDER,
+                null,
+                requireContext().mainExecutor
+            ) {
+                loadData(it.latitude, it.longitude)
+            }
         }
 
-        if (ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-
-        ) {
-            return
-        }
-        locationManager.getCurrentLocation(
-            LocationManager.NETWORK_PROVIDER,
-            null,
-            requireContext().mainExecutor
-        ) {
-            loadData(it.latitude, it.longitude)
-
-        }
     }
 
 //    private fun getLocationOverGoogle(){
@@ -300,6 +319,7 @@ class StartFragment : BaseFragment<FragmentStartBinding>(), LocationListener {
         snack(getString(R.string.location_disabled))
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
         Log.i("StartFrag", "status changed")
         //snack("status changed")

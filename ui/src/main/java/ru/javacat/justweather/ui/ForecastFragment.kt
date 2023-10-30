@@ -66,6 +66,7 @@ class ForecastFragment : BaseFragment<FragmentForecastBinding>() {
                     moonRiseValue.text = it.astro.moonrise
                     moonSetValue.text = it.astro.moonset
 
+
                     moonPhaseValue.text = when (it.astro.moon_phase) {
                         "New Moon" -> getString(R.string.Full_Moon)
                         "Waxing Crescent" -> getString(R.string.Waxing_Crescent)
