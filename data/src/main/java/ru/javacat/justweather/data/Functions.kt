@@ -19,8 +19,10 @@ suspend fun <T> apiRequest(request: suspend () -> Response<T>): T{
     val response = try {
         request()
     } catch (e: SocketException) {
+        println("SOCKET_ERROR: $e")
         throw NetworkError
     } catch (e: Exception) {
+        println("NETWORK_ERROR: $e")
         throw NetworkError
     }
     if (!response.isSuccessful) throw ApiError(response.code(), response.message())

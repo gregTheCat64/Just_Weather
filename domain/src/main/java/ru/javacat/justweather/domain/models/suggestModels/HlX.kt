@@ -1,7 +1,6 @@
 package ru.javacat.justweather.domain.models.suggestModels
 
-data class Hl(
+data class HlX(
     val begin: Int,
-    val end: Int,
-    val type: String
+    val end: Int
 )

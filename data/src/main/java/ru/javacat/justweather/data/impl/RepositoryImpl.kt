@@ -13,7 +13,7 @@ import ru.javacat.justweather.data.mapper.toDbWeather
 import ru.javacat.justweather.data.mapper.toModel
 import ru.javacat.justweather.data.network.ApiService
 import ru.javacat.justweather.data.toBase64
-import ru.javacat.justweather.domain.models.suggestModels.SuggestLocationList
+import ru.javacat.justweather.domain.models.suggestModels.Result
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -104,13 +104,14 @@ class RepositoryImpl @Inject constructor(
     }
 
 
-    override suspend fun findLocation(name: String): SuggestLocationList {
+    override suspend fun findLocation(name: String): List<Result>? {
         val result = apiRequest {
             apiService.suggestLocation(name)
         }
+        //val result = apiService.suggestLocation(name).body()
         //_weatherFlow.emit(result)
-        Log.i("MyTag", "emiting result: ${result}")
-        return result
+        Log.i("MyTag", "getting result: ${result}")
+        return result?.results
     }
 
     override suspend fun getHours(weatherId: String, date: String): List<ru.javacat.justweather.domain.models.Hour> {

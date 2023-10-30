@@ -3,7 +3,7 @@ package ru.javacat.justweather.domain.repos
 import kotlinx.coroutines.flow.Flow
 import ru.javacat.justweather.domain.models.Hour
 import ru.javacat.justweather.domain.models.Weather
-import ru.javacat.justweather.domain.models.suggestModels.SuggestLocationList
+import ru.javacat.justweather.domain.models.suggestModels.Result
 
 interface Repository {
     val allWeathers: Flow<List<Weather>>
@@ -17,7 +17,7 @@ interface Repository {
     suspend fun getAllWeathers(): List<Weather>?
     suspend fun fetchLocationDetails(name: String, currentId: String)
 
-    suspend fun findLocation(name: String): SuggestLocationList
+    suspend fun findLocation(name: String): List<Result>?
 
     suspend fun getCurrentWeather(): Weather?
 
