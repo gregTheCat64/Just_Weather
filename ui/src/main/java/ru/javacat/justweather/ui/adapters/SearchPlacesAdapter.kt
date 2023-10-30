@@ -6,8 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import ru.javacat.justweather.data.network.response_models.suggestModels.Result
-import ru.javacat.justweather.data.network.response_models.suggestModels.Subtitle
+import ru.javacat.justweather.domain.models.SearchLocation
 import ru.javacat.justweather.ui.util.pushAnimation
 import ru.javacat.ui.R
 import ru.javacat.ui.databinding.FoundItemBinding
@@ -18,7 +17,7 @@ interface OnSearchPlacesInteractionListener{
 
 class SearchPlacesAdapter(
     private val listener: OnSearchPlacesInteractionListener
-): ListAdapter<Subtitle, SearchPlacesAdapter.Holder>(Comparator()) {
+): ListAdapter<SearchLocation, SearchPlacesAdapter.Holder>(Comparator()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchPlacesAdapter.Holder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.found_item, parent, false)
@@ -32,9 +31,9 @@ class SearchPlacesAdapter(
     class Holder(view: View, private val listener: OnSearchPlacesInteractionListener): RecyclerView.ViewHolder(view){
         private val binding = FoundItemBinding.bind(view)
 
-        fun bind(item: Subtitle){
+        fun bind(item: SearchLocation){
             binding.apply {
-                nameValue.text = item.text
+                nameValue.text = item.name
                 regionValue.text = item.region + ", " + item.country
                 root.setOnClickListener {
                     it.pushAnimation(binding.root.context)
@@ -44,12 +43,12 @@ class SearchPlacesAdapter(
         }
     }
 
-    class Comparator: DiffUtil.ItemCallback<Subtitle>(){
-        override fun areItemsTheSame(oldItem: Subtitle, newItem: Subtitle): Boolean {
-            return oldItem.text == newItem.text
+    class Comparator: DiffUtil.ItemCallback<SearchLocation>(){
+        override fun areItemsTheSame(oldItem: SearchLocation, newItem: SearchLocation): Boolean {
+            return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: Subtitle, newItem: Subtitle): Boolean {
+        override fun areContentsTheSame(oldItem: SearchLocation, newItem: SearchLocation): Boolean {
             return oldItem == newItem
         }
     }

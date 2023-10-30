@@ -101,6 +101,7 @@ class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {
             override fun onSetPlace(item: ru.javacat.justweather.domain.models.Weather) {
                 viewModel.setPlace(item.location.lat.toString()+","+item.location.lon.toString())
 
+
             }
             override fun onRemovePlace(item: ru.javacat.justweather.domain.models.Weather) {
                 if (!item.isCurrent ){
