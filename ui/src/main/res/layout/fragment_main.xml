@@ -169,41 +169,34 @@
             tools:listitem="@layout/day_item" />
 
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <FrameLayout
                 android:id="@+id/alarmCard"
                 android:layout_width="match_parent"
-                android:layout_height="84dp"
+                android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:visibility="invisible"
                 >
 
-                <ScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent">
-
-
-                    <androidx.cardview.widget.CardView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:backgroundTint="?attr/cardBackgroundColor">
-
                         <TextView
                             android:id="@+id/alarmMsg"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
                             android:layout_gravity="bottom"
                             android:maxHeight="100dp"
+                            android:textSize="16sp"
+
+                            android:backgroundTint="?attr/cardBackgroundColor"
+                            android:ellipsize="marquee"
+                            android:singleLine="true"
+                            android:focusedByDefault="true"
+                            android:marqueeRepeatLimit="marquee_forever"
+                            android:scrollHorizontally="true"
                             android:padding="8dp"
+                            android:fadingEdge="horizontal"
                             android:text="Сегодня прекрасный день" />
 
-                    </androidx.cardview.widget.CardView>
 
-                </ScrollView>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </FrameLayout>
 
 
     </androidx.appcompat.widget.LinearLayoutCompat>

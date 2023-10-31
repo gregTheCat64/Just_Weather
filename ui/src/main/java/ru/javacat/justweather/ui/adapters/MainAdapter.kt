@@ -7,7 +7,7 @@ import androidx.core.net.toUri
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import ru.javacat.justweather.common.util.asLocalDate
+import ru.javacat.justweather.common.util.asDayOfWeek
 import ru.javacat.justweather.ui.util.load
 import ru.javacat.ui.R
 import ru.javacat.ui.databinding.DayItemBinding
@@ -28,17 +28,16 @@ class MainAdapter(
         fun bind(item: ru.javacat.justweather.domain.models.Forecastday)  {
             binding.apply {
                 val image = item.day.condition.icon
-                dayOfWeek.text = item.date.asLocalDate()
-                maxTempTxtView.text = item.day.maxtemp_c.roundToInt().toString()+ "\u00B0"
-                minTempTxtView.text = item.day.mintemp_c.roundToInt().toString()+ "°"
+                dayOfWeek.text = item.date.asDayOfWeek()
+                maxTempTxtView.text = item.day.avgtemp_c.roundToInt().toString()+ "\u00B0"
+                //minTempTxtView.text = item.day.mintemp_c.roundToInt().toString()+ "°"
                 root.setOnClickListener {
-                    onInteractionListener.onForecastItem(item, binding.underLine)
+                    onInteractionListener.onForecastItem(item, binding.forecastLayout)
                 }
 
                 conditionImgView.load(image.toUri().toString())
 
             }
-
         }
     }
 

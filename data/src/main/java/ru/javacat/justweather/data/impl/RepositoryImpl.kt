@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import ru.javacat.justweather.data.apiRequest
 import ru.javacat.justweather.data.db.dao.WeatherDao
+import ru.javacat.justweather.data.db.entities.DbHour
 import ru.javacat.justweather.data.dbQuery
 import ru.javacat.justweather.data.mapper.toDbAlert
 import ru.javacat.justweather.data.mapper.toDbForecastday
@@ -93,12 +94,19 @@ class RepositoryImpl @Inject constructor(
             }
         }.flatten()
 
+        val everyThirdHourList = mutableListOf<DbHour>()
+        for (i in hours.indices){
+            if (i%3==0){
+                everyThirdHourList.add(hours[i])
+            }
+        }
+
          Log.i("MyTag", "INSERTING TO DB")
         dbQuery { dao.insert(
             weather,
             alerts,
             forecasts,
-            hours
+            everyThirdHourList
         ) }
 
     }

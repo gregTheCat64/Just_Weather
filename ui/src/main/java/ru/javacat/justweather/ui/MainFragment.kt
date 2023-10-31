@@ -16,7 +16,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.javacat.justweather.common.util.toLocalDateTime
 import ru.javacat.justweather.common.util.toWindRus
@@ -169,11 +168,6 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
 
     }
 
-    private fun updateDb() {
-        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-            viewModel.updateDb()
-        }
-    }
 
     private fun updateWeather(weather: ru.javacat.justweather.domain.models.Weather?){
         Log.i("MainFragment", "updateUI")
@@ -186,7 +180,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
 
                 updateTime?.text = currentTime.toString()
                 when{
-                    currentTime.isAfter(LocalTime.of(5,0)) && currentTime.isBefore(LocalTime.of(12,0)) -> {
+                    currentTime.isAfter(LocalTime.of(6,0)) && currentTime.isBefore(LocalTime.of(12,0)) -> {
                         fc.background = back5
                         println("back: back5")
                     }
@@ -196,7 +190,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
                         fc.background = back12
                         println("back: back12")
                     }
-                    currentTime.isAfter(LocalTime.of(18,0)) && currentTime.isBefore(LocalTime.of(21,0)) -> {
+                    currentTime.isAfter(LocalTime.of(18,0)) && currentTime.isBefore(LocalTime.of(20,0)) -> {
                         fc.background = back18
                         println("back: back18")
                     }
@@ -204,7 +198,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
 //                        fc.background = back20
 //                        println("back: back20")
 //                    }
-                    currentTime.isAfter(LocalTime.of(20,0)) || currentTime.isBefore(LocalTime.of(5,0)) -> {
+                    currentTime.isAfter(LocalTime.of(20,0)) || currentTime.isBefore(LocalTime.of(6,0)) -> {
                         fc.background = back22
                         println("back: back22")
                     }
@@ -236,14 +230,17 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
                     it.current.humidity.toString() + getString(R.string.percent)
                 detailsLayout.uvIndex.text = it.current.uv.toString()
                 val alerts = it.alerts
+                val alertMsgBuffer = StringBuilder()
                 for (element in alerts) {
                     if (element.desc.isNotEmpty()) {
                         alarmCard.visibility = View.VISIBLE
-                        alarmMsg.text = element.desc
+                        alertMsgBuffer.append(element.desc)
+                        alarmMsg.isSelected = true
                     } else {
                         alarmCard.visibility = View.INVISIBLE
                     }
                 }
+                alarmMsg.text = alertMsgBuffer
             }
             //it.forecast.forecastday.get(0).astro.is_moon_up
 
@@ -255,9 +252,10 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
             override fun onForecastItem(item: ru.javacat.justweather.domain.models.Forecastday, view: View) {
                 //val color = context!!.resources.getColor(R.color.md_theme_light_primary)
                 view.changeColorOnPush(requireContext())
+                findNavController().navigate(R.id.action_mainFragment_to_forecastFragment)
                 viewModel.getHours(item.weatherId, item.date.toString())
                 viewModel.chooseForecastDay(item)
-                findNavController().navigate(R.id.action_mainFragment_to_forecastFragment)
+
             }
         })
         binding.daysRecView.adapter = adapter

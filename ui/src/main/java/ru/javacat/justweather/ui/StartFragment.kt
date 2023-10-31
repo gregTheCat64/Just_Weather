@@ -56,7 +56,7 @@ class StartFragment : BaseFragment<FragmentStartBinding>(), LocationListener {
         Log.i("StartFrag", "onCreate")
         super.onCreate(savedInstanceState)
 
-        dispatcher = Dispatchers.IO
+        dispatcher = Dispatchers.Default
 
         permissionListener()
 
@@ -97,11 +97,7 @@ class StartFragment : BaseFragment<FragmentStartBinding>(), LocationListener {
         Log.i("StartFrag", "init")
         //updateDb()
         initObserver()
-
             checkPermission()
-
-
-
     }
 
     private fun initObserver() {
@@ -201,29 +197,23 @@ class StartFragment : BaseFragment<FragmentStartBinding>(), LocationListener {
         Log.i("StartFrag", "getLocation")
         when (Build.VERSION.SDK_INT) {
             in 1..29 -> {
-                viewLifecycleOwner.lifecycleScope.launch(dispatcher){
-                    println("getLocationThread: ${Thread.currentThread().name}")
                     getLocationOverGps()
-                }
             }
             else -> {
-                viewLifecycleOwner.lifecycleScope.launch(dispatcher) {
-                    println("getLocationThread: ${Thread.currentThread().name}")
                     getLocationOverNetwork()
-                }
             }
         }
     }
 
     private fun getLocationOverGps() {
-        lifecycle.coroutineScope.launch() {
+
             Log.i("StartFrag", "getLocationOverGPS")
-            println("getLocationOverGPSThread: ${Thread.currentThread().name}")
+
             if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                 snack(getString(R.string.location_disabled))
                 binding.repeatBtn.isVisible = true
                 binding.progressBar.isVisible = false
-                return@launch
+                return
             }
 
             if (ActivityCompat.checkSelfPermission(
@@ -236,28 +226,28 @@ class StartFragment : BaseFragment<FragmentStartBinding>(), LocationListener {
                 snack(getString(R.string.location_disabled))
                 binding.repeatBtn.isVisible = true
                 binding.progressBar.isVisible = false
-                return@launch
+                return
             }
-            locationManager.requestSingleUpdate(
-                LocationManager.GPS_PROVIDER,
-                this@StartFragment,
-                null
-            )
-        }
-
+           lifecycle.coroutineScope.launch(){
+                println("getLocationOverGPSThread: ${Thread.currentThread().name}")
+                locationManager.requestSingleUpdate(
+                    LocationManager.GPS_PROVIDER,
+                    this@StartFragment,
+                    null
+                )
+            }
     }
 
 
     @RequiresApi(Build.VERSION_CODES.R)
     private fun getLocationOverNetwork() {
-        lifecycle.coroutineScope.launch(){
             println("getLocationOverNetworkThread: ${Thread.currentThread().name}")
             Log.i("StartFrag", "getLocationOverNetwork")
-            if (!locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            if (!locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) || !locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                 snack(getString(R.string.location_disabled))
                 binding.repeatBtn.isVisible = true
                 binding.progressBar.isVisible = false
-                return@launch
+                return
             }
 
             if (ActivityCompat.checkSelfPermission(
@@ -266,16 +256,35 @@ class StartFragment : BaseFragment<FragmentStartBinding>(), LocationListener {
                 ) != PackageManager.PERMISSION_GRANTED
 
             ) {
-                return@launch
+                return
             }
-            locationManager.getCurrentLocation(
-                LocationManager.NETWORK_PROVIDER,
-                null,
-                requireContext().mainExecutor
-            ) {
-                loadData(it.latitude, it.longitude)
+            viewLifecycleOwner.lifecycleScope.launch() {
+                println("getLocationOverNetworkThread: ${Thread.currentThread().name}")
+                locationManager.getCurrentLocation(
+                    LocationManager.NETWORK_PROVIDER,
+                    null,
+                    requireContext().mainExecutor
+                ) { location ->
+                    if (location != null){
+                        loadData(location.latitude, location.longitude)
+                    } else {
+                        locationManager.getCurrentLocation(
+                            LocationManager.GPS_PROVIDER,
+                            null,
+                            requireContext().mainExecutor
+                        ) {
+                            if (it != null){
+                                loadData(it.latitude, it.longitude)
+                            } else {
+                                println("Мы так и не добились никаких данных, хз в чем проблема")
+                            }
+                        }
+                    }
+
+                }
             }
-        }
+
+
 
     }
 
