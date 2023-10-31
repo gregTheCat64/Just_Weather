@@ -277,6 +277,7 @@ class StartFragment : BaseFragment<FragmentStartBinding>(), LocationListener {
                                 loadData(it.latitude, it.longitude)
                             } else {
                                 println("Мы так и не добились никаких данных, хз в чем проблема")
+                                Toast.makeText(requireContext(), "Мы так и не добились никаких данных, хз в чем проблема", Toast.LENGTH_SHORT).show()
                             }
                         }
                     }
