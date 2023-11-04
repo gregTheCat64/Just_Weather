@@ -11,7 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.javacat.justweather.domain.ApiError
 import ru.javacat.justweather.domain.NetworkError
-import ru.javacat.justweather.domain.models.SearchLocation
+import ru.javacat.justweather.domain.models.suggestModels.FoundLocation
 import ru.javacat.justweather.ui.LoadingState
 import ru.javacat.justweather.ui.SingleLiveEvent
 import javax.inject.Inject
@@ -25,8 +25,8 @@ class PlaceViewModel @Inject constructor(
 
     //val currentWeatherFlow = repository.currentWeatherFlow.asLiveData(viewModelScope.coroutineContext)
 
-    private var _foundLocations = MutableLiveData<List<SearchLocation>>()
-    val foundLocations: LiveData<List<SearchLocation>>
+    private var _foundLocations = MutableLiveData<List<FoundLocation>>()
+    val foundLocations: LiveData<List<FoundLocation>>
         get() = _foundLocations
 
 //    private var _allWeathers = MutableLiveData<List<Weather>?>()
@@ -98,7 +98,7 @@ class PlaceViewModel @Inject constructor(
             loadingState.postValue(LoadingState.Load)
 
             try {
-                val found = repository.findLocation(query) ?: throw NetworkError
+                val found = repository.findLocation(query).foundLocations
                 _foundLocations.postValue(found)
                 loadingState.postValue(LoadingState.Found)
                 //savePlace(Place(0, found.name, foundWeather.location.region))

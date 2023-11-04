@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import ru.javacat.justweather.domain.models.suggestModels.FoundLocation
 import ru.javacat.justweather.ui.adapters.OnPlacesInteractionListener
 import ru.javacat.justweather.ui.adapters.OnSearchPlacesInteractionListener
 import ru.javacat.justweather.ui.adapters.PlacesAdapter
@@ -167,9 +168,9 @@ class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {
     private fun initSearchBar() {
         val searchview: SearchView = binding.placeInput as SearchView
         searchAdapter = SearchPlacesAdapter(object : OnSearchPlacesInteractionListener{
-            override fun onSetPlace(item: ru.javacat.justweather.domain.models.SearchLocation) {
+            override fun onSetPlace(item: FoundLocation) {
                 //viewModel.savePlace(Place(0, item.name, item.region))
-                viewModel.setPlace(item.lat.toString()+","+item.lon.toString())
+                //viewModel.setPlace(item.lat.toString()+","+item.lon.toString())
             }
 
         })

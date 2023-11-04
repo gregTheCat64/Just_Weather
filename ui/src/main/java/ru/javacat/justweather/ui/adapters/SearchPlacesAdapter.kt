@@ -6,18 +6,18 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import ru.javacat.justweather.domain.models.SearchLocation
+import ru.javacat.justweather.domain.models.suggestModels.FoundLocation
 import ru.javacat.justweather.ui.util.pushAnimation
 import ru.javacat.ui.R
 import ru.javacat.ui.databinding.FoundItemBinding
 
 interface OnSearchPlacesInteractionListener{
-    fun onSetPlace(item: ru.javacat.justweather.domain.models.SearchLocation)
+    fun onSetPlace(item: FoundLocation)
 }
 
 class SearchPlacesAdapter(
     private val listener: OnSearchPlacesInteractionListener
-): ListAdapter<SearchLocation, SearchPlacesAdapter.Holder>(Comparator()) {
+): ListAdapter<FoundLocation, SearchPlacesAdapter.Holder>(Comparator()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchPlacesAdapter.Holder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.found_item, parent, false)
@@ -31,10 +31,10 @@ class SearchPlacesAdapter(
     class Holder(view: View, private val listener: OnSearchPlacesInteractionListener): RecyclerView.ViewHolder(view){
         private val binding = FoundItemBinding.bind(view)
 
-        fun bind(item: SearchLocation){
+        fun bind(item: FoundLocation){
             binding.apply {
-                nameValue.text = item.name
-                regionValue.text = item.region + ", " + item.country
+                nameValue.text = item.title.text
+                //regionValue.text = item.subtitle.text + ", " + item.country
                 root.setOnClickListener {
                     it.pushAnimation(binding.root.context)
                     listener.onSetPlace(item)
@@ -43,12 +43,12 @@ class SearchPlacesAdapter(
         }
     }
 
-    class Comparator: DiffUtil.ItemCallback<SearchLocation>(){
-        override fun areItemsTheSame(oldItem: SearchLocation, newItem: SearchLocation): Boolean {
-            return oldItem.id == newItem.id
+    class Comparator: DiffUtil.ItemCallback<FoundLocation>(){
+        override fun areItemsTheSame(oldItem: FoundLocation, newItem: FoundLocation): Boolean {
+            return oldItem.uri == newItem.uri
         }
 
-        override fun areContentsTheSame(oldItem: SearchLocation, newItem: SearchLocation): Boolean {
+        override fun areContentsTheSame(oldItem: FoundLocation, newItem: FoundLocation): Boolean {
             return oldItem == newItem
         }
     }
