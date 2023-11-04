@@ -184,13 +184,13 @@
                 android:layout_marginTop="16dp"
 
                 android:backgroundTint="?attr/cardBackgroundColor"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="@dimen/card_height">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/hoursRecView"
                     android:padding="8dp"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     android:orientation="horizontal"

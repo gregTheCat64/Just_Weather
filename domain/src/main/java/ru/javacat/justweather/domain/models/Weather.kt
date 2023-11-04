@@ -6,7 +6,8 @@ data class Weather(
     val current: Current,
     val forecasts: List<Forecastday>,
     val location: Location,
-    val isCurrent: Boolean
+    val isCurrent: Boolean,
+    var isLocated: Boolean
     //val hours: List<Hour>
 )
 

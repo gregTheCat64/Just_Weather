@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
@@ -178,20 +179,26 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
                 val currentTime = it.location.localtime.toLocalDateTime()
                     .toLocalTime()
 
-                updateTime?.text = currentTime.toString()
+                locatedMarker.isVisible = it.isLocated
+
+                updateTime.text = currentTime.toString()
+
+                //val whiteColor = R.color.white
                 when{
                     currentTime.isAfter(LocalTime.of(6,0)) && currentTime.isBefore(LocalTime.of(12,0)) -> {
                         fc.background = back5
+                        setWhiteTheme()
                         println("back: back5")
                     }
 
                     currentTime.isAfter(LocalTime.of(12,0)) && currentTime.isBefore(LocalTime.of(18,0)) -> {
-                        println("YES")
+                        setWhiteTheme()
                         fc.background = back12
                         println("back: back12")
                     }
                     currentTime.isAfter(LocalTime.of(18,0)) && currentTime.isBefore(LocalTime.of(20,0)) -> {
                         fc.background = back18
+                        setWhiteTheme()
                         println("back: back18")
                     }
 //                    currentTime.isAfter(LocalTime.of(20,0)) && currentTime.isBefore(LocalTime.of(22,0)) -> {
@@ -199,35 +206,45 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
 //                        println("back: back20")
 //                    }
                     currentTime.isAfter(LocalTime.of(20,0)) || currentTime.isBefore(LocalTime.of(6,0)) -> {
+                        setDarkTheme()
                         fc.background = back22
                         println("back: back22")
                     }
                     currentTime.isAfter(LocalTime.of(9,0)) &&  currentTime.isBefore(LocalTime.of(19,0))
                             && it.current.condition.code in (1150..1201) -> {
+                        setWhiteTheme()
                         fc.background = backRainy
                     }
                 }
+                val tempText =  it.current.temp_c.roundToInt()
+                    .toString() + getString(R.string.celcius)
+                tempTxtView.text = tempText
 
-                tempTxtView.text =
-                    it.current.temp_c.roundToInt()
-                        .toString() + getString(R.string.celcius)
                 cityTxtView.text = it.location.name
                 //conditionTxtView.text = it.current.condition.text
-                realFeelTxtView.text =
-                    it.current.feelslike_c.roundToInt().toString() + getString(
-                        R.string.celcius
-                    )
+                val reelFeelText =  it.current.feelslike_c.roundToInt().toString() + getString(
+                    R.string.celcius
+                )
+                realFeelTxtView.text =reelFeelText
+
                 it.current.condition.icon.let { it1 -> imageView.load(it1) }
-                detailsLayout.cloud.text = it.current.cloud.toString() + "%"
-                detailsLayout.windSpeed.text =
-                    it.current.wind_kph.roundToInt().toString() + getString(
-                        R.string.km_h
-                    )
+
+                val cloudText = it.current.cloud.toString() + "%"
+                detailsLayout.cloud.text = cloudText
+
+                val speedText =  it.current.wind_kph.roundToInt().toString() + getString(
+                    R.string.km_h
+                )
+                detailsLayout.windSpeed.text = speedText
+
                 detailsLayout.windDir.text = it.current.wind_dir.toWindRus()
-                detailsLayout.precipation.text =
-                    it.current.precip_mm.toString() + getString(R.string.mm)
-                detailsLayout.humidity.text =
-                    it.current.humidity.toString() + getString(R.string.percent)
+
+                val precipText = it.current.precip_mm.toString() + getString(R.string.mm)
+                detailsLayout.precipation.text =precipText
+
+                val humidityText =  it.current.humidity.toString() + getString(R.string.percent)
+                detailsLayout.humidity.text =humidityText
+
                 detailsLayout.uvIndex.text = it.current.uv.toString()
                 val alerts = it.alerts
                 val alertMsgBuffer = StringBuilder()
@@ -261,6 +278,36 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
         binding.daysRecView.adapter = adapter
         val list = forecastdays
         adapter.submitList(list)
+    }
+
+    private fun setDarkTheme(){
+        val color = R.color.white
+        binding.apply {
+            tempTxtView.setTextColor(AppCompatResources.getColorStateList(requireContext(), color))
+            realfeelTxt.setTextColor(AppCompatResources.getColorStateList(requireContext(), color))
+            realFeelTxtView.setTextColor(AppCompatResources.getColorStateList(requireContext(), color))
+            //imageView.setColorFilter(color, PorterDuff.Mode.MULTIPLY)
+//            DrawableCompat.setTint(
+//                DrawableCompat.wrap(imageView.drawable),
+//                ContextCompat.getColor(requireContext(), color)
+//            )
+
+        }
+    }
+
+    private fun setWhiteTheme(){
+        val color = R.color.grey
+        binding.apply {
+            tempTxtView.setTextColor(AppCompatResources.getColorStateList(requireContext(), color))
+            realfeelTxt.setTextColor(AppCompatResources.getColorStateList(requireContext(), color))
+            realFeelTxtView.setTextColor(AppCompatResources.getColorStateList(requireContext(), color))
+            //imageView.setColorFilter(color, PorterDuff.Mode.MULTIPLY)
+//            DrawableCompat.setTint(
+//                DrawableCompat.wrap(imageView.drawable),
+//                ContextCompat.getColor(requireContext(), color)
+//            )
+
+        }
     }
 
 }

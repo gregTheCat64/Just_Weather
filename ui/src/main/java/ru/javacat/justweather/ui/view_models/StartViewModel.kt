@@ -50,7 +50,7 @@ class StartViewModel @Inject constructor(
             loadingState.postValue(LoadingState.Load)
 
             try {
-                repository.fetchLocationDetails(name, "newCurrent")?:throw NetworkError
+                repository.fetchLocationDetails(name, "newCurrent", true)?:throw NetworkError
                 loadingState.postValue(LoadingState.Success)
 
                 //delay(5000)

@@ -60,7 +60,7 @@ class RepositoryImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
-    override suspend fun fetchLocationDetails(name: String, currentId: String) {
+    override suspend fun fetchLocationDetails(name: String, currentId: String, isLocated: Boolean) {
         Log.i("Repo", "loadingData")
         val weatherResponse = apiRequest {
             apiService.getByName(name)
@@ -85,6 +85,7 @@ class RepositoryImpl @Inject constructor(
 
         val weather = weatherResponse.toDbWeather(weatherId)
         Log.i("MyTag", "$currentId and $weatherId")
+        if (isLocated) weather.isLocated = true
         weather.isCurrent = currentId == weatherId || currentId == "newCurrent"
         Log.i("MyTag", "isCurrent: ${weather.isCurrent}")
 

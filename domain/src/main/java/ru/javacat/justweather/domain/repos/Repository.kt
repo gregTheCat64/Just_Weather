@@ -15,7 +15,7 @@ interface Repository {
     //suspend fun getAllWeathers(): List<Weather>?
 
     suspend fun getAllWeathers(): List<Weather>?
-    suspend fun fetchLocationDetails(name: String, currentId: String)
+    suspend fun fetchLocationDetails(name: String, currentId: String, isLocated: Boolean)
 
     suspend fun findLocation(name: String): List<SearchLocation>
 

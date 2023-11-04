@@ -5,9 +5,9 @@
         <item name="colorOnPrimary">@color/md_theme_light_onPrimary</item>
         <item name="colorSecondary">@color/md_theme_light_secondary</item>
         <item name="colorOnSecondary">@color/md_theme_light_onSecondary</item>
-        <item name="android:colorBackground">@color/md_theme_light_background</item>
+        <item name="android:colorBackground">#B2D893</item>
         <item name="android:statusBarColor">@color/md_theme_light_secondary</item>
-        <item name="textFillColor">@color/light_text_accent</item>
+        <item name="textFillColor">@color/dark_text_accent</item>
         <item name="android:textColorSecondary">@color/light_text_secondary</item>
         <item name="cardBackgroundColor">@color/light_card_back</item>
         <item name="background">@drawable/back_day</item>

@@ -12,6 +12,7 @@ import androidx.room.PrimaryKey
 data class DbWeather(
     @PrimaryKey val id: String,
     var isCurrent: Boolean,
+    var isLocated: Boolean,
     @Embedded val current: DbCurrent,
     @Embedded val location: DbLocation
 )

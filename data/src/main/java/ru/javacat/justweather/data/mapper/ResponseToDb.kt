@@ -18,18 +18,13 @@ import ru.javacat.justweather.data.network.response_models.ForecastdayResponse
 import ru.javacat.justweather.data.network.response_models.HourResponse
 import ru.javacat.justweather.data.network.response_models.LocationResponse
 import ru.javacat.justweather.data.network.response_models.WeatherResponse
-import ru.javacat.justweather.domain.models.Alert
-import ru.javacat.justweather.domain.models.Astro
-import ru.javacat.justweather.domain.models.Condition
-import ru.javacat.justweather.domain.models.Current
-import ru.javacat.justweather.domain.models.Day
-import ru.javacat.justweather.domain.models.Location
 
 fun WeatherResponse.toDbWeather(weatherId: String): DbWeather {
 
     return DbWeather(
         weatherId,
         false,
+        isLocated = false,
         current.toDb(),
         location.toDb()
     )

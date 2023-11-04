@@ -5,15 +5,12 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
 import ru.javacat.justweather.data.db.entities.DbAlert
-import ru.javacat.justweather.data.db.entities.DbWeatherWithForecastsAndAlerts
 import ru.javacat.justweather.data.db.entities.DbForecastday
 import ru.javacat.justweather.data.db.entities.DbHour
 import ru.javacat.justweather.data.db.entities.DbWeather
-import ru.javacat.justweather.domain.models.Weather
+import ru.javacat.justweather.data.db.entities.DbWeatherWithForecastsAndAlerts
 
 @Dao
 interface WeatherDao {
@@ -36,7 +33,7 @@ interface WeatherDao {
     @Query("SELECT * FROM weathers_table")
     fun getAll(): Flow<List<DbWeatherWithForecastsAndAlerts>>
 
-    @Query("SELECT * FROM weathers_table")
+    @Query("SELECT * FROM weathers_table ORDER BY id DESC")
     fun getAllWeathers(): List<DbWeatherWithForecastsAndAlerts>
 
     @Query("SELECT * FROM weathers_table WHERE isCurrent = 1")

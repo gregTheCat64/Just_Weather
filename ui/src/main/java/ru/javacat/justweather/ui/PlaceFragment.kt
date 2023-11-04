@@ -131,7 +131,7 @@ class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 //viewModel.removePlace(adapter.getItemId(viewHolder.adapterPosition))
                 val item = adapter.getItemAt(viewHolder.adapterPosition)
-                if (!item.isCurrent ){
+                if (!item.isLocated ){
                     viewModel.removePlace(item.id)
                 }
             }
@@ -174,8 +174,8 @@ class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {
 
         })
 
-        binding.searchList?.layoutManager = LinearLayoutManager(requireContext())
-        binding.searchList?.adapter = searchAdapter
+        binding.searchList.layoutManager = LinearLayoutManager(requireContext())
+        binding.searchList.adapter = searchAdapter
 
         searchview.setOnCloseListener {
             AndroidUtils.hideKeyboard(requireView())

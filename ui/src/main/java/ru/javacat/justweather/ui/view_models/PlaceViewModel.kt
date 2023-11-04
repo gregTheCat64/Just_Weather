@@ -71,7 +71,7 @@ class PlaceViewModel @Inject constructor(
                 repository.clearDbs()
                 for (pair in pairList){
                     //добавляем в параметр айди текущего города, чтобы в обновлении городов снова его вставить
-                    repository.fetchLocationDetails("${pair.first},${pair.second}", previousCurrentId.toString())
+                    repository.fetchLocationDetails("${pair.first},${pair.second}", previousCurrentId.toString(),false)
                 }
             }
         }
@@ -122,7 +122,7 @@ class PlaceViewModel @Inject constructor(
             loadingState.postValue(LoadingState.Load)
 
             try {
-                repository.fetchLocationDetails(name, "newCurrent") ?: throw NetworkError
+                repository.fetchLocationDetails(name, "newCurrent", false) ?: throw NetworkError
 
                 //Log.i("MyTag", "weatherResp: $weather")
                 loadingState.postValue(LoadingState.Success)

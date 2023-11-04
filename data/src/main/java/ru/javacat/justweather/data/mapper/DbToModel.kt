@@ -19,8 +19,8 @@ fun DbWeatherWithForecastsAndAlerts.toModel(): ru.javacat.justweather.domain.mod
         weather.current.toModel(),
         forecasts.map { it.toModel() },
         weather.location.toModel(),
-        weather.isCurrent
-        //hours.map { it.toModel() }
+        weather.isCurrent,
+        weather.isLocated
     )
 }
 

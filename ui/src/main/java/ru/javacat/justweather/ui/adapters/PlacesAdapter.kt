@@ -3,10 +3,10 @@ package ru.javacat.justweather.ui.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import ru.javacat.justweather.common.util.asTime
 import ru.javacat.justweather.common.util.toLocalDateTime
 import ru.javacat.justweather.ui.util.load
 import ru.javacat.justweather.ui.util.pushAnimation
@@ -48,13 +48,14 @@ class PlacesAdapter(
                 nameValue.text = item.location.name
                 regionValue.text = item.location.region + ", "+ item.location.country
                 tempValue.text = item.current.temp_c.roundToInt().toString() + "°"
-                updateTime.text = item.location.localtime.toLocalDateTime().asTime()
+                updateTime.text = item.location.localtime.toLocalDateTime().toLocalTime().toString()
                 conditionImage.load(image)
                 root.setOnClickListener {
                     it.pushAnimation(binding.root.context)
                     onInteractionListener.onSetPlace(item)
 
                 }
+                locatedMarker.isVisible = item.isLocated
             }
 
         }
