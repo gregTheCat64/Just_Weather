@@ -118,7 +118,7 @@ class RepositoryImpl @Inject constructor(
             apiService.suggestLocation(name)
         }
 
-        Log.i("MyTag", "result: ${result.foundLocations}")
+        Log.i("MyTag", "result: ${result.results}")
         return result
     }
 

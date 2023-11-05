@@ -1,4 +1,4 @@
-package ru.javacat.justweather.data.network.response_models.suggestModels
+package ru.javacat.justweather.domain.models.suggestModels
 
 data class Distance(
     val text: String,

@@ -98,7 +98,7 @@ class PlaceViewModel @Inject constructor(
             loadingState.postValue(LoadingState.Load)
 
             try {
-                val found = repository.findLocation(query).foundLocations
+                val found = repository.findLocation(query).results
                 _foundLocations.postValue(found)
                 loadingState.postValue(LoadingState.Found)
                 //savePlace(Place(0, found.name, foundWeather.location.region))

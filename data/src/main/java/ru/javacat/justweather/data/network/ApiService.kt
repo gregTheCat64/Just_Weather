@@ -3,6 +3,8 @@ package ru.javacat.justweather.data.network
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
+import ru.javacat.justweather.common.util.API_KEY
+import ru.javacat.justweather.common.util.GEO_SUGGEST_API_KEY
 import ru.javacat.justweather.data.network.response_models.WeatherResponse
 import ru.javacat.justweather.domain.models.suggestModels.SuggestLocationList
 
@@ -47,7 +49,11 @@ interface ApiService{
 
     @GET("https://suggest-maps.yandex.ru/v1/suggest?apikey=$GEO_SUGGEST_API_KEY")
     suspend fun suggestLocation(
-        @Query ("text") name: String
+        @Query ("text") name: String,
+        @Query ("types") types: String = "geo",
+        @Query ("print_address") printAddress: String = "1",
+        @Query ("results") results: String = "7",
+        @Query ("attrs") attrs: String = "uri",
     ): Response<SuggestLocationList>
 
 }

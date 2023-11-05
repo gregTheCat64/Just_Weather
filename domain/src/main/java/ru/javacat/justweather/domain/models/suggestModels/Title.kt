@@ -1,8 +1,6 @@
-package ru.javacat.justweather.data.network.response_models.suggestModels
-
-import ru.javacat.justweather.domain.models.suggestModels.Hl
+package ru.javacat.justweather.domain.models.suggestModels
 
 data class Title(
-    val hl: List<Hl>,
+    val hl: List<HlX>,
     val text: String
 )
