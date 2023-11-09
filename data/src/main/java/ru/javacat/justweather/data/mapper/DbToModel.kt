@@ -33,7 +33,8 @@ fun DbLocation.toModel(): ru.javacat.justweather.domain.models.Location =
         lon,
         name,
         region,
-        tz_id
+        tz_id,
+        localTitle, localSubtitle
     )
 
 fun DbCurrent.toModel(): ru.javacat.justweather.domain.models.Current =

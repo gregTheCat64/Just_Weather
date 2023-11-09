@@ -62,7 +62,7 @@ fun ConditionResponse.toDb(): DbCondition =
 
 fun LocationResponse.toDb(): DbLocation =
     DbLocation(
-        country, lat, localtime, localtime_epoch, lon, name, region, tz_id
+        country, lat, localtime, localtime_epoch, lon, name, region, tz_id, "", ""
     )
 
 

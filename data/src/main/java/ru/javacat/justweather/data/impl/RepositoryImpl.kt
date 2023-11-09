@@ -14,6 +14,8 @@ import ru.javacat.justweather.data.mapper.toDbWeather
 import ru.javacat.justweather.data.mapper.toModel
 import ru.javacat.justweather.data.network.ApiService
 import ru.javacat.justweather.data.toBase64
+import ru.javacat.justweather.domain.models.geoCoderModels.GeoObjectCollection
+import ru.javacat.justweather.domain.models.geoCoderModels.Point
 import ru.javacat.justweather.domain.models.suggestModels.SuggestLocationList
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -60,7 +62,7 @@ class RepositoryImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
-    override suspend fun fetchLocationDetails(name: String, currentId: String, isLocated: Boolean) {
+    override suspend fun fetchLocationDetails(name: String, currentId: String, isLocated: Boolean, localTitle: String, localSubtitle: String) {
         Log.i("Repo", "loadingData")
         val weatherResponse = apiRequest {
             apiService.getByName(name)
@@ -87,6 +89,8 @@ class RepositoryImpl @Inject constructor(
         Log.i("MyTag", "$currentId and $weatherId")
         if (isLocated) weather.isLocated = true
         weather.isCurrent = currentId == weatherId || currentId == "newCurrent"
+        weather.location.localTitle = localTitle
+        weather.location.localSubtitle = localSubtitle
         Log.i("MyTag", "isCurrent: ${weather.isCurrent}")
 
         val hours = weatherResponse.forecast.forecastday.map { forecastdays ->
@@ -119,6 +123,23 @@ class RepositoryImpl @Inject constructor(
         }
 
         Log.i("MyTag", "result: ${result.results}")
+        return result
+    }
+
+    override suspend fun getCoords(uri: String): Point {
+        val result = apiRequest {
+            apiService.getCoords(uri)
+        }.response.GeoObjectCollection.featureMember[0].GeoObject.Point
+
+        Log.i("MyTag", "position: ${result}")
+
+        return result
+    }
+
+    override suspend fun getLocationByCoords(coords: String): GeoObjectCollection {
+        val result = apiRequest {
+            apiService.getLocationByCoords(coords)
+        }.response.GeoObjectCollection
         return result
     }
 

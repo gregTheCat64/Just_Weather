@@ -98,9 +98,15 @@ class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {
 
     private fun initObserver() {
         Log.i("PlaceFragment", "initObserver")
+
         adapter = PlacesAdapter(object : OnPlacesInteractionListener {
             override fun onSetPlace(item: ru.javacat.justweather.domain.models.Weather) {
-                viewModel.setPlace(item.location.lat.toString()+","+item.location.lon.toString())
+
+                viewModel.setPlace(item.location.lat.toString()+","+item.location.lon.toString(),
+                    item.isLocated,
+                    item.location.localTitle,
+                    item.location.localSubtitle
+                    )
                 //viewModel.setPlace(item.location.region+","+item.location.name)
 
 
@@ -169,10 +175,20 @@ class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {
         val searchview: SearchView = binding.placeInput as SearchView
         searchAdapter = SearchPlacesAdapter(object : OnSearchPlacesInteractionListener{
             override fun onSetPlace(item: FoundLocation) {
-                //viewModel.savePlace(Place(0, item.name, item.region))
-                //viewModel.setPlace(item.lat.toString()+","+item.lon.toString())
-            }
+                val country = item.address.component.firstOrNull(){
+                    it.kind[0] == "COUNTRY"
+                }?.name?:""
+                val province =  item.address.component.lastOrNull() {
+                    it.kind[0] == "PROVINCE"
+                }?.name?:""
+                val localTitle =  item.address.component.lastOrNull() {
+                    it.kind[0] == "LOCALITY"
+                }?.name?:""
 
+                val subtitle = "$country, $province"
+
+                viewModel.getCoordinates(item.uri, localTitle, subtitle)
+            }
         })
 
         binding.searchList.layoutManager = LinearLayoutManager(requireContext())

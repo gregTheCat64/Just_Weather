@@ -45,8 +45,8 @@ class PlacesAdapter(
             val image = item.current.condition.icon
             binding.apply {
                 conditionValue.text = item.current.condition.text
-                nameValue.text = item.location.name
-                regionValue.text = item.location.region + ", "+ item.location.country
+                nameValue.text = item.location.localTitle
+                regionValue.text = item.location.localSubtitle
                 tempValue.text = item.current.temp_c.roundToInt().toString() + "°"
                 updateTime.text = item.location.localtime.toLocalDateTime().toLocalTime().toString()
                 conditionImage.load(image)

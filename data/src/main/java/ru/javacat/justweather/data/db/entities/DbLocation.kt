@@ -8,5 +8,7 @@ data class DbLocation(
     val lon: Double,
     val name: String,
     val region: String,
-    val tz_id: String
+    val tz_id: String,
+    var localTitle: String,
+    var localSubtitle: String
 )

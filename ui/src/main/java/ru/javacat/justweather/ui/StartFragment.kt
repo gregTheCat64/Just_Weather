@@ -156,7 +156,8 @@ class StartFragment : BaseFragment<FragmentStartBinding>(), LocationListener {
 
     private fun loadData(lat: Double, long: Double) {
         //Log.i("MyLog", "Loading data")
-        viewModel.findPlaceByLocation("$lat,$long")
+        viewModel.getLocationByCoords("$lat,$long")
+        //viewModel.findPlaceByLocation("$lat,$long")
     }
 
     private fun checkPermission() {

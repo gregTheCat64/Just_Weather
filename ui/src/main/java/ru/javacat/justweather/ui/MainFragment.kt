@@ -220,7 +220,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
                     .toString() + getString(R.string.celcius)
                 tempTxtView.text = tempText
 
-                cityTxtView.text = it.location.name
+                cityTxtView.text = it.location.localTitle
                 //conditionTxtView.text = it.current.condition.text
                 val reelFeelText =  it.current.feelslike_c.roundToInt().toString() + getString(
                     R.string.celcius

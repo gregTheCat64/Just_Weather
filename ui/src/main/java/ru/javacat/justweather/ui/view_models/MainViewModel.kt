@@ -63,7 +63,7 @@ class MainViewModel @Inject constructor(
                 repository.clearDbs()
                 for (pair in pairList){
                     //добавляем в параметр айди текущего города, чтобы в обновлении городов снова его вставить
-                    repository.fetchLocationDetails("${pair.first},${pair.second}", previousCurrentId.toString(), false)
+                    repository.fetchLocationDetails("${pair.first},${pair.second}", previousCurrentId.toString(), false, "", "")
                 }
             }
         }
@@ -72,20 +72,22 @@ class MainViewModel @Inject constructor(
     fun updateWeather(){
         viewModelScope.launch(Dispatchers.IO) {
             val place = repository.getCurrentWeather()
+            val localTitle = place?.location?.localTitle.toString()
+            val localSubTitle = place?.location?.localSubtitle.toString()
             Log.i("MyTag", "restoring ${place?.location}")
             val coords = place?.location?.lat.toString() +","+place?.location?.lon.toString()
-            findPlaceByLocation(coords)
+            findPlaceByLocation(coords, localTitle, localSubTitle)
         }
 
     }
 
 
-    private fun findPlaceByLocation(name: String) {
+    private fun findPlaceByLocation(name: String, localTitle: String, localSubtitle: String) {
         viewModelScope.launch(Dispatchers.IO) {
             loadingState.postValue(LoadingState.Load)
 
             try {
-                repository.fetchLocationDetails(name, "newCurrent", false)?: throw NetworkError
+                repository.fetchLocationDetails(name, "newCurrent", false, localTitle, localSubtitle)?: throw NetworkError
                 //_weatherData.postValue(repository.getCurrentWeather(name))
                 loadingState.postValue(LoadingState.Success)
 

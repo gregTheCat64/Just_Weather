@@ -63,6 +63,8 @@ class PlaceViewModel @Inject constructor(
             //получаем Id текущего города
             val previousCurrentId = repository.getCurrentWeather()?.id
             val previousCurrentName = repository.getCurrentWeather()?.location?.name
+            val localTitle = repository.getCurrentWeather()?.location?.localTitle
+            val localSubtitle = repository.getCurrentWeather()?.location?.localSubtitle
             Log.i("MyTag", "ГОРОД: $previousCurrentName")
             Log.i("MyTag", "id: $previousCurrentId")
 
@@ -71,7 +73,7 @@ class PlaceViewModel @Inject constructor(
                 repository.clearDbs()
                 for (pair in pairList){
                     //добавляем в параметр айди текущего города, чтобы в обновлении городов снова его вставить
-                    repository.fetchLocationDetails("${pair.first},${pair.second}", previousCurrentId.toString(),false)
+                    repository.fetchLocationDetails("${pair.first},${pair.second}", previousCurrentId.toString(),false, localTitle.toString(), localSubtitle.toString())
                 }
             }
         }
@@ -115,14 +117,35 @@ class PlaceViewModel @Inject constructor(
         }
     }
 
+    fun getCoordinates(uri: String, localTitle: String, localSubtitle: String){
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val result = repository.getCoords(uri)
+
+                val coordList = result.pos.split(" ")
+                val coords = coordList[1]+","+coordList[0]
+
+                setPlace(coords, false, localTitle, localSubtitle)
+            } catch (e: ApiError) {
+                loadingState.postValue(LoadingState.InputError)
+                Log.i("MyTag", "ОШИБКА: ${e.code}")
+            } catch (e: NetworkError) {
+                loadingState.postValue(LoadingState.NetworkError)
+                Log.i("MyTag", "ОШИБКА: NETWORK")
+            }
+        }
+    }
 
 
-    fun setPlace(name: String) {
+
+    fun setPlace(request: String, isLocated: Boolean, localTitle: String, localSubtitle: String) {
         viewModelScope.launch(Dispatchers.IO) {
             loadingState.postValue(LoadingState.Load)
 
             try {
-                repository.fetchLocationDetails(name, "newCurrent", false) ?: throw NetworkError
+                //repository.fetchLocationDetails(name, "newCurrent", false) ?: throw NetworkError
+
+                repository.fetchLocationDetails(request, "newCurrent", isLocated, localTitle, localSubtitle)
 
                 //Log.i("MyTag", "weatherResp: $weather")
                 loadingState.postValue(LoadingState.Success)
