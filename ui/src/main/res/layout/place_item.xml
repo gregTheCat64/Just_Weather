@@ -47,9 +47,17 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:lines="1"
-                    android:text="Saratov"
                     app:layout_constraintStart_toEndOf="@id/locatedMarker"
                     app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/positionId"
+                    android:layout_marginStart="8dp"
+                    android:textSize="18sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+
             </LinearLayout>
 
 
@@ -62,7 +70,6 @@
                 android:layout_marginStart="12dp"
                 android:ellipsize="end"
                 android:lines="2"
-                android:text="Саратовская область"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/nameValue" />
 

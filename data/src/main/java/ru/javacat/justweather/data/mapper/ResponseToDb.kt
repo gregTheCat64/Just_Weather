@@ -22,11 +22,11 @@ import ru.javacat.justweather.data.network.response_models.WeatherResponse
 fun WeatherResponse.toDbWeather(weatherId: String): DbWeather {
 
     return DbWeather(
-        weatherId,
         false,
-        isLocated = false,
-        current.toDb(),
-        location.toDb()
+        false,
+        weatherId,
+        0,
+        current.toDb()
     )
 }
 
@@ -60,9 +60,9 @@ fun CurrentResponse.toDb(): DbCurrent =
 fun ConditionResponse.toDb(): DbCondition =
     DbCondition(code, icon, text)
 
-fun LocationResponse.toDb(): DbLocation =
+fun LocationResponse.toDb(weatherId: String): DbLocation =
     DbLocation(
-        country, lat, localtime, localtime_epoch, lon, name, region, tz_id, "", ""
+        weatherId, country, lat, localtime, localtime_epoch, lon, name, region, tz_id, "", ""
     )
 
 

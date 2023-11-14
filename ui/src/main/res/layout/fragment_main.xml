@@ -102,7 +102,7 @@
                         android:id="@+id/imageView"
                         android:layout_width="64dp"
                         android:layout_height="64dp"
-                        android:layout_gravity="top"
+                        android:layout_gravity="center"
                         android:layout_marginStart="12dp"
                         android:src="@drawable/icon_cloud"
 
@@ -153,8 +153,9 @@
         <include
             android:id="@+id/detailsLayout"
             layout="@layout/fragment_details"
-
-            android:layout_width="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginBottom="64dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             />
 

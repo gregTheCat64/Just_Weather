@@ -9,8 +9,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import ru.javacat.justweather.domain.ApiError
-import ru.javacat.justweather.domain.NetworkError
 import ru.javacat.justweather.ui.LoadingState
 import ru.javacat.justweather.ui.SingleLiveEvent
 import javax.inject.Inject
@@ -19,18 +17,17 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val repository: ru.javacat.justweather.domain.repos.Repository,
-    private val currentPlaceRepository: ru.javacat.justweather.domain.repos.CurrentPlaceRepository
 ) : ViewModel(){
 
 
     val currentWeatherFlow = repository.currentWeatherFlow.asLiveData(viewModelScope.coroutineContext)
-    //val forecastFlow = repository.forecastFlow.asLiveData(viewModelScope.coroutineContext)
+
 
     private val loadingState = SingleLiveEvent<LoadingState>()
 
-    private val _weatherData: MutableLiveData<ru.javacat.justweather.domain.models.Weather> = MutableLiveData()
-    val weatherData: LiveData<ru.javacat.justweather.domain.models.Weather>
-        get() = _weatherData
+//    private val _weatherData: MutableLiveData<ru.javacat.justweather.domain.models.Weather> = MutableLiveData()
+//    val weatherData: LiveData<ru.javacat.justweather.domain.models.Weather>
+//        get() = _weatherData
 
     private val _forecastData: MutableLiveData<ru.javacat.justweather.domain.models.Forecastday> = MutableLiveData()
     val forecastData: LiveData<ru.javacat.justweather.domain.models.Forecastday>
@@ -44,62 +41,39 @@ class MainViewModel @Inject constructor(
         Log.i("MyTag", "initing VM")
     }
 
-    suspend fun updateDb(){
-        viewModelScope.launch(Dispatchers.IO) {
-            //получаем координаты всех городов в БД
-            val lats:List<Double>? = repository.getAllWeathers()?.map { it.location.lat }
-            val longs: List<Double>? = repository.getAllWeathers()?.map { it.location.lon }
-
-            Log.i("lats:", "${lats?.size}")
-            Log.i("longs:", "${longs?.size}")
-
-            //получаем Id текущего города
-            val previousCurrentId = repository.getCurrentWeather()?.id
-            val previousCurrentName = repository.getCurrentWeather()?.location?.name
-            Log.i("MyTag", "ГОРОД: $previousCurrentName")
-
-            if (!lats.isNullOrEmpty() && !longs.isNullOrEmpty()){
-                val pairList = lats.zip(longs)
-                repository.clearDbs()
-                for (pair in pairList){
-                    //добавляем в параметр айди текущего города, чтобы в обновлении городов снова его вставить
-                    repository.fetchLocationDetails("${pair.first},${pair.second}", previousCurrentId.toString(), false, "", "")
-                }
-            }
-        }
-    }
 
     fun updateWeather(){
         viewModelScope.launch(Dispatchers.IO) {
             val place = repository.getCurrentWeather()
-            val localTitle = place?.location?.localTitle.toString()
-            val localSubTitle = place?.location?.localSubtitle.toString()
+            //val localTitle = place?.location?.localTitle.toString()
+            //val localSubTitle = place?.location?.localSubtitle.toString()
             Log.i("MyTag", "restoring ${place?.location}")
-            val coords = place?.location?.lat.toString() +","+place?.location?.lon.toString()
-            findPlaceByLocation(coords, localTitle, localSubTitle)
-        }
-
-    }
-
-
-    private fun findPlaceByLocation(name: String, localTitle: String, localSubtitle: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            loadingState.postValue(LoadingState.Load)
-
-            try {
-                repository.fetchLocationDetails(name, "newCurrent", false, localTitle, localSubtitle)?: throw NetworkError
-                //_weatherData.postValue(repository.getCurrentWeather(name))
-                loadingState.postValue(LoadingState.Success)
-
-            } catch (e: ApiError) {
-                loadingState.postValue(LoadingState.InputError)
-                Log.i("MyTag", "ОШИБКА: ${e.code}")
-            } catch (e: NetworkError) {
-                loadingState.postValue(LoadingState.NetworkError)
-                Log.i("MyTag", "ОШИБКА: NETWORK")
-            }
+            //val coords = place?.location?.lat.toString() +","+place?.location?.lon.toString()
+            val id = place?.id.toString()
+            //getWeatherDetails(coords, localTitle, localSubTitle)
+            repository.updateWeatherById(id, false)
         }
     }
+
+
+//    private fun getWeatherDetails(name: String, localTitle: String, localSubtitle: String) {
+//        viewModelScope.launch(Dispatchers.IO) {
+//            loadingState.postValue(LoadingState.Load)
+//
+//            try {
+//                repository.getNewPlaceDetails(name, "newCurrent", false, localTitle, localSubtitle)?: throw NetworkError
+//                //_weatherData.postValue(repository.getCurrentWeather(name))
+//                loadingState.postValue(LoadingState.Success)
+//
+//            } catch (e: ApiError) {
+//                loadingState.postValue(LoadingState.InputError)
+//                Log.i("MyTag", "ОШИБКА: ${e.code}")
+//            } catch (e: NetworkError) {
+//                loadingState.postValue(LoadingState.NetworkError)
+//                Log.i("MyTag", "ОШИБКА: NETWORK")
+//            }
+//        }
+//    }
 
 
     fun chooseForecastDay(item: ru.javacat.justweather.domain.models.Forecastday) {
@@ -123,7 +97,5 @@ class MainViewModel @Inject constructor(
                 loadingState.postValue(LoadingState.NetworkError)
             }
         }
-
-
     }
 }

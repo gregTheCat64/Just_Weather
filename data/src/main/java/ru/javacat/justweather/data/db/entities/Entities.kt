@@ -10,11 +10,38 @@ import androidx.room.PrimaryKey
     tableName = "weathers_table"
 )
 data class DbWeather(
-    @PrimaryKey val id: String,
     var isCurrent: Boolean,
     var isLocated: Boolean,
+    @PrimaryKey val id: String,
+    var positionId: Int,
     @Embedded val current: DbCurrent,
-    @Embedded val location: DbLocation
+//    @Embedded val location: DbLocation
+)
+
+@Entity(
+    tableName = "locations_table",
+    foreignKeys = [
+        ForeignKey(
+            entity = DbWeather::class,
+            parentColumns = ["id"],
+            childColumns = ["weatherId"],
+            onDelete = ForeignKey.CASCADE,
+            onUpdate = ForeignKey.CASCADE
+        )
+    ]
+)
+data class DbLocation(
+    @PrimaryKey val weatherId: String,
+    val country: String,
+    val lat: Double,
+    val localtime: String,
+    val localtime_epoch: Int,
+    val lon: Double,
+    val name: String,
+    val region: String,
+    val tz_id: String,
+    var localTitle: String,
+    var localSubtitle: String
 )
 
 @Entity(
@@ -66,7 +93,6 @@ data class DbAlert(
 data class DbForecastday(
     val weatherId: String,
     val date: String,
-
     @Embedded val astro: DbAstro,
     val date_epoch: Int,
     @Embedded val day: DbDay,

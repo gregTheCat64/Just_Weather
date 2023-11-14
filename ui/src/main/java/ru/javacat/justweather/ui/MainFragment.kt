@@ -159,14 +159,6 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
             }
         }
 
-//        viewLifecycleOwner.lifecycleScope.launch {
-//            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-//                viewModel.forecastFlow.observe(viewLifecycleOwner) {
-//                    updateForecast(it)
-//                }
-//            }
-//        }
-
     }
 
 
@@ -176,7 +168,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
             alarmCard.visibility = View.INVISIBLE
 
             weather?.let {
-                val currentTime = it.location.localtime.toLocalDateTime()
+                val currentTime = it.current.last_updated.toLocalDateTime()
                     .toLocalTime()
 
                 locatedMarker.isVisible = it.isLocated
@@ -229,23 +221,24 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
 
                 it.current.condition.icon.let { it1 -> imageView.load(it1) }
 
-                val cloudText = it.current.cloud.toString() + "%"
-                detailsLayout.cloud.text = cloudText
+//                val cloudText = it.current.cloud.toString() + "%"
+//                detailsLayout.cloud.text = cloudText
 
-                val speedText =  it.current.wind_kph.roundToInt().toString() + getString(
+                val speedText =  it.current.wind_kph.roundToInt().toString() + " " +getString(
                     R.string.km_h
                 )
                 detailsLayout.windSpeed.text = speedText
 
                 detailsLayout.windDir.text = it.current.wind_dir.toWindRus()
 
-                val precipText = it.current.precip_mm.toString() + getString(R.string.mm)
-                detailsLayout.precipation.text =precipText
+//                val precipText = it.current.precip_mm.toString() + getString(R.string.mm)
+//                detailsLayout.precipation.text =precipText
 
                 val humidityText =  it.current.humidity.toString() + getString(R.string.percent)
                 detailsLayout.humidity.text =humidityText
 
-                detailsLayout.uvIndex.text = it.current.uv.toString()
+                //detailsLayout.uvIndex.text = it.current.uv.toString()
+                detailsLayout.pressureTextValue.text = it.current.precip_mm.toString() + " " + getString(R.string.mbar)
                 val alerts = it.alerts
                 val alertMsgBuffer = StringBuilder()
                 for (element in alerts) {

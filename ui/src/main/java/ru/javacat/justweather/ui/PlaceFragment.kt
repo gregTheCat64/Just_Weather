@@ -23,7 +23,9 @@ import ru.javacat.justweather.ui.adapters.PlacesAdapter
 import ru.javacat.justweather.ui.adapters.SearchPlacesAdapter
 import ru.javacat.justweather.ui.base.BaseFragment
 import ru.javacat.justweather.ui.util.AndroidUtils
+import ru.javacat.justweather.ui.util.snack
 import ru.javacat.justweather.ui.view_models.PlaceViewModel
+import ru.javacat.ui.R
 import ru.javacat.ui.databinding.FragmentPlaceBinding
 
 @AndroidEntryPoint
@@ -40,15 +42,12 @@ class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {
         Log.i("PlaceFragment", "onCreate")
         super.onCreate(savedInstanceState)
 
-
-
         //val inflater = TransitionInflater.from(requireContext())
         //enterTransition = inflater.inflateTransition(R.transition.slide_right)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.i("PlaceFragment", "onViewCreated")
-        //updateDb()
         initLoadingStateObserving()
         initObserver()
         initSearchBar()
@@ -101,21 +100,12 @@ class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {
 
         adapter = PlacesAdapter(object : OnPlacesInteractionListener {
             override fun onSetPlace(item: ru.javacat.justweather.domain.models.Weather) {
-
-                viewModel.setPlace(item.location.lat.toString()+","+item.location.lon.toString(),
-                    item.isLocated,
-                    item.location.localTitle,
-                    item.location.localSubtitle
-                    )
-                //viewModel.setPlace(item.location.region+","+item.location.name)
-
-
+                viewModel.setPlace(item.id)
             }
             override fun onRemovePlace(item: ru.javacat.justweather.domain.models.Weather) {
                 if (!item.isCurrent ){
                     viewModel.removePlace(item.id) 
-                } else Toast.makeText(requireContext(), "Невозможно удалить текущий город", Toast.LENGTH_SHORT).show()
-               
+                }
             }
         })
         binding.placesList.adapter = adapter
@@ -136,11 +126,18 @@ class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                //viewModel.removePlace(adapter.getItemId(viewHolder.adapterPosition))
                 val item = adapter.getItemAt(viewHolder.adapterPosition)
                 if (!item.isLocated ){
                     viewModel.removePlace(item.id)
                 }
+            }
+
+            override fun getSwipeDirs(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder
+            ): Int {
+                if (viewHolder.adapterPosition == 0) return 0
+                return super.getSwipeDirs(recyclerView, viewHolder)
             }
         }
         ).attachToRecyclerView(binding.placesList)
@@ -152,12 +149,14 @@ class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {
             when (it) {
                 is LoadingState.NetworkError -> {
                     binding.progressBar.visibility = View.INVISIBLE
-                    Toast.makeText(requireContext(), "Проблемы с соединением", Toast.LENGTH_SHORT)
+                    Toast.makeText(requireContext(),
+                        getString(R.string.Connection_problem), Toast.LENGTH_SHORT)
                         .show()
                 }
                 is LoadingState.InputError -> {
                     binding.progressBar.visibility = View.INVISIBLE
-                    Toast.makeText(requireContext(), "Город не найден", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(),
+                        getString(R.string.city_not_found), Toast.LENGTH_SHORT).show()
                 }
                 is LoadingState.Load -> binding.progressBar.visibility = View.VISIBLE
                 is LoadingState.Success -> {
@@ -167,21 +166,25 @@ class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {
                 is LoadingState.Found -> {
                     binding.progressBar.visibility = View.INVISIBLE
                 }
+                is LoadingState.Updated -> {
+                    binding.progressBar.visibility = View.INVISIBLE
+                    snack(getString(R.string.locations_updated))
+                }
             }
         }
     }
 
     private fun initSearchBar() {
-        val searchview: SearchView = binding.placeInput as SearchView
+        val searchView: SearchView = binding.placeInput
         searchAdapter = SearchPlacesAdapter(object : OnSearchPlacesInteractionListener{
             override fun onSetPlace(item: FoundLocation) {
-                val country = item.address.component.firstOrNull(){
+                val country = item.address.component.firstOrNull{
                     it.kind[0] == "COUNTRY"
                 }?.name?:""
-                val province =  item.address.component.lastOrNull() {
+                val province =  item.address.component.lastOrNull{
                     it.kind[0] == "PROVINCE"
                 }?.name?:""
-                val localTitle =  item.address.component.lastOrNull() {
+                val localTitle =  item.address.component.lastOrNull{
                     it.kind[0] == "LOCALITY"
                 }?.name?:""
 
@@ -194,13 +197,13 @@ class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {
         binding.searchList.layoutManager = LinearLayoutManager(requireContext())
         binding.searchList.adapter = searchAdapter
 
-        searchview.setOnCloseListener {
+        searchView.setOnCloseListener {
             AndroidUtils.hideKeyboard(requireView())
             false
         }
 
 
-        searchview.setOnQueryTextListener(object : android.widget.SearchView.OnQueryTextListener {
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(location: String?): Boolean {
                 return false
             }

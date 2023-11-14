@@ -21,4 +21,8 @@
     <string name="backbtn" translatable="false">backBtn</string>
     <string name="uv_index">UV index:</string>
     <string name="update_current_location">Update current location</string>
+    <string name="locations_updated">Locations Updated</string>
+    <string name="city_not_found">location not found</string>
+    <string name="Connection_problem">Connection problem</string>
+    <string name="mbar">" mBar"</string>
 </resources>

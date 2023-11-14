@@ -15,10 +15,11 @@ import ru.javacat.justweather.data.db.entities.DbWeatherWithForecastsAndAlerts
 fun DbWeatherWithForecastsAndAlerts.toModel(): ru.javacat.justweather.domain.models.Weather {
     return ru.javacat.justweather.domain.models.Weather(
         weather.id,
+        weather.positionId,
         alerts.map { it.toModel() },
         weather.current.toModel(),
         forecasts.map { it.toModel() },
-        weather.location.toModel(),
+        location.toModel(),
         weather.isCurrent,
         weather.isLocated
     )

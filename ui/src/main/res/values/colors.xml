@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="md_theme_light_primary">#FF6900</color>
+    <color name="md_theme_light_primary">#FEAB00</color>
     <color name="md_theme_light_onPrimary">#FFFFFF</color>
 
-    <color name="md_theme_light_secondary">#C76D2E</color>
+    <color name="md_theme_light_secondary">#FEAB00</color>
     <color name="md_theme_light_onSecondary">#FFFFFF</color>
 
     <color name="md_theme_light_background">#931B00</color>

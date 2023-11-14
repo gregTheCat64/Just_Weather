@@ -6,11 +6,13 @@ import ru.javacat.justweather.data.db.dao.WeatherDao
 import ru.javacat.justweather.data.db.entities.DbAlert
 import ru.javacat.justweather.data.db.entities.DbForecastday
 import ru.javacat.justweather.data.db.entities.DbHour
+import ru.javacat.justweather.data.db.entities.DbLocation
 import ru.javacat.justweather.data.db.entities.DbWeather
 
 @Database(
     entities = [
         DbWeather::class,
+        DbLocation::class,
         DbAlert::class,
         DbForecastday::class,
         DbHour::class

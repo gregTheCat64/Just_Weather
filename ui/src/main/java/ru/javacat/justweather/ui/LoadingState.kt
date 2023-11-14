@@ -7,6 +7,8 @@ sealed interface LoadingState {
 
     object Found: LoadingState
 
+    object Updated: LoadingState
+
     object InputError: LoadingState
 
     object NetworkError: LoadingState

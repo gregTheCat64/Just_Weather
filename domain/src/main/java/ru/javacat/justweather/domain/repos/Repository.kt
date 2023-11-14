@@ -10,15 +10,10 @@ import ru.javacat.justweather.domain.models.suggestModels.SuggestLocationList
 interface Repository {
     val allWeathers: Flow<List<Weather>>
     val currentWeatherFlow: Flow<Weather?>
-    //val hoursFlow: Flow<List<Hour>>?
-
-    //val forecastFlow: Flow<List<ForecastdayWithHours>>
-
-    //suspend fun getAllWeathers(): List<Weather>?
 
     suspend fun getAllWeathers(): List<Weather>?
-    suspend fun fetchLocationDetails(name: String, currentId: String, isLocated: Boolean, localTitle: String, localSubtitle: String)
-
+    suspend fun getNewPlaceDetails(name: String, isLocated: Boolean, localTitle: String, localSubtitle: String, locationsLimit: Int)
+    suspend fun updateWeatherById(locationId: String, setCurrent: Boolean)
     suspend fun findLocation(name: String): SuggestLocationList
 
     suspend fun getCoords(uri: String): Point
@@ -27,11 +22,16 @@ interface Repository {
 
     suspend fun getCurrentWeather(): Weather?
 
-    suspend fun setCurrentWeather(weather: Weather)
 
     suspend fun getHours(weatherId: String, date: String): List<Hour>
 
     suspend fun removeById(id: String)
+
+    suspend fun changePositionId(locId: String)
+
+    suspend fun unCheckLocated()
+
+    suspend fun unCheckCurrent()
 
     suspend fun  clearDbs()
 

@@ -2,81 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:padding="8dp"
     android:orientation="horizontal">
 
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/windLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_weight="1"
-       android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        >
-
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_gravity="center"
-            android:src="@drawable/icon_wind"
-            app:tint="?attr/textFillColor" />
-
-        <TextView
-            android:id="@+id/windSpeed"
-            android:layout_gravity="center"
-            android:layout_marginTop="4dp"
-            android:textColor="?attr/textFillColor"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-             />
-
-        <TextView
-            android:id="@+id/windDir"
-            android:layout_gravity="center"
-            android:textColor="?attr/textFillColor"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            />
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/precipationLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_weight="1"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp">
-
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_gravity="center"
-            android:src="@drawable/icon_precipation"
-            app:tint="?attr/textFillColor" />
-
-
-        <TextView
-            android:id="@+id/precipation"
-            android:layout_gravity="center"
-            android:layout_marginTop="4dp"
-            android:textColor="?attr/textFillColor"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-           />
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/humidityLaout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:orientation="horizontal"
         android:layout_weight="1"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="16dp"
         android:layout_marginEnd="8dp">
 
         <ImageView
@@ -89,69 +27,93 @@
 
         <TextView
             android:id="@+id/humidity"
-            android:layout_gravity="center"
-            android:layout_marginTop="4dp"
-            android:textColor="?attr/textFillColor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-          />
+            android:layout_gravity="center"
+            android:layout_marginStart="8dp"
+            android:fontFamily="sans-serif"
+            android:text="fdasdf"
+            android:textColor="?attr/textFillColor" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
+
+
     <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/cloudChanceLayout"
+        android:id="@+id/linearLayoutCompat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
         android:layout_weight="1"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="22dp"
         android:layout_marginEnd="8dp">
 
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_gravity="center"
-            android:src="@drawable/icon_cloud_chance"
-            app:tint="?attr/textFillColor" />
-
-
-        <TextView
-            android:id="@+id/cloud"
-            android:layout_gravity="center"
-            android:layout_marginTop="4dp"
-            android:textColor="?attr/textFillColor"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            />
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/linearLayoutCompat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_weight="1"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="UV"
-            android:layout_gravity="center"
-            android:textSize="18sp"
-            android:textColor="?attr/textFillColor"
+            android:src="@drawable/gauge_icon"
+            app:tint="?attr/textFillColor"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/uvIndex"
+            android:id="@+id/pressureTextValue"
             android:layout_gravity="center"
-            android:layout_marginTop="4dp"
+            android:layout_marginStart="8dp"
             android:textColor="?attr/textFillColor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
              />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/windLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_weight="1"
+        android:layout_marginStart="22dp"
+        android:layout_marginEnd="8dp"
+        >
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:src="@drawable/icon_wind"
+            app:tint="?attr/textFillColor" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:orientation="vertical"
+            >
+            <TextView
+                android:id="@+id/windSpeed"
+                android:layout_gravity="center"
+
+                android:text="-12 км/ч"
+                android:textColor="?attr/textFillColor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+
+            <TextView
+                android:id="@+id/windDir"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginStart="8dp"
+                android:text="SW"
+                android:textSize="12sp"
+                android:textColor="?attr/textFillColor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+
+        </LinearLayout>
+
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

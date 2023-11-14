@@ -48,8 +48,9 @@ class PlacesAdapter(
                 nameValue.text = item.location.localTitle
                 regionValue.text = item.location.localSubtitle
                 tempValue.text = item.current.temp_c.roundToInt().toString() + "°"
-                updateTime.text = item.location.localtime.toLocalDateTime().toLocalTime().toString()
+                updateTime.text = item.current.last_updated.toLocalDateTime().toLocalTime().toString()
                 conditionImage.load(image)
+                positionId.text = item.positionId.toString()
                 root.setOnClickListener {
                     it.pushAnimation(binding.root.context)
                     onInteractionListener.onSetPlace(item)

@@ -19,6 +19,12 @@ data class DbWeatherWithForecastsAndAlerts (
     )
     val alerts: List<DbAlert>,
 
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "weatherId"
+    )
+    val location: DbLocation
+
 //    @Embedded
 //    val hours: List<DbHour>
 )
