@@ -23,4 +23,5 @@
     <string name="update_current_location">Обновите местоположение</string>
     <string name="Connection_problem">Проблемы с соединением</string>
     <string name="mbar">мБар</string>
+    <string name="updated">Обновлено</string>
 </resources>

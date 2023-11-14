@@ -16,6 +16,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import ru.javacat.justweather.common.util.toLocalDateTime
@@ -26,6 +27,7 @@ import ru.javacat.justweather.ui.base.BaseFragment
 import ru.javacat.justweather.ui.util.changeColorOnPush
 import ru.javacat.justweather.ui.util.load
 import ru.javacat.justweather.ui.util.refreshAnimation
+import ru.javacat.justweather.ui.util.snack
 import ru.javacat.justweather.ui.view_models.MainViewModel
 import ru.javacat.ui.R
 import ru.javacat.ui.databinding.FragmentMainBinding
@@ -119,6 +121,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
 
         Log.i("MainFragment", "onCreateView")
 
+        initStateObserver()
         initDataObserver()
 
         return super.onCreateView(inflater, container, savedInstanceState)
@@ -127,11 +130,10 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.i("MainFragment", "onViewCreated")
-        //updateDb()
+
 
         binding.placeLayout.setOnClickListener {
             it.changeColorOnPush(requireContext())
-            //updateDb()
             findNavController().navigate(R.id.action_mainFragment_to_placeFragment)
 //            parentFragmentManager
 //                .beginTransaction()
@@ -158,7 +160,24 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
                 }
             }
         }
+    }
 
+    private fun initStateObserver(){
+        viewModel.loadingState.observe(viewLifecycleOwner) {
+            when (it) {
+                is LoadingState.NetworkError -> {
+                    Snackbar.make(
+                        requireView(),
+                        getString(R.string.network_error),
+                        Snackbar.LENGTH_LONG
+                    ).show()
+                }
+                is LoadingState.Success -> {
+                    snack(getString(R.string.updated))
+                }
+                else -> {}
+            }
+        }
     }
 
 

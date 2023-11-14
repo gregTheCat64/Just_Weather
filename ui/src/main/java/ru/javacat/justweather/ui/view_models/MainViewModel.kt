@@ -9,8 +9,12 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import ru.javacat.justweather.domain.ApiError
+import ru.javacat.justweather.domain.NetworkError
 import ru.javacat.justweather.ui.LoadingState
+
 import ru.javacat.justweather.ui.SingleLiveEvent
+
 import javax.inject.Inject
 
 
@@ -23,7 +27,7 @@ class MainViewModel @Inject constructor(
     val currentWeatherFlow = repository.currentWeatherFlow.asLiveData(viewModelScope.coroutineContext)
 
 
-    private val loadingState = SingleLiveEvent<LoadingState>()
+    val loadingState = SingleLiveEvent<LoadingState>()
 
 //    private val _weatherData: MutableLiveData<ru.javacat.justweather.domain.models.Weather> = MutableLiveData()
 //    val weatherData: LiveData<ru.javacat.justweather.domain.models.Weather>
@@ -44,14 +48,21 @@ class MainViewModel @Inject constructor(
 
     fun updateWeather(){
         viewModelScope.launch(Dispatchers.IO) {
-            val place = repository.getCurrentWeather()
-            //val localTitle = place?.location?.localTitle.toString()
-            //val localSubTitle = place?.location?.localSubtitle.toString()
-            Log.i("MyTag", "restoring ${place?.location}")
-            //val coords = place?.location?.lat.toString() +","+place?.location?.lon.toString()
-            val id = place?.id.toString()
-            //getWeatherDetails(coords, localTitle, localSubTitle)
-            repository.updateWeatherById(id, false)
+            loadingState.postValue(LoadingState.Load)
+            try {
+                val place = repository.getCurrentWeather()
+                Log.i("MyTag", "restoring ${place?.location}")
+                val id = place?.id.toString()
+                repository.updateWeatherById(id, false)
+                loadingState.postValue(LoadingState.Success)
+            }catch (e: ApiError) {
+                loadingState.postValue(LoadingState.InputError)
+                Log.i("MyTag", "ОШИБКА: ${e.code}")
+            } catch (e: NetworkError) {
+                loadingState.postValue(LoadingState.NetworkError)
+                Log.i("MyTag", "ОШИБКА: NETWORK")
+            }
+
         }
     }
 

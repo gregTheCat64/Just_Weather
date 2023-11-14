@@ -25,4 +25,5 @@
     <string name="city_not_found">location not found</string>
     <string name="Connection_problem">Connection problem</string>
     <string name="mbar">" mBar"</string>
+    <string name="updated">Updated</string>
 </resources>

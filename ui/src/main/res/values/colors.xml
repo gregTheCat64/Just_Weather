@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="md_theme_light_primary">#FEAB00</color>
+    <color name="md_theme_light_primary">#FE8700</color>
     <color name="md_theme_light_onPrimary">#FFFFFF</color>
 
-    <color name="md_theme_light_secondary">#FEAB00</color>
+    <color name="md_theme_light_secondary">#FE8700</color>
     <color name="md_theme_light_onSecondary">#FFFFFF</color>
 
     <color name="md_theme_light_background">#931B00</color>
@@ -32,5 +32,6 @@
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="grey">#4F4F4F</color>
+    <color name="forecastImageColor">#FFFFFF</color>
 
 </resources>
