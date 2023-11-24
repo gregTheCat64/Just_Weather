@@ -46,6 +46,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
+            app:cardBackgroundColor="?attr/cardBackgroundColor"
             app:cardCornerRadius="8dp">
 
 
@@ -60,6 +61,7 @@
                     android:id="@+id/locatedMarker"
                     android:layout_width="18dp"
                     android:layout_height="18dp"
+                    android:layout_marginEnd="8dp"
                     android:layout_gravity="center"
                     android:src="@drawable/baseline_location_on_24"
                     app:tint="?attr/colorPrimary" />
@@ -68,47 +70,51 @@
                     android:id="@+id/cityTxtView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="8dp"
-
-                    android:textSize="18sp" />
+                    android:text="fdasdfsa"
+                    android:gravity="center"
+                    style="@style/TextAppearance.Material3.LabelLarge.ForecastLargeText"
+                    android:textColor="@color/white"
+                     />
             </androidx.appcompat.widget.LinearLayoutCompat>
 
 
         </androidx.cardview.widget.CardView>
 
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
 
+            android:layout_marginTop="32dp"
+            android:orientation="horizontal">
 
+            <TextView
+                android:id="@+id/tempTxtView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="15"
+                android:textSize="96sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.4"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="32dp"
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_marginStart="16dp"
+                android:layout_gravity="center"
+                android:src="@drawable/icon_cloud"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/tempTxtView"
+                app:layout_constraintTop_toTopOf="parent" />
 
-                    android:layout_gravity="center_horizontal"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/tempTxtView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="15"
-                        android:textSize="96sp"
-                        android:textStyle="bold" />
-
-                    <ImageView
-                        android:id="@+id/imageView"
-                        android:layout_width="64dp"
-                        android:layout_height="64dp"
-                        android:layout_gravity="center"
-                        android:layout_marginStart="12dp"
-                        android:src="@drawable/icon_cloud"
-
-                        />
-
-                </androidx.appcompat.widget.LinearLayoutCompat>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
                 <androidx.appcompat.widget.LinearLayoutCompat
@@ -123,6 +129,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="16dp"
+                        style="@style/TextAppearance.Material3.LabelSmall.SmallText"
                         android:text="@string/realfeel"
                         android:textColor="?attr/textFillColor" />
 
@@ -130,6 +137,7 @@
                         android:id="@+id/realFeelTxtView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        style="@style/TextAppearance.Material3.TitleLarge.TitleTextValue"
                         android:textSize="22dp"
                         android:text="Нажмите обновить"
                         android:layout_marginStart="8dp"

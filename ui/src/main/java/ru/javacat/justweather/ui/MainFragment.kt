@@ -156,7 +156,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
                 viewModel.currentWeatherFlow.observe(viewLifecycleOwner) { weather ->
                     Log.i("MainFragment", "collecting")
                     updateWeather(weather)
-                    weather?.forecasts?.let { updateForecast(forecastdays = it) }
+                    weather?.forecasts?.let { updateForecast(forecastdays = it, weather.location.localTitle) }
                 }
             }
         }
@@ -276,12 +276,14 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
         }
     }
 
-    private fun updateForecast(forecastdays: List<ru.javacat.justweather.domain.models.Forecastday>){
+    private fun updateForecast(forecastdays: List<ru.javacat.justweather.domain.models.Forecastday>, locName: String){
+        val bundle = Bundle()
+        bundle.putString("LOC_NAME", locName)
         adapter = MainAdapter(object : OnInteractionListener {
             override fun onForecastItem(item: ru.javacat.justweather.domain.models.Forecastday, view: View) {
                 //val color = context!!.resources.getColor(R.color.md_theme_light_primary)
                 view.changeColorOnPush(requireContext())
-                findNavController().navigate(R.id.action_mainFragment_to_forecastFragment)
+                findNavController().navigate(R.id.action_mainFragment_to_forecastFragment, bundle)
                 viewModel.getHours(item.weatherId, item.date.toString())
                 viewModel.chooseForecastDay(item)
 

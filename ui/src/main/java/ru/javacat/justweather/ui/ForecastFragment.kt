@@ -39,27 +39,33 @@ class ForecastFragment : BaseFragment<FragmentForecastBinding>() {
             //parentFragmentManager.popBackStack()
             findNavController().navigateUp()
         }
-        initForecastObserver()
+
+
+        val args = arguments
+        val locName = args?.getString("LOC_NAME","")?:""
+
+        initForecastObserver(locName)
         initHoursObserver()
 
         super.onViewCreated(view, savedInstanceState)
     }
 
 
-    private fun initForecastObserver() {
+    private fun initForecastObserver(locName: String) {
         lifecycleScope.launch {
             viewModel.forecastData.observe(viewLifecycleOwner) {
                 binding.apply {
+                    mainTextView.text = locName
                     conditionImage.load(it.day.condition.icon)
                     conditionValue.text = it.day.condition.text
                     dateTxtView.text = it.date.asLocalDate()
-                    avgTempValue.text = it.day.avgtemp_c.toString() + "°"
+                    avgTempValue.text = it.day.avgtemp_c.roundToInt().toString() + "°"
                     maxTempValue.text = it.day.maxtemp_c.roundToInt().toString() + "°"
                     minTempValue.text = it.day.mintemp_c.roundToInt().toString() + "°"
-                    maxWindSpeedValue.text = it.day.maxwind_kph.roundToInt().toString() + "км/ч"
-                    totalPrecipValue.text = it.day.totalprecip_mm.toString() + "мм"
+                    maxWindSpeedValue.text = it.day.maxwind_kph.roundToInt().toString() + " км/ч"
+                    totalPrecipValue.text = it.day.totalprecip_mm.toString() + " мм"
                     avgHumidityValue.text = it.day.avghumidity.toString() + "%"
-                    avgvisValue.text = it.day.avgvis_km.toString() + "км"
+                    avgvisValue.text = it.day.avgvis_km.toString() + " км"
                     uvIndexValue.text = it.day.uv.toString()
                     sunRiseValue.text = it.astro.sunrise
                     sunSetValue.text = it.astro.sunset
@@ -67,8 +73,8 @@ class ForecastFragment : BaseFragment<FragmentForecastBinding>() {
                     moonSetValue.text = it.astro.moonset
                     val precipChance = StringBuffer()
                     if (it.day.daily_chance_of_rain>0 ||it.day.daily_chance_of_snow>0) {
-                        precipChance.append("дождь: ${it.day.daily_chance_of_rain} % \n")
-                        precipChance.append("снег: ${it.day.daily_chance_of_snow} %")
+                        precipChance.append("дождь: ${it.day.daily_chance_of_rain} % ")
+                        precipChance.append("  снег: ${it.day.daily_chance_of_snow} %")
                         precipChanceValue.text = precipChance
                     } else  precipChanceValue.text = "0%"
 

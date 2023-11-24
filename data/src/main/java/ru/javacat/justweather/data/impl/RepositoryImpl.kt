@@ -202,6 +202,10 @@ class RepositoryImpl @Inject constructor(
 
 
         if (isLocated) {
+            for (i in weatherList){
+                Log.i("MyTag","changin position at ${i.location?.name}")
+                changePositionId(i.weather.id)
+            }
             weather.isLocated = true
             weather.positionId = 0
         } else {

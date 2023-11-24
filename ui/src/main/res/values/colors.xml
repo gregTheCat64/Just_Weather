@@ -26,7 +26,7 @@
 
     <color name="dark_text_accent">#FFFFFF</color>
     <color name="dark_text_secondary">#9E9E9E</color>
-    <color name="dark_card_back">#2E2E2E</color>
+    <color name="dark_card_back">#393939</color>
     <color name="dark_status_bar">#2F2F2F</color>
 
     <color name="white">#FFFFFF</color>
