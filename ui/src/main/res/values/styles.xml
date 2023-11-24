@@ -39,7 +39,7 @@
         <item name="fontFamily">@font/bauhas</item>
     </style>
 
-    <style name="Android.Widget.SearchView.MySearch" parent="Base.Theme.JustWeather">
+    <style name="Android.Widget.SearchView.MySearch" parent="Widget.AppCompat.SearchView">
         <item name="android:textColorPrimary">@color/white</item>
         <item name="textFillColor">@color/white</item>
         <item name="android:textColor">@color/white</item>

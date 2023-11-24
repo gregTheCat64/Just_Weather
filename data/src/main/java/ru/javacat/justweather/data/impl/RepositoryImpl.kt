@@ -60,7 +60,7 @@ class RepositoryImpl @Inject constructor(
         val dbWeather = dbQuery { dao.getByLocationId(locationId) }
         //Log.i("MyTag", "dbweather: ${dbWeather.weather.positionId}")
         val weatherList = dbQuery { dao.getAllWeathers() }
-        Log.i("Positions", "allweatherListIds: ${weatherList.map { it.weather.positionId }}" )
+        Log.i("Positions", "allweatherListIds: ${weatherList.map { it.weather.positionId }}")
 
         //анчекаем текущие города
         unCheckCurrent()
@@ -94,8 +94,7 @@ class RepositoryImpl @Inject constructor(
         weather.isLocated = dbWeather?.weather?.isLocated == true
         if (setCurrent) {
             weather.isCurrent = true
-        } else
-        {
+        } else {
             weather.isCurrent = dbWeather?.weather?.isCurrent == true
         }
 
@@ -109,7 +108,7 @@ class RepositoryImpl @Inject constructor(
 
         // двигаем города, если это не нулевой город и если стоит флаг - сетКарент
         if (setCurrent && !weather.isLocated) {
-            for (i in listToChangePosition){
+            for (i in listToChangePosition) {
                 Log.i("Positions", "changinPos: ${i.weather.positionId}")
                 changePositionId(i.weather.id)
                 Log.i("Positions", "now pos is: ${i.weather.positionId}")
@@ -118,7 +117,6 @@ class RepositoryImpl @Inject constructor(
         } else {
             weather.positionId = dbWeather?.weather?.positionId!!
         }
-
 
 
         //формируем табличку Часиков
@@ -130,23 +128,31 @@ class RepositoryImpl @Inject constructor(
 
         //получаем каждый 3й час
         val everyThirdHourList = mutableListOf<DbHour>()
-        for (i in hours.indices){
-            if (i%3==0){
+        for (i in hours.indices) {
+            if (i % 3 == 0) {
                 everyThirdHourList.add(hours[i])
             }
         }
 
         //вставляем таблички в БД
-        dbQuery { dao.update(
-            weather,
-            alerts,
-            forecasts,
-            everyThirdHourList
-        ) }
+        dbQuery {
+            dao.update(
+                weather,
+                alerts,
+                forecasts,
+                everyThirdHourList
+            )
+        }
     }
 
 
-    override suspend fun getNewPlaceDetails(name: String, isLocated: Boolean, localTitle: String, localSubtitle: String, locationsLimit: Int) {
+    override suspend fun getNewPlaceDetails(
+        name: String,
+        isLocated: Boolean,
+        localTitle: String,
+        localSubtitle: String,
+        locationsLimit: Int
+    ) {
         Log.i("Repo", "loadingData")
         val weatherResponse = apiRequest {
             apiService.getByName(name)
@@ -154,8 +160,9 @@ class RepositoryImpl @Inject constructor(
 
         val weatherList = dbQuery { dao.getAllWeathers() }
 
-        if (weatherList.size>=4 && !isLocated) {
-            val lastLocationId = weatherList.findLast { it.weather.positionId == locationsLimit }?.weather?.id
+        if (weatherList.size >= 4 && !isLocated) {
+            val lastLocationId =
+                weatherList.findLast { it.weather.positionId == locationsLimit }?.weather?.id
             dbQuery {
                 if (lastLocationId != null) {
                     dao.removeById(lastLocationId)
@@ -200,19 +207,33 @@ class RepositoryImpl @Inject constructor(
 
         Log.i("MyTag", "lesspositionlist: ${listToChangePosition.map { it.weather.positionId }}")
 
+        val previousLocatedPlaceId =
+            weatherList.findLast { it.weather.positionId == 0 }?.location?.weatherId
+        Log.i("MyTag", "prevPlace: $previousLocatedPlaceId")
+        Log.i("MyTag", "nowPlace: $weatherId")
 
         if (isLocated) {
-            for (i in weatherList){
-                Log.i("MyTag","changin position at ${i.location?.name}")
-                changePositionId(i.weather.id)
+            if (weatherId != previousLocatedPlaceId) {
+//                for (i in weatherList){
+//                    Log.i("MyTag","changin position at ${i.location?.name}")
+//                    changePositionId(i.weather.id)
+//                }
+
+                dbQuery {
+                    if (previousLocatedPlaceId != null) {
+                        dao.removeById(previousLocatedPlaceId)
+                    }
+                }
+
             }
+
             weather.isLocated = true
             weather.positionId = 0
         } else {
             //Двигаем номер позиции
-            
-            for (i in listToChangePosition){
-                Log.i("MyTag","changin position at ${i.location?.name}")
+
+            for (i in listToChangePosition) {
+                Log.i("MyTag", "changin position at ${i.location?.name}")
                 changePositionId(i.weather.id)
             }
             weather.positionId = 1
@@ -229,20 +250,22 @@ class RepositoryImpl @Inject constructor(
         }.flatten()
 
         val everyThirdHourList = mutableListOf<DbHour>()
-        for (i in hours.indices){
-            if (i%3==0){
+        for (i in hours.indices) {
+            if (i % 3 == 0) {
                 everyThirdHourList.add(hours[i])
             }
         }
 
-         Log.i("MyTag", "INSERTING TO DB")
-        dbQuery { dao.insert(
-            weather,
-            location,
-            alerts,
-            forecasts,
-            everyThirdHourList
-        ) }
+        Log.i("MyTag", "INSERTING TO DB")
+        dbQuery {
+            dao.insert(
+                weather,
+                location,
+                alerts,
+                forecasts,
+                everyThirdHourList
+            )
+        }
     }
 
 
@@ -272,13 +295,16 @@ class RepositoryImpl @Inject constructor(
         return result
     }
 
-    override suspend fun getHours(weatherId: String, date: String): List<ru.javacat.justweather.domain.models.Hour> {
+    override suspend fun getHours(
+        weatherId: String,
+        date: String
+    ): List<ru.javacat.justweather.domain.models.Hour> {
         println("getting hours")
 
-        val result = dao.getHours(weatherId, date).map {list->
-          list.toModel()
+        val result = dao.getHours(weatherId, date).map { list ->
+            list.toModel()
         }
-        return  result
+        return result
     }
 
 
@@ -292,22 +318,23 @@ class RepositoryImpl @Inject constructor(
 
     override suspend fun changePositionId(locId: String) {
         dbQuery { dao.increaseId(locId) }
-        Log.i("MyTag","position changed")
+        Log.i("MyTag", "position changed")
     }
 
     override suspend fun removeById(id: String) {
         val location = dbQuery { dao.getByLocationId(id) }
         val locatedPlace = dbQuery { dao.getAllWeathers().firstOrNull { it.weather.isLocated } }
-        val listToChangePosition = dbQuery { dao.getAllWeathers() }.filter { it.weather.positionId > location?.weather?.positionId!! }
+        val listToChangePosition =
+            dbQuery { dao.getAllWeathers() }.filter { it.weather.positionId > location?.weather?.positionId!! }
         Log.i("MyTag", "locatedplace: ${locatedPlace?.location?.name}")
         Log.i("MyTag", "locatedplaceId: ${locatedPlace?.weather?.id}")
 
-        if (listToChangePosition.isNotEmpty()){
-            for (i in listToChangePosition){
+        if (listToChangePosition.isNotEmpty()) {
+            for (i in listToChangePosition) {
                 dbQuery { dao.decreaseId(i.weather.id) }
             }
         }
-        if (location?.weather?.isCurrent == true){
+        if (location?.weather?.isCurrent == true) {
             dao.removeById(id)
             dbQuery { locatedPlace?.weather?.id?.let { dao.setCurrent(it) } }
             Log.i("MyTag", "locatedplaceId:")

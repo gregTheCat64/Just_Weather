@@ -157,7 +157,7 @@ class StartFragment : BaseFragment<FragmentStartBinding>(), LocationListener {
     private fun loadData(lat: Double, long: Double) {
         //Log.i("MyLog", "Loading data")
         viewModel.getLocationByCoords("$lat,$long")
-        //viewModel.findPlaceByLocation("$lat,$long")
+        //viewModel.getLocationByCoords("0,0")
     }
 
     private fun checkPermission() {
@@ -279,6 +279,8 @@ class StartFragment : BaseFragment<FragmentStartBinding>(), LocationListener {
                             } else {
                                 println("Мы так и не добились никаких данных, хз в чем проблема")
                                 Toast.makeText(requireContext(), "Мы так и не добились никаких данных, хз в чем проблема", Toast.LENGTH_SHORT).show()
+                                binding.repeatBtn.isVisible = true
+                                binding.progressBar.isVisible = false
                             }
                         }
                     }

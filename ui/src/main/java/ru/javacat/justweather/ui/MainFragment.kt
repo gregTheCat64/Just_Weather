@@ -91,10 +91,12 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
 
     override fun onResume() {
         super.onResume()
-//        val currentPlace = viewModel.weatherFlow
-//        if (currentPlace.value == null) {
-//            viewModel.updateWeather()
-//        }
+        val currentPlace = viewModel.currentWeatherFlow
+        //TODO разобраться почему иногда значение NULL
+        if (currentPlace.value == null) {
+            Log.i("MainFragment", "currentPlace: ${currentPlace.value}")
+            viewModel.updateWeather()
+        }
 
         Log.i("MainFragment", "onResume")
     }
@@ -172,7 +174,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
                         Snackbar.LENGTH_LONG
                     ).show()
                 }
-                is LoadingState.Success -> {
+                is LoadingState.Updated -> {
                     snack(getString(R.string.updated))
                 }
                 else -> {}

@@ -55,6 +55,7 @@ class MainViewModel @Inject constructor(
                 val id = place?.id.toString()
                 repository.updateWeatherById(id, false)
                 loadingState.postValue(LoadingState.Success)
+                loadingState.postValue(LoadingState.Updated)
             }catch (e: ApiError) {
                 loadingState.postValue(LoadingState.InputError)
                 Log.i("MyTag", "ОШИБКА: ${e.code}")
