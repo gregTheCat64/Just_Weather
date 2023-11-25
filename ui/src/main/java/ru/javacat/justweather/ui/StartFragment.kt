@@ -29,6 +29,7 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import ru.javacat.justweather.ui.base.BaseFragment
 import ru.javacat.justweather.ui.util.isPermissionGranted
@@ -104,8 +105,8 @@ class StartFragment : BaseFragment<FragmentStartBinding>(), LocationListener {
         Log.i("StartFrag", "initObserver")
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.currentWeatherFlow.observe(viewLifecycleOwner) {
-                    println("currentflow: ${it?.location}")
+                viewModel.currentWeatherFlow.collectLatest  {
+                    Log.i("StartFrag", "curFlow: ${it?.location}")
                     it?.let {
                         //findNavController().navigate(R.id.mainFragment)
                     }
@@ -278,7 +279,7 @@ class StartFragment : BaseFragment<FragmentStartBinding>(), LocationListener {
                                 loadData(it.latitude, it.longitude)
                             } else {
                                 println("Мы так и не добились никаких данных, хз в чем проблема")
-                                Toast.makeText(requireContext(), "Мы так и не добились никаких данных, хз в чем проблема", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(requireContext(), "Нажмите повторить", Toast.LENGTH_SHORT).show()
                                 binding.repeatBtn.isVisible = true
                                 binding.progressBar.isVisible = false
                             }

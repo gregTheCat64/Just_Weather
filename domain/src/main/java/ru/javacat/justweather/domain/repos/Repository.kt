@@ -14,6 +14,8 @@ interface Repository {
     suspend fun getAllWeathers(): List<Weather>?
     suspend fun getNewPlaceDetails(name: String, isLocated: Boolean, localTitle: String, localSubtitle: String, locationsLimit: Int)
     suspend fun updateWeatherById(locationId: String, setCurrent: Boolean)
+
+    suspend fun updateCurrentWeather(locationId: String)
     suspend fun findLocation(name: String): SuggestLocationList
 
     suspend fun getCoords(uri: String): Point

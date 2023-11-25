@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -28,7 +27,7 @@ class StartViewModel @Inject constructor(
     val weatherData: LiveData<ru.javacat.justweather.domain.models.Weather>
         get() = _weatherData
 
-    val currentWeatherFlow = repository.currentWeatherFlow.asLiveData(viewModelScope.coroutineContext)
+    val currentWeatherFlow = repository.currentWeatherFlow
 
     val loadingState = SingleLiveEvent<LoadingState>()
 

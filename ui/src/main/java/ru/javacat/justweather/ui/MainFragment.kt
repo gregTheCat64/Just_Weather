@@ -18,9 +18,11 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import ru.javacat.justweather.common.util.toLocalDateTime
 import ru.javacat.justweather.common.util.toWindRus
+import ru.javacat.justweather.domain.models.Weather
 import ru.javacat.justweather.ui.adapters.MainAdapter
 import ru.javacat.justweather.ui.adapters.OnInteractionListener
 import ru.javacat.justweather.ui.base.BaseFragment
@@ -91,14 +93,12 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
 
     override fun onResume() {
         super.onResume()
+        Log.i("MainFragment", "onResume")
         val currentPlace = viewModel.currentWeatherFlow
         //TODO разобраться почему иногда значение NULL
-        if (currentPlace.value == null) {
-            Log.i("MainFragment", "currentPlace: ${currentPlace.value}")
-            viewModel.updateWeather()
-        }
 
-        Log.i("MainFragment", "onResume")
+
+
     }
 
     override fun onDestroy() {
@@ -145,7 +145,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
         }
 
         binding.refresh.setOnClickListener {
-            viewModel.updateWeather()
+            viewModel.updateCurrentWeather()
             it.refreshAnimation(requireContext())
         }
     }
@@ -155,9 +155,11 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.currentWeatherFlow.observe(viewLifecycleOwner) { weather ->
+                viewModel.currentWeatherFlow.collectLatest { weather ->
                     Log.i("MainFragment", "collecting")
-                    updateWeather(weather)
+                    Log.i("MainFragment", "current weather: ${weather?.location?.name}")
+                    if (weather == null) viewModel.updateCurrentWeather()
+                    updateUI(weather)
                     weather?.forecasts?.let { updateForecast(forecastdays = it, weather.location.localTitle) }
                 }
             }
@@ -183,7 +185,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
     }
 
 
-    private fun updateWeather(weather: ru.javacat.justweather.domain.models.Weather?){
+    private fun updateUI(weather: Weather?){
         Log.i("MainFragment", "updateUI")
         binding.apply {
             alarmCard.visibility = View.INVISIBLE
@@ -196,23 +198,22 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
 
                 updateTime.text = currentTime.toString()
 
-                //val whiteColor = R.color.white
                 when{
                     currentTime.isAfter(LocalTime.of(6,0)) && currentTime.isBefore(LocalTime.of(12,0)) -> {
                         fc.background = back5
-                        setWhiteTheme()
-                        println("back: back5")
+                        setLightTheme()
+                        //println("back: back5")
                     }
 
                     currentTime.isAfter(LocalTime.of(12,0)) && currentTime.isBefore(LocalTime.of(18,0)) -> {
-                        setWhiteTheme()
+                        setLightTheme()
                         fc.background = back12
-                        println("back: back12")
+                        //println("back: back12")
                     }
                     currentTime.isAfter(LocalTime.of(18,0)) && currentTime.isBefore(LocalTime.of(20,0)) -> {
                         fc.background = back18
-                        setWhiteTheme()
-                        println("back: back18")
+                        setLightTheme()
+                        //println("back: back18")
                     }
 //                    currentTime.isAfter(LocalTime.of(20,0)) && currentTime.isBefore(LocalTime.of(22,0)) -> {
 //                        fc.background = back20
@@ -221,11 +222,11 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
                     currentTime.isAfter(LocalTime.of(20,0)) || currentTime.isBefore(LocalTime.of(6,0)) -> {
                         setDarkTheme()
                         fc.background = back22
-                        println("back: back22")
+                        //println("back: back22")
                     }
                     currentTime.isAfter(LocalTime.of(9,0)) &&  currentTime.isBefore(LocalTime.of(19,0))
                             && it.current.condition.code in (1150..1201) -> {
-                        setWhiteTheme()
+                        setLightTheme()
                         fc.background = backRainy
                     }
                 }
@@ -234,7 +235,6 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
                 tempTxtView.text = tempText
 
                 cityTxtView.text = it.location.localTitle
-                //conditionTxtView.text = it.current.condition.text
                 val reelFeelText =  it.current.feelslike_c.roundToInt().toString() + getString(
                     R.string.celcius
                 )
@@ -311,7 +311,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
         }
     }
 
-    private fun setWhiteTheme(){
+    private fun setLightTheme(){
         val color = R.color.grey
         binding.apply {
             tempTxtView.setTextColor(AppCompatResources.getColorStateList(requireContext(), color))
