@@ -103,7 +103,7 @@ class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {
                 viewModel.setPlace(item.id)
             }
             override fun onRemovePlace(item: ru.javacat.justweather.domain.models.Weather) {
-                if (!item.isCurrent ){
+                if (!item.isLocated ){
                     viewModel.removePlace(item.id) 
                 }
             }

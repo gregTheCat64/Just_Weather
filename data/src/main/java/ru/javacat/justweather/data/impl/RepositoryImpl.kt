@@ -112,9 +112,6 @@ class RepositoryImpl @Inject constructor(
         val dbWeather = dbQuery { dao.getByLocationId(locationId) }
         val weatherList = dbQuery { dao.getAllWeathers() }
 
-        //анчекаем текущие города
-        Log.i("Repo", "uncheckCurrent")
-        unCheckCurrent()
 
         val coords = "${dbWeather?.location?.lat},${dbWeather?.location?.lon}"
 
@@ -146,11 +143,11 @@ class RepositoryImpl @Inject constructor(
         weather.isLocated = dbWeather?.weather?.isLocated == true
 
         if (setCurrent){
+            unCheckCurrent()
             weather.isCurrent = true
         } else {
             weather.isCurrent = dbWeather?.weather?.isCurrent == true
         }
-
 
 
         val listToChangePosition =

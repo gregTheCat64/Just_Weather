@@ -38,28 +38,7 @@ class MainViewModel @Inject constructor(
         Log.i("MyTag", "initing VM")
     }
 
-
-    fun updateWeatherList(){
-        viewModelScope.launch(Dispatchers.IO) {
-            loadingState.postValue(LoadingState.Load)
-            try {
-                val place = repository.getCurrentWeather()
-                Log.i("MyTag", "restoring ${place?.location}")
-                val id = place?.id.toString()
-                repository.updateWeatherById(id, false)
-                loadingState.postValue(LoadingState.Success)
-                loadingState.postValue(LoadingState.Updated)
-            }catch (e: ApiError) {
-                loadingState.postValue(LoadingState.InputError)
-                Log.i("MyTag", "ОШИБКА: ${e.code}")
-            } catch (e: NetworkError) {
-                loadingState.postValue(LoadingState.NetworkError)
-                Log.i("MyTag", "ОШИБКА: NETWORK")
-            }
-
-        }
-    }
-
+    
     fun updateCurrentWeather(){
         viewModelScope.launch(Dispatchers.IO) {
             loadingState.postValue(LoadingState.Load)
