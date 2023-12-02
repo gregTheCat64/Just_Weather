@@ -15,6 +15,7 @@ import ru.javacat.justweather.data.mapper.toDbWeather
 import ru.javacat.justweather.data.mapper.toModel
 import ru.javacat.justweather.data.network.ApiService
 import ru.javacat.justweather.data.toBase64
+import ru.javacat.justweather.domain.models.Hour
 import ru.javacat.justweather.domain.models.Weather
 import ru.javacat.justweather.domain.models.geoCoderModels.GeoObjectCollection
 import ru.javacat.justweather.domain.models.geoCoderModels.Point
@@ -343,13 +344,14 @@ class RepositoryImpl @Inject constructor(
     override suspend fun getHours(
         weatherId: String,
         date: String
-    ): List<ru.javacat.justweather.domain.models.Hour> {
-        println("getting hours")
+    ): List<Hour> {
+        Log.i("Repo", "gettingHours")
 
-        val result = dao.getHours(weatherId, date).map { list ->
-            list.toModel()
+        return dbQuery {
+            dao.getHours(weatherId, date).map { list ->
+                list.toModel()
+            }
         }
-        return result
     }
 
 

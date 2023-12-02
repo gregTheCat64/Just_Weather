@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.TransitionInflater
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -42,8 +43,8 @@ class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {
         Log.i("PlaceFragment", "onCreate")
         super.onCreate(savedInstanceState)
 
-        //val inflater = TransitionInflater.from(requireContext())
-        //enterTransition = inflater.inflateTransition(R.transition.slide_right)
+        val inflater = TransitionInflater.from(requireContext())
+        enterTransition = inflater.inflateTransition(R.transition.slide_right)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -100,11 +101,11 @@ class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {
 
         adapter = PlacesAdapter(object : OnPlacesInteractionListener {
             override fun onSetPlace(item: ru.javacat.justweather.domain.models.Weather) {
-                viewModel.setPlace(item.id)
+                viewModel.setLocation(item.id)
             }
             override fun onRemovePlace(item: ru.javacat.justweather.domain.models.Weather) {
                 if (!item.isLocated ){
-                    viewModel.removePlace(item.id) 
+                    viewModel.removeLocation(item.id)
                 }
             }
         })
@@ -128,7 +129,7 @@ class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val item = adapter.getItemAt(viewHolder.adapterPosition)
                 if (!item.isLocated ){
-                    viewModel.removePlace(item.id)
+                    viewModel.removeLocation(item.id)
                 }
             }
 

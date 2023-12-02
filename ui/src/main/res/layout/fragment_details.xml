@@ -21,7 +21,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_gravity="center"
-            android:src="@drawable/icon_drop"
+            android:src="@drawable/icon_humidity"
             app:tint="?attr/textFillColor" />
 
 
@@ -31,8 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginStart="8dp"
-            android:fontFamily="sans-serif"
-            android:text="fdasdf"
+
             android:textColor="?attr/textFillColor" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
@@ -53,7 +52,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_gravity="center"
-            android:src="@drawable/gauge_icon"
+            android:src="@drawable/icon_barometer"
             app:tint="?attr/textFillColor"
             android:textStyle="bold" />
 
@@ -94,8 +93,6 @@
             <TextView
                 android:id="@+id/windSpeed"
                 android:layout_gravity="center"
-
-                android:text="-12 км/ч"
                 android:textColor="?attr/textFillColor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -105,7 +102,6 @@
                 android:id="@+id/windDir"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginStart="8dp"
-                android:text="SW"
                 android:textSize="12sp"
                 android:textColor="?attr/textFillColor"
                 android:layout_width="match_parent"

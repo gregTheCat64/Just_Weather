@@ -145,8 +145,6 @@ class StartFragment : BaseFragment<FragmentStartBinding>(), LocationListener {
                 }
 
                 is LoadingState.Success -> {
-                    //binding.progressBar.isVisible = false
-                    //binding.repeatBtn.isVisible = false
                     findNavController().navigate(R.id.mainFragment)
                 }
 
@@ -156,7 +154,6 @@ class StartFragment : BaseFragment<FragmentStartBinding>(), LocationListener {
     }
 
     private fun loadData(lat: Double, long: Double) {
-        //Log.i("MyLog", "Loading data")
         viewModel.getLocationByCoords("$lat,$long")
         //viewModel.getLocationByCoords("0,0")
     }

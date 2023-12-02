@@ -83,7 +83,7 @@ class PlaceViewModel @Inject constructor(
                 val coordList = result.pos.split(" ")
                 val coords = coordList[1]+","+coordList[0]
 
-                setNewPlace(coords, false, localTitle, localSubtitle)
+                setNewLocation(coords, false, localTitle, localSubtitle)
             } catch (e: ApiError) {
                 loadingState.postValue(LoadingState.InputError)
                 Log.i("MyTag", "ОШИБКА: ${e.code}")
@@ -96,7 +96,7 @@ class PlaceViewModel @Inject constructor(
 
 
 
-    private fun setNewPlace(request: String, isLocated: Boolean, localTitle: String, localSubtitle: String) {
+    private fun setNewLocation(request: String, isLocated: Boolean, localTitle: String, localSubtitle: String) {
         viewModelScope.launch(Dispatchers.IO) {
             loadingState.postValue(LoadingState.Load)
             try {
@@ -112,13 +112,12 @@ class PlaceViewModel @Inject constructor(
         }
     }
 
-    fun setPlace(locationId: String) {
+    fun setLocation(locationId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             loadingState.postValue(LoadingState.Load)
 
             try {
                 repository.updateWeatherById(locationId, true)
-                //Log.i("MyTag", "weatherResp: $weather")
                 loadingState.postValue(LoadingState.Success)
 
             } catch (e: ApiError) {
@@ -131,7 +130,7 @@ class PlaceViewModel @Inject constructor(
         }
     }
 
-    fun removePlace(id: String) {
+    fun removeLocation(id: String) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.removeById(id)
         }

@@ -62,7 +62,7 @@
                     android:layout_width="18dp"
                     android:layout_height="18dp"
                     android:layout_marginEnd="8dp"
-                    android:layout_gravity="top"
+                    android:layout_gravity="center_vertical"
                     android:src="@drawable/baseline_location_on_24"
                     app:tint="?attr/colorPrimary" />
 
@@ -70,7 +70,6 @@
                     android:id="@+id/cityTxtView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="fdasdfsa"
                     android:gravity="center"
                     style="@style/TextAppearance.Material3.LabelLarge.ForecastLargeText"
                     android:textColor="@color/white"
@@ -109,7 +108,6 @@
                 android:layout_height="64dp"
                 android:layout_marginStart="16dp"
                 android:layout_gravity="center"
-                android:src="@drawable/icon_cloud"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/tempTxtView"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -195,7 +193,7 @@
                             android:layout_gravity="bottom"
                             android:maxHeight="100dp"
                             android:textSize="16sp"
-
+                            style="@style/TextAppearance.Material3.LabelMedium.SecondaryText"
                             android:backgroundTint="?attr/cardBackgroundColor"
                             android:ellipsize="marquee"
                             android:singleLine="true"

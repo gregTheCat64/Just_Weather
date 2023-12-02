@@ -1,13 +1,13 @@
 package ru.javacat.justweather.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import kotlinx.coroutines.launch
+import androidx.transition.TransitionInflater
 import ru.javacat.justweather.common.util.asLocalDate
 import ru.javacat.justweather.ui.adapters.ForecastAdapter
 import ru.javacat.justweather.ui.base.BaseFragment
@@ -28,21 +28,27 @@ class ForecastFragment : BaseFragment<FragmentForecastBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //val inflater = TransitionInflater.from(requireContext())
-        //enterTransition = inflater.inflateTransition(R.transition.slide_right)
+        Log.i("ForecastFrag", "onCreate")
+        val inflater = TransitionInflater.from(requireContext())
+        enterTransition = inflater.inflateTransition(R.transition.slide_right)
+
     }
 
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        Log.i("ForecastFrag", "onViewCreated")
         binding.backBtn.setOnClickListener {
             //parentFragmentManager.popBackStack()
             findNavController().navigateUp()
         }
 
-
         val args = arguments
-        val locName = args?.getString("LOC_NAME","")?:""
+        val locName = args?.getString("LOC_NAME", "") ?: ""
+
+        forecastAdapter = ForecastAdapter()
+
+        binding.hoursRecView.adapter = forecastAdapter
+
 
         initForecastObserver(locName)
         initHoursObserver()
@@ -52,61 +58,59 @@ class ForecastFragment : BaseFragment<FragmentForecastBinding>() {
 
 
     private fun initForecastObserver(locName: String) {
-        lifecycleScope.launch {
-            viewModel.forecastData.observe(viewLifecycleOwner) {
-                binding.apply {
-                    mainTextView.text = locName
-                    conditionImage.load(it.day.condition.icon)
-                    conditionValue.text = it.day.condition.text
-                    dateTxtView.text = it.date.asLocalDate()
-                    avgTempValue.text = it.day.avgtemp_c.roundToInt().toString() + "°"
-                    maxTempValue.text = it.day.maxtemp_c.roundToInt().toString() + "°"
-                    minTempValue.text = it.day.mintemp_c.roundToInt().toString() + "°"
-                    maxWindSpeedValue.text = it.day.maxwind_kph.roundToInt().toString() + " км/ч"
-                    totalPrecipValue.text = it.day.totalprecip_mm.toString() + " мм"
-                    avgHumidityValue.text = it.day.avghumidity.toString() + "%"
-                    avgvisValue.text = it.day.avgvis_km.toString() + " км"
-                    uvIndexValue.text = it.day.uv.toString()
-                    sunRiseValue.text = it.astro.sunrise
-                    sunSetValue.text = it.astro.sunset
-                    moonRiseValue.text = it.astro.moonrise
-                    moonSetValue.text = it.astro.moonset
-                    val precipChance = StringBuffer()
-                    if (it.day.daily_chance_of_rain>0 ||it.day.daily_chance_of_snow>0) {
-                        precipChance.append("дождь: ${it.day.daily_chance_of_rain} % ")
-                        precipChance.append("  снег: ${it.day.daily_chance_of_snow} %")
-                        precipChanceValue.text = precipChance
-                    } else  precipChanceValue.text = "0%"
+        Log.i("ForecastFrag", "initForecastObserver")
+        val celciusSign = "°"
 
-                    moonPhaseValue.text = when (it.astro.moon_phase) {
-                        "New Moon" -> getString(R.string.Full_Moon)
-                        "Waxing Crescent" -> getString(R.string.Waxing_Crescent)
-                        "First Quarter" -> getString(R.string.First_Quarter)
-                        "Waxing Gibbous" -> getString(R.string.Waning_Gibbous)
-                        "Full Moon" -> getString(R.string.Full_Moon)
-                        "Waning Gibbous" -> getString(R.string.Waning_Gibbous)
-                        "Last Quarter" -> getString(R.string.Last_Quarter)
-                        "Waning Crescent" -> getString(R.string.Waning_Crescent)
-                        else -> "Какой-то новый вид луны, неизвестный разработчику"
-                    }
+        viewModel.forecastData.observe(viewLifecycleOwner) {
+            Log.i("ForecastFrag", "getting data")
+            viewModel.getHours(it.weatherId, it.date.toString())
+            binding.apply {
+                mainTextView.text = locName
+                conditionImage.load(it.day.condition.icon)
+                conditionValue.text = it.day.condition.text
+                dateTxtView.text = it.date.asLocalDate()
+                avgTempValue.text = "${it.day.avgtemp_c.roundToInt()}$celciusSign"
+                maxTempValue.text = it.day.maxtemp_c.roundToInt().toString() + celciusSign
+                minTempValue.text = it.day.mintemp_c.roundToInt().toString() + celciusSign
+                maxWindSpeedValue.text = it.day.maxwind_kph.roundToInt().toString() + " км/ч"
+                totalPrecipValue.text = it.day.totalprecip_mm.roundToInt().toString() + " мм"
+                avgHumidityValue.text = it.day.avghumidity.toString() + "%"
+                avgvisValue.text = it.day.avgvis_km.toString() + " км"
+                uvIndexValue.text = it.day.uv.toString()
+                sunRiseValue.text = it.astro.sunrise
+                sunSetValue.text = it.astro.sunset
+                moonRiseValue.text = it.astro.moonrise
+                moonSetValue.text = it.astro.moonset
+                val precipChance = StringBuffer()
+                if (it.day.daily_chance_of_rain > 0 || it.day.daily_chance_of_snow > 0) {
+                    precipChance.append("дождь: ${it.day.daily_chance_of_rain} % ")
+                    precipChance.append("  снег: ${it.day.daily_chance_of_snow} %")
+                    precipChanceValue.text = precipChance
+                } else precipChanceValue.text = "0%"
+
+                moonPhaseValue.text = when (it.astro.moon_phase) {
+                    "New Moon" -> getString(R.string.Full_Moon)
+                    "Waxing Crescent" -> getString(R.string.Waxing_Crescent)
+                    "First Quarter" -> getString(R.string.First_Quarter)
+                    "Waxing Gibbous" -> getString(R.string.Waning_Gibbous)
+                    "Full Moon" -> getString(R.string.Full_Moon)
+                    "Waning Gibbous" -> getString(R.string.Waning_Gibbous)
+                    "Last Quarter" -> getString(R.string.Last_Quarter)
+                    "Waning Crescent" -> getString(R.string.Waning_Crescent)
+                    else -> "Какой-то новый вид луны, неизвестный разработчику"
                 }
-
-                //initForecastRecView()
             }
         }
     }
 
     private fun initHoursObserver() {
-        viewModel.hoursData?.observe(viewLifecycleOwner){
+        viewModel.hoursData?.observe(viewLifecycleOwner) {
             initForecastRecView()
         }
     }
 
     private fun initForecastRecView() {
-        forecastAdapter = ForecastAdapter()
-        //viewModel.chooseForecastData(Forecastday())
 
-        binding.hoursRecView.adapter = forecastAdapter
         val list = viewModel.hoursData?.value
         forecastAdapter.submitList(list)
 

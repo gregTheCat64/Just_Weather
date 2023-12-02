@@ -8,30 +8,33 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ru.javacat.justweather.common.util.asDayOfWeek
+import ru.javacat.justweather.domain.models.Forecastday
 import ru.javacat.justweather.ui.util.load
+import ru.javacat.justweather.ui.util.pushAnimation
 import ru.javacat.ui.R
 import ru.javacat.ui.databinding.DayItemBinding
 import kotlin.math.roundToInt
 
 interface OnInteractionListener {
-    fun onForecastItem(item: ru.javacat.justweather.domain.models.Forecastday, view: View)
+    fun onForecastItem(item: Forecastday, view: View)
 }
 
 class MainAdapter(
     private val onInteractionListener: OnInteractionListener
-): ListAdapter<ru.javacat.justweather.domain.models.Forecastday, MainAdapter.Holder>(Comparator()) {
+): ListAdapter<Forecastday, MainAdapter.Holder>(Comparator()) {
 
     class Holder(view: View, private val onInteractionListener: OnInteractionListener): RecyclerView.ViewHolder(view){
         private val binding = DayItemBinding.bind(view)
 
 
-        fun bind(item: ru.javacat.justweather.domain.models.Forecastday)  {
+        fun bind(item: Forecastday)  {
             binding.apply {
                 val image = item.day.condition.icon
                 dayOfWeek.text = item.date.asDayOfWeek()
                 maxTempTxtView.text = item.day.avgtemp_c.roundToInt().toString()+ "\u00B0"
                 //minTempTxtView.text = item.day.mintemp_c.roundToInt().toString()+ "°"
                 root.setOnClickListener {
+                    it.pushAnimation(binding.root.context)
                     onInteractionListener.onForecastItem(item, binding.forecastLayout)
                 }
 

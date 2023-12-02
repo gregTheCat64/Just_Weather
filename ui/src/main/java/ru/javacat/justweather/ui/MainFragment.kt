@@ -16,18 +16,19 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.transition.TransitionInflater
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import ru.javacat.justweather.common.util.toLocalDateTime
 import ru.javacat.justweather.common.util.toWindRus
+import ru.javacat.justweather.domain.models.Forecastday
 import ru.javacat.justweather.domain.models.Weather
 import ru.javacat.justweather.ui.adapters.MainAdapter
 import ru.javacat.justweather.ui.adapters.OnInteractionListener
 import ru.javacat.justweather.ui.base.BaseFragment
-import ru.javacat.justweather.ui.util.changeColorOnPush
 import ru.javacat.justweather.ui.util.load
+import ru.javacat.justweather.ui.util.pushAnimation
 import ru.javacat.justweather.ui.util.refreshAnimation
 import ru.javacat.justweather.ui.util.snack
 import ru.javacat.justweather.ui.view_models.MainViewModel
@@ -57,6 +58,9 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
     private lateinit var back22: Drawable
     private lateinit var backRainy: Drawable
 
+    var locName = ""
+    val bundle = Bundle()
+
 
 
     private val viewModel: MainViewModel by activityViewModels()
@@ -64,13 +68,15 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.i("MainFragment", "onCreateFragment")
-        //currentTime = LocalTime.now()
 
+        val inflater = TransitionInflater.from(requireContext())
+        //exitTransition = inflater.inflateTransition(R.transition.fade)
+        //currentTime = LocalTime.now()
+        //enterTransition = inflater.inflateTransition(R.transition.slide_right)
 
         requireActivity().onBackPressedDispatcher.addCallback(this) {
             requireActivity().finish()
         }
-
 
         //backgrounds
         back5 = AppCompatResources.getDrawable(requireContext(), R.drawable.back_5)!!
@@ -80,10 +86,6 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
         back20 = AppCompatResources.getDrawable(requireContext(), R.drawable.back_20)!!
         back22 = AppCompatResources.getDrawable(requireContext(), R.drawable.back_22)!!
         backRainy = AppCompatResources.getDrawable(requireContext(), R.drawable.back_rainy)!!
-
-        //val inflater = TransitionInflater.from(requireContext())
-        //exitTransition = inflater.inflateTransition(R.transition.fade)
-        //enterTransition = inflater.inflateTransition(R.transition.slide_right)
     }
 
     override fun onStart() {
@@ -94,11 +96,19 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
     override fun onResume() {
         super.onResume()
         Log.i("MainFragment", "onResume")
-        val currentPlace = viewModel.currentWeatherFlow
+        //val currentPlace = viewModel.currentWeatherFlow
         //TODO разобраться почему иногда значение NULL
 
+    }
 
+    override fun onPause() {
+        Log.i("MainFragment", "onPause")
+        super.onPause()
+    }
 
+    override fun onStop() {
+        Log.i("MainFragment", "onStop")
+        super.onStop()
     }
 
     override fun onDestroy() {
@@ -121,10 +131,9 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
         val activity = requireActivity() as AppCompatActivity
         fc = activity.findViewById<FragmentContainerView>(R.id.fragmentContainer)
 
+
         Log.i("MainFragment", "onCreateView")
 
-        initStateObserver()
-        initDataObserver()
 
         return super.onCreateView(inflater, container, savedInstanceState)
     }
@@ -133,10 +142,23 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
         super.onViewCreated(view, savedInstanceState)
         Log.i("MainFragment", "onViewCreated")
 
+        adapter = MainAdapter(object : OnInteractionListener {
+            override fun onForecastItem(item: Forecastday, view: View) {
+                //val color = context!!.resources.getColor(R.color.md_theme_light_primary)
+                //view.changeColorOnPush(requireContext())
+                findNavController().navigate(R.id.forecastFragment, bundle)
+                viewModel.chooseForecastDay(item)
+            }
+        })
+
+        binding.daysRecView.adapter = adapter
+
+        initStateObserver()
+        initDataObserver()
 
         binding.placeLayout.setOnClickListener {
-            it.changeColorOnPush(requireContext())
-            findNavController().navigate(R.id.action_mainFragment_to_placeFragment)
+            it.pushAnimation(requireContext())
+            findNavController().navigate(R.id.placeFragment)
 //            parentFragmentManager
 //                .beginTransaction()
 //                .addToBackStack(null)
@@ -154,13 +176,16 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
         Log.i("MainFragment", "observing data")
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.currentWeatherFlow.collectLatest { weather ->
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+                viewModel.currentWeatherFlow.observe(viewLifecycleOwner) { weather ->
                     Log.i("MainFragment", "collecting")
                     Log.i("MainFragment", "current weather: ${weather?.location?.name}")
                     if (weather == null) viewModel.updateCurrentWeather()
                     updateUI(weather)
-                    weather?.forecasts?.let { updateForecast(forecastdays = it, weather.location.localTitle) }
+                    locName = weather?.location?.localTitle.toString()
+                    bundle.putString("LOC_NAME", locName)
+
+                    weather?.forecasts?.let { updateForecast(forecastdays = it) }
                 }
             }
         }
@@ -210,7 +235,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
                         fc.background = back12
                         //println("back: back12")
                     }
-                    currentTime.isAfter(LocalTime.of(18,0)) && currentTime.isBefore(LocalTime.of(20,0)) -> {
+                    currentTime.isAfter(LocalTime.of(18,0)) && currentTime.isBefore(LocalTime.of(19,0)) -> {
                         fc.background = back18
                         setLightTheme()
                         //println("back: back18")
@@ -219,7 +244,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
 //                        fc.background = back20
 //                        println("back: back20")
 //                    }
-                    currentTime.isAfter(LocalTime.of(20,0)) || currentTime.isBefore(LocalTime.of(6,0)) -> {
+                    currentTime.isAfter(LocalTime.of(19,0)) || currentTime.isBefore(LocalTime.of(6,0)) -> {
                         setDarkTheme()
                         fc.background = back22
                         //println("back: back22")
@@ -242,9 +267,6 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
 
                 it.current.condition.icon.let { it1 -> imageView.load(it1) }
 
-//                val cloudText = it.current.cloud.toString() + "%"
-//                detailsLayout.cloud.text = cloudText
-
                 val speedText =  it.current.wind_kph.roundToInt().toString() + " " +getString(
                     R.string.km_h
                 )
@@ -252,13 +274,9 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
 
                 detailsLayout.windDir.text = it.current.wind_dir.toWindRus()
 
-//                val precipText = it.current.precip_mm.toString() + getString(R.string.mm)
-//                detailsLayout.precipation.text =precipText
-
                 val humidityText =  it.current.humidity.toString() + getString(R.string.percent)
                 detailsLayout.humidity.text =humidityText
 
-                //detailsLayout.uvIndex.text = it.current.uv.toString()
                 detailsLayout.pressureTextValue.text = it.current.precip_mm.toString() + " " + getString(R.string.mbar)
                 val alerts = it.alerts
                 val alertMsgBuffer = StringBuilder()
@@ -273,25 +291,23 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
                 }
                 alarmMsg.text = alertMsgBuffer
             }
-            //it.forecast.forecastday.get(0).astro.is_moon_up
-
         }
     }
 
-    private fun updateForecast(forecastdays: List<ru.javacat.justweather.domain.models.Forecastday>, locName: String){
-        val bundle = Bundle()
-        bundle.putString("LOC_NAME", locName)
-        adapter = MainAdapter(object : OnInteractionListener {
-            override fun onForecastItem(item: ru.javacat.justweather.domain.models.Forecastday, view: View) {
-                //val color = context!!.resources.getColor(R.color.md_theme_light_primary)
-                view.changeColorOnPush(requireContext())
-                findNavController().navigate(R.id.action_mainFragment_to_forecastFragment, bundle)
-                viewModel.getHours(item.weatherId, item.date.toString())
-                viewModel.chooseForecastDay(item)
+    private fun updateForecast(forecastdays: List<Forecastday>){
+//        val bundle = Bundle()
+//        bundle.putString("LOC_NAME", locName)
+//        adapter = MainAdapter(object : OnInteractionListener {
+//            override fun onForecastItem(item: Forecastday, view: View) {
+//                //val color = context!!.resources.getColor(R.color.md_theme_light_primary)
+//                //view.changeColorOnPush(requireContext())
+//                findNavController().navigate(R.id.action_mainFragment_to_forecastFragment, bundle)
+//                viewModel.getHours(item.weatherId, item.date.toString())
+//                viewModel.chooseForecastDay(item)
+//
+//            }
+//        })
 
-            }
-        })
-        binding.daysRecView.adapter = adapter
         val list = forecastdays
         adapter.submitList(list)
     }
@@ -327,4 +343,3 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
     }
 
 }
-//initRecView()

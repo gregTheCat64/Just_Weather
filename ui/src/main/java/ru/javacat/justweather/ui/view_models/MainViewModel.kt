@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -22,7 +23,7 @@ class MainViewModel @Inject constructor(
     private val repository: ru.javacat.justweather.domain.repos.Repository,
 ) : ViewModel(){
 
-    val currentWeatherFlow = repository.currentWeatherFlow
+    val currentWeatherFlow = repository.currentWeatherFlow.asLiveData(Dispatchers.IO)
 
     val loadingState = SingleLiveEvent<LoadingState>()
 
@@ -62,10 +63,10 @@ class MainViewModel @Inject constructor(
 
 
     fun chooseForecastDay(item: Forecastday) {
-        viewModelScope.launch {
+        Log.i("MainViewModel", "setting _forecastData")
+        viewModelScope.launch() {
             try {
                 _forecastData.postValue(item)
-                Log.i("MyTag", "forecast: ${_forecastData.value}")
             } catch (e: Exception) {
                 loadingState.postValue(LoadingState.NetworkError)
             }
@@ -73,12 +74,13 @@ class MainViewModel @Inject constructor(
     }
 
     fun getHours(weatherId: String, date: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 println("getting hours in vm")
-                _hoursData.value = repository.getHours(weatherId, date)
+                _hoursData.postValue(repository.getHours(weatherId, date))
                 //Log.i("HOURS", "${hoursData.value}")
             } catch (e: Exception) {
+                println("ERROR inVM with hours")
                 loadingState.postValue(LoadingState.NetworkError)
             }
         }
