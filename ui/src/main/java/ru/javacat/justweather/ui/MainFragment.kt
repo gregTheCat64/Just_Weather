@@ -26,7 +26,7 @@ import ru.javacat.justweather.domain.models.Forecastday
 import ru.javacat.justweather.domain.models.Weather
 import ru.javacat.justweather.ui.adapters.MainAdapter
 import ru.javacat.justweather.ui.adapters.OnInteractionListener
-import ru.javacat.justweather.ui.base.BaseFragment
+import ru.javacat.justweather.ui.util.LocationListenerImplFragment
 import ru.javacat.justweather.ui.util.load
 import ru.javacat.justweather.ui.util.pushAnimation
 import ru.javacat.justweather.ui.util.refreshAnimation
@@ -39,7 +39,7 @@ import kotlin.math.roundToInt
 
 
 @AndroidEntryPoint
-class MainFragment : BaseFragment<FragmentMainBinding>() {
+class MainFragment : LocationListenerImplFragment<FragmentMainBinding>() {
 
     override val bindingInflater: (LayoutInflater, ViewGroup?) -> FragmentMainBinding =
         { inflater, container ->
@@ -86,6 +86,8 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
         back20 = AppCompatResources.getDrawable(requireContext(), R.drawable.back_20)!!
         back22 = AppCompatResources.getDrawable(requireContext(), R.drawable.back_22)!!
         backRainy = AppCompatResources.getDrawable(requireContext(), R.drawable.back_rainy)!!
+
+        viewModel.updateCurrentWeather()
     }
 
     override fun onStart() {
@@ -155,6 +157,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
 
         initStateObserver()
         initDataObserver()
+
 
         binding.placeLayout.setOnClickListener {
             it.pushAnimation(requireContext())
@@ -275,9 +278,9 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
                 detailsLayout.windDir.text = it.current.wind_dir.toWindRus()
 
                 val humidityText =  it.current.humidity.toString() + getString(R.string.percent)
-                detailsLayout.humidity.text =humidityText
+                detailsLayout.humidity.text = humidityText
 
-                detailsLayout.pressureTextValue.text = it.current.precip_mm.toString() + " " + getString(R.string.mbar)
+                detailsLayout.pressureTextValue.text = it.current.pressure_mb.roundToInt().toString() + " " + getString(R.string.mbar)
                 val alerts = it.alerts
                 val alertMsgBuffer = StringBuilder()
                 for (element in alerts) {

@@ -94,6 +94,35 @@ class PlaceViewModel @Inject constructor(
         }
     }
 
+    fun getLocationByCoords(coords: String){
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val listOfCoords = coords.split(",")
+                val reversedCoords = listOfCoords[1]+","+listOfCoords[0]
+                val result = repository.getLocationByCoords(reversedCoords)
+                Log.i("MyTag", "getLocationByCoords: $result")
+
+                //val localTitle = result.featureMember[0].GeoObject.name
+                val localAddress = result.featureMember[0].GeoObject.metaDataProperty.GeocoderMetaData.Address
+
+                val country = localAddress.Components.firstOrNull{it.kind == "country"}?.name
+                val province = localAddress.Components.firstOrNull{it.kind == "province"}?.name
+                val localTitle = localAddress.Components.lastOrNull { it.kind == "locality" }?.name.toString()
+                val localSubtitle = "$country, $province"
+
+                repository.unCheckLocated()
+
+                setNewLocation(coords, true, localTitle, localSubtitle)
+            } catch (e: ApiError) {
+                loadingState.postValue(LoadingState.InputError)
+                Log.i("MyTag", "ОШИБКА: ${e.code}")
+            } catch (e: NetworkError) {
+                loadingState.postValue(LoadingState.NetworkError)
+                Log.i("MyTag", "ОШИБКА: NETWORK")
+            }
+        }
+    }
+
 
 
     private fun setNewLocation(request: String, isLocated: Boolean, localTitle: String, localSubtitle: String) {

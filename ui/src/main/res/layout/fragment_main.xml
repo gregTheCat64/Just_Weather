@@ -1,152 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
 
-    <LinearLayout
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/refresh"
+        style="@style/Widget.Material3.Button.IconButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:layout_margin="12dp"
-        android:orientation="vertical">
+        android:layout_margin="8dp"
+        android:contentDescription="@string/update_current_location"
+        app:icon="@drawable/baseline_refresh_24"
+        app:iconTint="?attr/colorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/refresh"
-            style="@style/Widget.Material3.Button.IconButton"
+    <TextView
+        android:id="@+id/updateTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/light_text_secondary"
+        app:layout_constraintEnd_toEndOf="@+id/refresh"
+        app:layout_constraintStart_toStartOf="@+id/refresh"
+        app:layout_constraintTop_toBottomOf="@id/refresh" />
+
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        app:cardBackgroundColor="?attr/cardBackgroundColor"
+        app:cardCornerRadius="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/refresh"
+        app:layout_constraintStart_toStartOf="parent">
+
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/placeLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/update_current_location"
-            app:icon="@drawable/baseline_refresh_24"
-            app:iconTint="?attr/colorPrimary" />
-        <TextView
-            android:id="@+id/updateTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp">
 
-            android:layout_gravity="center_horizontal"
-            android:textColor="@color/light_text_secondary"/>
+            <ImageView
+                android:id="@+id/locatedMarker"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/baseline_location_on_24"
+                app:tint="?attr/colorPrimary" />
+
+            <TextView
+                android:id="@+id/cityTxtView"
+                style="@style/TextAppearance.Material3.LabelLarge.ForecastLargeText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/white" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
 
-    </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
+
+    <TextView
+        android:id="@+id/tempTxtView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="96dp"
+        android:text="15"
+        android:textSize="96sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/tempTxtView"
+        app:layout_constraintStart_toEndOf="@+id/tempTxtView"
+        app:layout_constraintTop_toTopOf="@+id/tempTxtView" />
 
 
     <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:orientation="vertical">
+        android:id="@+id/linearLayoutCompat4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tempTxtView">
 
-
-        <androidx.cardview.widget.CardView
+        <TextView
+            android:id="@+id/realfeelTxt"
+            style="@style/TextAppearance.Material3.LabelSmall.SmallText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
-            app:cardBackgroundColor="?attr/cardBackgroundColor"
-            app:cardCornerRadius="8dp">
+            android:text="@string/realfeel"
+            android:textColor="?attr/textFillColor"
+            android:textSize="16dp" />
 
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/placeLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="8dp">
-
-                <ImageView
-                    android:id="@+id/locatedMarker"
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/baseline_location_on_24"
-                    app:tint="?attr/colorPrimary" />
-
-                <TextView
-                    android:id="@+id/cityTxtView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    style="@style/TextAppearance.Material3.LabelLarge.ForecastLargeText"
-                    android:textColor="@color/white"
-                     />
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-        </androidx.cardview.widget.CardView>
-
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/realFeelTxtView"
+            style="@style/TextAppearance.Material3.TitleLarge.TitleTextValue"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-
-            android:layout_marginTop="32dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/tempTxtView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="15"
-                android:textSize="96sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.4"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:layout_marginStart="16dp"
-                android:layout_gravity="center"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/tempTxtView"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-
-                    android:layout_gravity="center_horizontal"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/realfeelTxt"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="16dp"
-                        style="@style/TextAppearance.Material3.LabelSmall.SmallText"
-                        android:text="@string/realfeel"
-                        android:textColor="?attr/textFillColor" />
-
-                    <TextView
-                        android:id="@+id/realFeelTxtView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        style="@style/TextAppearance.Material3.TitleLarge.TitleTextValue"
-                        android:textSize="22dp"
-                        android:text="Нажмите обновить"
-                        android:layout_marginStart="8dp"
-                        android:textColor="?attr/textFillColor" />
-
-                </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-
+            android:layout_marginStart="8dp"
+            android:text="Нажмите обновить"
+            android:textColor="?attr/textFillColor"
+            android:textSize="22dp" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
+
 
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -154,16 +131,18 @@
 
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <include
             android:id="@+id/detailsLayout"
             layout="@layout/fragment_details"
-            android:layout_gravity="center"
-            android:layout_marginBottom="64dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            />
+            android:layout_gravity="center"
+            android:layout_marginBottom="64dp" />
 
 
         <androidx.recyclerview.widget.RecyclerView
@@ -178,37 +157,36 @@
             tools:listitem="@layout/day_item" />
 
 
-            <FrameLayout
-                android:id="@+id/alarmCard"
+        <FrameLayout
+            android:id="@+id/alarmCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:visibility="invisible">
+
+            <TextView
+                android:id="@+id/alarmMsg"
+                style="@style/TextAppearance.Material3.LabelMedium.SecondaryText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:visibility="invisible"
-                >
-
-                        <TextView
-                            android:id="@+id/alarmMsg"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="bottom"
-                            android:maxHeight="100dp"
-                            android:textSize="16sp"
-                            style="@style/TextAppearance.Material3.LabelMedium.SecondaryText"
-                            android:backgroundTint="?attr/cardBackgroundColor"
-                            android:ellipsize="marquee"
-                            android:singleLine="true"
-                            android:focusedByDefault="true"
-                            android:marqueeRepeatLimit="marquee_forever"
-                            android:scrollHorizontally="true"
-                            android:padding="8dp"
-                            android:fadingEdge="horizontal"
-                            android:text="Сегодня прекрасный день" />
+                android:layout_gravity="bottom"
+                android:backgroundTint="?attr/cardBackgroundColor"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
+                android:focusedByDefault="true"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:maxHeight="100dp"
+                android:padding="8dp"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:text="Сегодня прекрасный день"
+                android:textSize="16sp" />
 
 
-            </FrameLayout>
+        </FrameLayout>
 
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
 
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

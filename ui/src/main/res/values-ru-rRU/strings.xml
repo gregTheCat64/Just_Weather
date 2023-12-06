@@ -24,4 +24,14 @@
     <string name="Connection_problem">Проблемы с соединением</string>
     <string name="mbar">мБар</string>
     <string name="updated">Обновлено</string>
+    <string name="Precipations">Осадки</string>
+    <string name="humidity">Влажность</string>
+    <string name="wind">Ветер</string>
+    <string name="visibility">Видимость</string>
+    <string name="t_max">Макс. t</string>
+    <string name="t_min">Мин. t</string>
+    <string name="sunrise">Восход</string>
+    <string name="moonset">Заход луны</string>
+    <string name="moonrise">Восход луны</string>
+    <string name="sunset">Закат</string>
 </resources>

@@ -28,4 +28,14 @@
     <string name="updated">Updated</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="Precipations">Precipitation</string>
+    <string name="humidity">Humidity</string>
+    <string name="wind">Wind</string>
+    <string name="visibility">Visibility</string>
+    <string name="t_max">t max</string>
+    <string name="t_min">t min</string>
+    <string name="sunrise">Sunrise</string>
+    <string name="moonset">Moonset</string>
+    <string name="moonrise">Moonrise</string>
+    <string name="sunset">Sunset</string>
 </resources>

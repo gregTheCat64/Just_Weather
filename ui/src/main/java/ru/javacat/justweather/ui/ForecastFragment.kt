@@ -28,12 +28,11 @@ class ForecastFragment : BaseFragment<FragmentForecastBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.i("ForecastFrag", "onCreate")
+        Log.i("ForecastFrag", "onCreate2")
         val inflater = TransitionInflater.from(requireContext())
         enterTransition = inflater.inflateTransition(R.transition.slide_right)
 
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.i("ForecastFrag", "onViewCreated")
@@ -72,21 +71,32 @@ class ForecastFragment : BaseFragment<FragmentForecastBinding>() {
                 avgTempValue.text = "${it.day.avgtemp_c.roundToInt()}$celciusSign"
                 maxTempValue.text = it.day.maxtemp_c.roundToInt().toString() + celciusSign
                 minTempValue.text = it.day.mintemp_c.roundToInt().toString() + celciusSign
-                maxWindSpeedValue.text = it.day.maxwind_kph.roundToInt().toString() + " км/ч"
+                maxWindSpeedValue.text = (it.day.maxwind_kph*0.28).roundToInt().toString() + " м/с"
                 totalPrecipValue.text = it.day.totalprecip_mm.roundToInt().toString() + " мм"
-                avgHumidityValue.text = it.day.avghumidity.toString() + "%"
+                avgHumidityValue.text = it.day.avghumidity.roundToInt().toString() + "%"
                 avgvisValue.text = it.day.avgvis_km.toString() + " км"
                 uvIndexValue.text = it.day.uv.toString()
                 sunRiseValue.text = it.astro.sunrise
                 sunSetValue.text = it.astro.sunset
                 moonRiseValue.text = it.astro.moonrise
                 moonSetValue.text = it.astro.moonset
-                val precipChance = StringBuffer()
-                if (it.day.daily_chance_of_rain > 0 || it.day.daily_chance_of_snow > 0) {
-                    precipChance.append("дождь: ${it.day.daily_chance_of_rain} % ")
-                    precipChance.append("  снег: ${it.day.daily_chance_of_snow} %")
-                    precipChanceValue.text = precipChance
-                } else precipChanceValue.text = "0%"
+                var precipChance = ""
+//                if (it.day.daily_chance_of_rain > 0 || it.day.daily_chance_of_snow > 0) {
+//                    precipChance.append("дождь: ${it.day.daily_chance_of_rain} % ")
+//                    precipChance.append("  снег: ${it.day.daily_chance_of_snow} %")
+//                    precipChanceValue.text = precipChance
+//                }
+
+                if (it.day.daily_will_it_rain == 1 && it.day.daily_will_it_snow == 1) {
+                    precipChance = "Cнег с дождем"
+                }  else {
+                    if (it.day.daily_will_it_rain == 1) precipChance = "Будет дождик"
+                    if (it.day.daily_will_it_snow == 1) precipChance = "Будет снег"
+                }
+                precipChanceValue.text = precipChance
+
+
+
 
                 moonPhaseValue.text = when (it.astro.moon_phase) {
                     "New Moon" -> getString(R.string.Full_Moon)

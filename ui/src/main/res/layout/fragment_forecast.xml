@@ -29,7 +29,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end|bottom"
-                android:text="11 августа"
+
                 android:layout_marginBottom="8dp"
                 android:textColor="@color/white" />
 
@@ -72,7 +72,7 @@
                     android:layout_gravity="bottom|end"
                     android:layout_margin="8dp"
                     android:ellipsize="end"
-                    android:text="Солнечно"
+
                     android:textColor="@color/light_text_secondary" />
 
                 <TextView
@@ -82,7 +82,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:layout_margin="16dp"
-                    android:text="18"
+
                     android:textSize="32sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="@+id/mainTextView"
@@ -113,7 +113,7 @@
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/precipLayout"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/card_height"
+                android:layout_height="@dimen/little_card_view_height"
                 android:layout_marginTop="16dp"
                 android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="parent"
@@ -122,7 +122,7 @@
                 <androidx.cardview.widget.CardView
                     android:id="@+id/precipCardView"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/card_height"
+                    android:layout_height="@dimen/little_card_view_height"
                     android:layout_marginEnd="8dp"
                     android:layout_weight="1"
                     android:backgroundTint="?attr/cardBackgroundColor"
@@ -133,10 +133,11 @@
 
                     <ImageView
                         android:id="@+id/precipImageView"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
                         android:layout_gravity="start|center_vertical"
                         android:layout_marginStart="8dp"
+
                         android:layout_weight="1"
                         android:src="@drawable/icon_precipation"
                         app:layout_constraintBottom_toBottomOf="@+id/linearLayout2"
@@ -152,7 +153,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="top|center_horizontal"
                         android:layout_marginTop="8dp"
-                        android:text="Осадки"
+                        android:text="@string/Precipations"
                         app:layout_constraintStart_toStartOf="@+id/guideline4"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintVertical_chainStyle="packed" />
@@ -163,7 +164,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="15.11 мм"
+
+
+                        android:layout_marginTop="4dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="@+id/guideline4"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -173,9 +176,11 @@
                         android:id="@+id/precipChanceValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="bottom"
-                        android:layout_margin="4dp"
-                        android:text="15%"
+                        android:layout_gravity="bottom|start"
+                        android:layout_marginBottom="4dp"
+                        android:layout_marginStart="8dp"
+
+
                         android:textColor="@color/light_text_secondary"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent" />
@@ -185,7 +190,7 @@
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/card_height"
+                    android:layout_height="match_parent"
                     android:layout_marginStart="8dp"
                     android:layout_weight="1"
                     android:backgroundTint="?attr/cardBackgroundColor"
@@ -194,8 +199,8 @@
 
                     <ImageView
                         android:id="@+id/imageView2"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="8dp"
@@ -211,7 +216,7 @@
                         android:layout_gravity="top|center_horizontal"
                         android:layout_margin="8dp"
                         android:ellipsize="end"
-                        android:text="Влажность"
+                        android:text="@string/humidity"
                         android:textColor="?attr/colorPrimary" />
 
                     <TextView
@@ -221,7 +226,8 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="8dp"
-                        android:text="1" />
+
+                         />
 
 
                 </androidx.cardview.widget.CardView>
@@ -230,7 +236,7 @@
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/windLayout"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/card_height"
+                android:layout_height="@dimen/little_card_view_height"
                 android:layout_marginTop="16dp"
                 android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="parent"
@@ -239,7 +245,7 @@
                 <androidx.cardview.widget.CardView
                     android:id="@+id/windCardView"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/card_height"
+                    android:layout_height="@dimen/little_card_view_height"
                     android:layout_marginEnd="8dp"
                     android:layout_weight="1"
                     android:backgroundTint="?attr/cardBackgroundColor"
@@ -250,12 +256,11 @@
 
                     <ImageView
                         android:id="@+id/maxWindSpeedImgView"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
                         android:layout_gravity="start|center_vertical"
                         android:layout_marginStart="8dp"
-                        android:layout_marginTop="4dp"
-                        android:layout_weight="1"
+                        android:layout_marginTop="8dp"
                         android:src="@drawable/icon_wind"
                         app:tint="@color/forecastImageColor" />
 
@@ -268,7 +273,7 @@
                         android:layout_gravity="top|center_horizontal"
                         android:layout_marginTop="8dp"
                         android:ellipsize="end"
-                        android:text="Ветер" />
+                        android:text="@string/wind" />
 
                     <TextView
                         android:id="@+id/maxWindSpeedValue"
@@ -276,7 +281,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginTop="4dp"
+                        android:layout_marginTop="8dp"
                         android:text="15 км/ч" />
 
 
@@ -284,7 +289,7 @@
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/card_height"
+                    android:layout_height="@dimen/little_card_view_height"
                     android:layout_marginStart="8dp"
                     android:layout_weight="1"
                     android:backgroundTint="?attr/cardBackgroundColor"
@@ -295,11 +300,11 @@
 
                     <ImageView
                         android:id="@+id/imageView3"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
                         android:layout_gravity="start|center_vertical"
                         android:layout_marginStart="8dp"
-                        android:layout_marginTop="4dp"
+                        android:layout_marginTop="8dp"
                         android:src="@drawable/icon_visibility"
                         app:tint="@color/forecastImageColor" />
 
@@ -312,7 +317,7 @@
                         android:layout_gravity="top|center_horizontal"
                         android:layout_marginTop="8dp"
                         android:ellipsize="end"
-                        android:text="Видимость" />
+                        android:text="@string/visibility" />
 
                     <TextView
                         android:id="@+id/avgvisValue"
@@ -320,12 +325,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginTop="4dp"
-                        android:text="15"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="@+id/pressureGuideLine"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.5" />
+                        android:layout_marginTop="8dp"
+                        android:text="15 км"
+                         />
 
 
                 </androidx.cardview.widget.CardView>
@@ -352,10 +354,11 @@
 
                     <ImageView
                         android:id="@+id/hotTempImgView"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
                         android:layout_gravity="start|center_vertical"
                         android:layout_marginStart="8dp"
+                        android:layout_marginTop="6dp"
                         android:src="@drawable/icon_temp_max"
                         app:tint="@color/forecastImageColor" />
 
@@ -365,16 +368,17 @@
                         style="@style/TextAppearance.Material3.LabelLarge.ForecastLargeText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="Макс. t" />
+                        android:layout_gravity="top|center_horizontal"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/t_max" />
 
                     <TextView
                         android:id="@+id/maxTempValue"
                         style="@style/TextAppearance.Material3.LabelLarge.ForecastLargeTextValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="end|center_vertical"
-                        android:layout_marginEnd="16dp"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="8dp"
                         android:text="24" />
 
 
@@ -391,10 +395,11 @@
 
                     <ImageView
                         android:id="@+id/minTempImgView"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
                         android:layout_gravity="start|center_vertical"
                         android:layout_marginStart="8dp"
+                        android:layout_marginTop="6dp"
                         android:src="@drawable/icon_temp_min"
                         app:tint="@color/forecastImageColor" />
 
@@ -404,16 +409,17 @@
                         style="@style/TextAppearance.Material3.LabelLarge.ForecastLargeText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="Мин. t" />
+                        android:layout_gravity="top|center_horizontal"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/t_min" />
 
                     <TextView
                         android:id="@+id/minTempValue"
                         style="@style/TextAppearance.Material3.LabelLarge.ForecastLargeTextValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="end|center_vertical"
-                        android:layout_marginEnd="16dp"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="8dp"
                         android:text="24" />
 
 
@@ -443,10 +449,10 @@
 
                         <ImageView
                             android:id="@+id/imageView5"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
                             android:layout_gravity="start|center_vertical"
-                            android:layout_marginStart="4dp"
+                            android:layout_marginStart="8dp"
                             android:src="@drawable/icon_sun_up"
                             app:tint="@color/forecastImageColor" />
 
@@ -457,7 +463,8 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="top|center_horizontal"
                             android:layout_marginTop="8dp"
-                            android:text="Восход" />
+                            android:layout_marginStart="8dp"
+                            android:text="@string/sunrise" />
 
                         <TextView
                             android:id="@+id/sunRiseValue"
@@ -465,8 +472,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_marginStart="16dp"
-                            android:text="15" />
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="4dp"
+                            android:text="19:00РМ" />
 
                         <TextView
                             android:id="@+id/uvIndexTxtView"
@@ -474,18 +482,19 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="start|bottom"
-                            android:layout_margin="8dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginBottom="4dp"
                             android:text="@string/uv_index" />
 
                         <TextView
                             android:id="@+id/uvIndexValue"
-                            style="@style/TextAppearance.Material3.BodyLarge"
+                            style="@style/TextAppearance.Material3.BodySmall"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom|center_horizontal"
-                            android:layout_marginBottom="8dp"
+                            android:layout_marginBottom="4dp"
                             android:text="2"
-                            android:textColor="@color/forecastImageColor"
+                            android:textColor="@color/white"
 
                             />
                     </FrameLayout>
@@ -505,10 +514,10 @@
 
                         <ImageView
                             android:id="@+id/imageView4"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
                             android:layout_gravity="start|center_vertical"
-                            android:layout_marginStart="4dp"
+                            android:layout_marginStart="12dp"
                             android:src="@drawable/icon_sun_down"
                             app:layout_constraintBottom_toBottomOf="@+id/imageView5"
                             app:layout_constraintStart_toStartOf="@+id/guideline3"
@@ -523,7 +532,8 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="top|center_horizontal"
                             android:layout_marginTop="8dp"
-                            android:text="Закат"
+                            android:layout_marginStart="8dp"
+                            android:text="@string/sunset"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@+id/imageView4"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -534,8 +544,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_marginStart="16dp"
-                            android:text="15"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="4dp"
+                            android:text="8:00 АМ"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="@+id/sunSetTxtView"
                             app:layout_constraintStart_toStartOf="@+id/sunSetTxtView"
@@ -570,9 +581,10 @@
 
                         <ImageView
                             android:id="@+id/imageView6"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
                             android:layout_gravity="start|center_vertical"
+                            android:layout_marginStart="4dp"
                             android:src="@drawable/icon_moon_up"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
@@ -586,7 +598,7 @@
                             android:layout_gravity="top|center_horizontal"
                             android:layout_marginTop="8dp"
                             android:ellipsize="end"
-                            android:text="Восход луны" />
+                            android:text="@string/moonrise" />
 
                         <TextView
                             android:id="@+id/moonRiseValue"
@@ -594,7 +606,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:text="15" />
+                            android:layout_marginTop="4dp"
+                            android:text="15:00PM" />
 
 
                     </FrameLayout>
@@ -606,9 +619,10 @@
                         android:layout_weight="1">
 
                         <ImageView
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
                             android:layout_gravity="start|center_vertical"
+                            android:layout_marginStart="8dp"
                             android:src="@drawable/icon_moon_down"
                             app:layout_constraintStart_toStartOf="@+id/minTempImgView"
                             app:layout_constraintTop_toTopOf="@+id/totalPrecipTxtView"
@@ -621,7 +635,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="top|center_horizontal"
                             android:layout_marginTop="8dp"
-                            android:text="Заход луны" />
+                            android:text="@string/moonset" />
 
                         <TextView
                             android:id="@+id/moonSetValue"
@@ -629,7 +643,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:text="15" />
+                            android:layout_marginTop="4dp"
+                            android:text="8:00AM" />
                     </FrameLayout>
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
@@ -648,8 +663,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom"
                         android:text="Фаза луны"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent" />
+                         />
 
                     <TextView
                         android:id="@+id/moonPhaseValue"
@@ -659,8 +673,7 @@
                         android:layout_gravity="bottom"
                         android:layout_marginStart="8dp"
                         android:textColor="@color/white"
-                        app:layout_constraintBottom_toBottomOf="@+id/moonPhaseTxtView"
-                        app:layout_constraintStart_toEndOf="@+id/moonPhaseTxtView" />
+                         />
 
 
                 </LinearLayout>

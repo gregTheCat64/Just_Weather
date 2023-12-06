@@ -12,4 +12,6 @@ sealed interface LoadingState {
     object InputError: LoadingState
 
     object NetworkError: LoadingState
+
+    object LocationIsUnabled: LoadingState
 }

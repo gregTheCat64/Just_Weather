@@ -1,7 +1,6 @@
 package ru.javacat.justweather.common.util
 
 
-
     fun String.toWindRus(): String{
         return this.replace(Regex("[NSWE]")){
             when (it.value) {

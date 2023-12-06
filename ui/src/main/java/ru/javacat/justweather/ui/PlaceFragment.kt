@@ -1,5 +1,6 @@
 package ru.javacat.justweather.ui
 
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -22,15 +23,18 @@ import ru.javacat.justweather.ui.adapters.OnPlacesInteractionListener
 import ru.javacat.justweather.ui.adapters.OnSearchPlacesInteractionListener
 import ru.javacat.justweather.ui.adapters.PlacesAdapter
 import ru.javacat.justweather.ui.adapters.SearchPlacesAdapter
-import ru.javacat.justweather.ui.base.BaseFragment
 import ru.javacat.justweather.ui.util.AndroidUtils
+import ru.javacat.justweather.ui.util.LocationListenerImplFragment
+import ru.javacat.justweather.ui.util.coordsFlow
+import ru.javacat.justweather.ui.util.getLocationOverGps
+import ru.javacat.justweather.ui.util.getLocationOverNetwork
 import ru.javacat.justweather.ui.util.snack
 import ru.javacat.justweather.ui.view_models.PlaceViewModel
 import ru.javacat.ui.R
 import ru.javacat.ui.databinding.FragmentPlaceBinding
 
 @AndroidEntryPoint
-class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {
+class PlaceFragment : LocationListenerImplFragment<FragmentPlaceBinding>() {
     override val bindingInflater: (LayoutInflater, ViewGroup?) -> FragmentPlaceBinding ={
         inflater, container ->
         FragmentPlaceBinding.inflate(inflater, container, false)
@@ -62,6 +66,23 @@ class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {
 
         binding.refreshBtn.setOnClickListener {
             updateDb()
+        }
+
+        binding.locateBtn.setOnClickListener {
+            when (Build.VERSION.SDK_INT) {
+                in 1..29 -> getLocationOverGps()
+                else -> getLocationOverNetwork()
+            }
+            //snack("coords: $coords")
+
+        }
+
+        lifecycleScope.launch{
+            coordsFlow.collect  {
+                //snack("coordsFlow: $it")
+                viewModel.getLocationByCoords("${it.first}, ${it.second}")
+                Log.i("MainFrag","$it")
+            }
         }
 
 //        binding.placeInput.setOnEditorActionListener { _, actionId, _ ->
@@ -170,6 +191,9 @@ class PlaceFragment : BaseFragment<FragmentPlaceBinding>() {
                 is LoadingState.Updated -> {
                     binding.progressBar.visibility = View.INVISIBLE
                     snack(getString(R.string.locations_updated))
+                }
+                is LoadingState.LocationIsUnabled -> {
+                    snack(getString(R.string.location_disabled))
                 }
             }
         }

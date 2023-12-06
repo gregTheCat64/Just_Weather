@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import ru.javacat.justweather.common.util.LOC_LIMIT
 import ru.javacat.justweather.domain.ApiError
 import ru.javacat.justweather.domain.NetworkError
 import ru.javacat.justweather.domain.models.Forecastday
@@ -22,6 +23,8 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val repository: ru.javacat.justweather.domain.repos.Repository,
 ) : ViewModel(){
+
+    private val locationsLimit = LOC_LIMIT
 
     val currentWeatherFlow = repository.currentWeatherFlow.asLiveData(Dispatchers.IO)
 
@@ -60,6 +63,8 @@ class MainViewModel @Inject constructor(
 
         }
     }
+
+
 
 
     fun chooseForecastDay(item: Forecastday) {
