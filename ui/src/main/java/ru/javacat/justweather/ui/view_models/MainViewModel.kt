@@ -4,12 +4,12 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import ru.javacat.justweather.common.util.LOC_LIMIT
 import ru.javacat.justweather.domain.ApiError
 import ru.javacat.justweather.domain.NetworkError
 import ru.javacat.justweather.domain.models.Forecastday
@@ -24,15 +24,13 @@ class MainViewModel @Inject constructor(
     private val repository: ru.javacat.justweather.domain.repos.Repository,
 ) : ViewModel(){
 
-    private val locationsLimit = LOC_LIMIT
 
-    val currentWeatherFlow = repository.currentWeatherFlow.asLiveData(Dispatchers.IO)
+    val currentWeatherFlow = repository.currentWeatherFlow
 
     val loadingState = SingleLiveEvent<LoadingState>()
 
-    private val _forecastData: MutableLiveData<Forecastday> = MutableLiveData()
-    val forecastData: LiveData<Forecastday>
-        get() = _forecastData
+    private val _forecastData = MutableStateFlow<Forecastday?>(null)
+    val forecastData = _forecastData.asStateFlow()
 
     private var _hoursData: MutableLiveData<List<Hour>> = MutableLiveData()
     var hoursData: LiveData<List<Hour>>? = _hoursData
@@ -66,12 +64,11 @@ class MainViewModel @Inject constructor(
 
 
 
-
     fun chooseForecastDay(item: Forecastday) {
         Log.i("MainViewModel", "setting _forecastData")
         viewModelScope.launch() {
             try {
-                _forecastData.postValue(item)
+                _forecastData.emit(item)
             } catch (e: Exception) {
                 loadingState.postValue(LoadingState.NetworkError)
             }

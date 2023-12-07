@@ -19,6 +19,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.transition.TransitionInflater
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import ru.javacat.justweather.common.util.toLocalDateTime
 import ru.javacat.justweather.common.util.toWindRus
@@ -178,12 +179,12 @@ class MainFragment : LocationListenerImplFragment<FragmentMainBinding>() {
     private fun initDataObserver() {
         Log.i("MainFragment", "observing data")
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
-                viewModel.currentWeatherFlow.observe(viewLifecycleOwner) { weather ->
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.currentWeatherFlow.collectLatest { weather ->
                     Log.i("MainFragment", "collecting")
                     Log.i("MainFragment", "current weather: ${weather?.location?.name}")
-                    if (weather == null) viewModel.updateCurrentWeather()
+                    //if (weather == null) viewModel.updateCurrentWeather()
                     updateUI(weather)
                     locName = weather?.location?.localTitle.toString()
                     bundle.putString("LOC_NAME", locName)
