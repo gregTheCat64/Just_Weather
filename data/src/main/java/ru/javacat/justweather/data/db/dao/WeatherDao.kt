@@ -58,7 +58,7 @@ interface WeatherDao {
     fun getCurrentFlow(): Flow<DbWeatherWithForecastsAndAlerts?>
 
     @Query("SELECT * FROM weathers_table WHERE isCurrent = 1")
-    suspend fun getCurrent(): List<DbWeatherWithForecastsAndAlerts>
+    suspend fun getCurrent(): DbWeatherWithForecastsAndAlerts
 
     @Transaction
     @Query("UPDATE weathers_table SET isCurrent = 1 WHERE id = :weatherId")

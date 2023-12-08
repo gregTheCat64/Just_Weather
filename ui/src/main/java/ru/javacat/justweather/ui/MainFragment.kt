@@ -159,7 +159,6 @@ class MainFragment : LocationListenerImplFragment<FragmentMainBinding>() {
         initStateObserver()
         initDataObserver()
 
-
         binding.placeLayout.setOnClickListener {
             it.pushAnimation(requireContext())
             findNavController().navigate(R.id.placeFragment)
@@ -181,7 +180,7 @@ class MainFragment : LocationListenerImplFragment<FragmentMainBinding>() {
 
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.currentWeatherFlow.collectLatest { weather ->
+                viewModel.getCurrentWeatherFlow().collectLatest { weather ->
                     Log.i("MainFragment", "collecting")
                     Log.i("MainFragment", "current weather: ${weather?.location?.name}")
                     //if (weather == null) viewModel.updateCurrentWeather()
@@ -271,9 +270,9 @@ class MainFragment : LocationListenerImplFragment<FragmentMainBinding>() {
 
                 it.current.condition.icon.let { it1 -> imageView.load(it1) }
 
-                val speedText =  it.current.wind_kph.roundToInt().toString() + " " +getString(
-                    R.string.km_h
-                )
+                val speedInmS = (it.current.wind_kph*0.28).roundToInt().toString()
+                val speedText =  "$speedInmS ${getString(R.string.m_s)}"
+
                 detailsLayout.windSpeed.text = speedText
 
                 detailsLayout.windDir.text = it.current.wind_dir.toWindRus()
@@ -281,7 +280,8 @@ class MainFragment : LocationListenerImplFragment<FragmentMainBinding>() {
                 val humidityText =  it.current.humidity.toString() + getString(R.string.percent)
                 detailsLayout.humidity.text = humidityText
 
-                detailsLayout.pressureTextValue.text = it.current.pressure_mb.roundToInt().toString() + " " + getString(R.string.mbar)
+                val pressureText = it.current.pressure_mb.roundToInt().toString()
+                detailsLayout.pressureTextValue.text = pressureText
                 val alerts = it.alerts
                 val alertMsgBuffer = StringBuilder()
                 for (element in alerts) {

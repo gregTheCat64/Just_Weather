@@ -41,14 +41,14 @@ class RepositoryImpl @Inject constructor(
             it?.toModel()
         }
 
-    override suspend fun getAllWeathers(): List<Weather>? {
+    override suspend fun getAllWeathers(): List<Weather> {
         return dbQuery { dao.getAllWeathers().map { it.toModel() } }
     }
-
-    override suspend fun getCurrentWeather(): Weather? {
+    override suspend fun getCurrentWeather(): Weather {
         Log.i("MyTag", "Getting weahter in repo")
-        return dbQuery { dao.getCurrent().firstOrNull()?.toModel() }
+        return dbQuery { dao.getCurrent().toModel() }
     }
+
 
     override suspend fun updateCurrentWeather(locationId: String) {
         val dbWeather = dbQuery { dao.getByLocationId(locationId) }
@@ -178,6 +178,7 @@ class RepositoryImpl @Inject constructor(
                 it.toDbHour(weatherId, forecastdays.date)
             }
         }.flatten()
+
 
         //получаем каждый 3й час
         val everyThirdHourList = mutableListOf<DbHour>()

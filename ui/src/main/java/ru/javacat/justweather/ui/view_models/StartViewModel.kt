@@ -4,10 +4,13 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.javacat.justweather.common.util.LOC_LIMIT
 import ru.javacat.justweather.domain.ApiError
@@ -28,9 +31,16 @@ class StartViewModel @Inject constructor(
     val weatherData: LiveData<Weather>
         get() = _weatherData
 
-    val currentWeatherFlow = repository.currentWeatherFlow.asLiveData()
+    //val currentWeatherFlow = repository.currentWeatherFlow.asLiveData()
 
     val loadingState = SingleLiveEvent<LoadingState>()
+
+    suspend fun getCurrentWeatherFlow(): StateFlow<Weather?> =
+        repository.currentWeatherFlow.stateIn(
+            CoroutineScope(Dispatchers.IO),
+            SharingStarted.WhileSubscribed(),
+            repository.getCurrentWeather()
+        )
 
 
     fun getLocationByCoords(coords: String){

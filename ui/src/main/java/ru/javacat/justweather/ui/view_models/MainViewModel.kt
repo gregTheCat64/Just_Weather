@@ -1,19 +1,22 @@
 package ru.javacat.justweather.ui.view_models
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.javacat.justweather.domain.ApiError
 import ru.javacat.justweather.domain.NetworkError
 import ru.javacat.justweather.domain.models.Forecastday
 import ru.javacat.justweather.domain.models.Hour
+import ru.javacat.justweather.domain.models.Weather
 import ru.javacat.justweather.ui.LoadingState
 import ru.javacat.justweather.ui.SingleLiveEvent
 import javax.inject.Inject
@@ -25,22 +28,28 @@ class MainViewModel @Inject constructor(
 ) : ViewModel(){
 
 
-    val currentWeatherFlow = repository.currentWeatherFlow
+    //val currentWeatherFlow = repository.currentWeatherFlow
 
     val loadingState = SingleLiveEvent<LoadingState>()
 
     private val _forecastData = MutableStateFlow<Forecastday?>(null)
     val forecastData = _forecastData.asStateFlow()
 
-    private var _hoursData: MutableLiveData<List<Hour>> = MutableLiveData()
-    var hoursData: LiveData<List<Hour>>? = _hoursData
+    private var _hoursData = MutableStateFlow<List<Hour>?>(null)
+    var hoursData = _hoursData.asStateFlow()
 
 
     init {
         Log.i("MyTag", "initing VM")
     }
 
-    
+    suspend fun getCurrentWeatherFlow(): StateFlow<Weather?> =
+        repository.currentWeatherFlow.stateIn(
+            CoroutineScope(Dispatchers.IO),
+            SharingStarted.WhileSubscribed(),
+            repository.getCurrentWeather()
+        )
+
     fun updateCurrentWeather(){
         viewModelScope.launch(Dispatchers.IO) {
             loadingState.postValue(LoadingState.Load)
@@ -79,8 +88,8 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 println("getting hours in vm")
-                _hoursData.postValue(repository.getHours(weatherId, date))
-                //Log.i("HOURS", "${hoursData.value}")
+                _hoursData.emit(repository.getHours(weatherId, date))
+                Log.i("HOURS", "${hoursData.value}")
             } catch (e: Exception) {
                 println("ERROR inVM with hours")
                 loadingState.postValue(LoadingState.NetworkError)

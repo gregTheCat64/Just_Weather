@@ -57,16 +57,32 @@
             app:tint="?attr/textFillColor"
             android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/pressureTextValue"
-            android:layout_gravity="center"
-            android:text="20мбар"
-            android:textSize="16dp"
-            android:layout_marginStart="8dp"
-            android:textColor="?attr/textFillColor"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-             />
+            android:layout_marginStart="8dp"
+            android:orientation="vertical"
+            >
+            <TextView
+                android:id="@+id/pressureTextValue"
+                android:layout_gravity="center"
+                android:text="2000"
+                android:textSize="16dp"
+                android:textColor="?attr/textFillColor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:text="мбар"
+                android:textColor="@color/light_text_secondary"
+                />
+
+        </LinearLayout>
+
+
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -105,9 +121,9 @@
             <TextView
                 android:id="@+id/windDir"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginStart="8dp"
                 android:textSize="16dp"
-                android:textColor="?attr/textFillColor"
+                android:gravity="center_horizontal"
+                android:textColor="@color/light_text_secondary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 />

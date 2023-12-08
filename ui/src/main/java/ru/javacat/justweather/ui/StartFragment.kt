@@ -14,7 +14,9 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -103,16 +105,18 @@ class StartFragment : LocationListenerImplFragment<FragmentStartBinding>(), Loca
     private fun currentFlowObserver() {
         Log.i("StartFrag", "currentFlowObserver")
         viewLifecycleOwner.lifecycleScope.launch {
-
-                viewModel.currentWeatherFlow.observe(viewLifecycleOwner) {
-                    Log.i("StartFrag", "curFlow: ${it?.location}")
-                    if (it != null){
-                        //viewModel.updateCurrentWeather()
-                        findNavController().navigate(R.id.mainFragment)
-                    } else {
-                        getLocation()
+                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    viewModel.getCurrentWeatherFlow().collectLatest  {
+                        Log.i("StartFrag", "curFlow: ${it?.location}")
+                        if (it != null){
+                            //viewModel.updateCurrentWeather()
+                            findNavController().navigate(R.id.mainFragment)
+                        } else {
+                            getLocation()
+                        }
                     }
                 }
+
         }
 
     }

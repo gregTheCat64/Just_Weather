@@ -13,6 +13,7 @@
     <string name="enter_the_city">Enter the city\n</string>
     <string name="location_disabled">Location disabled</string>
     <string name="km_h">km/h</string>
+    <string name="m_s">m/s</string>
     <string name="mm">mm</string>
     <string name="celcius" translatable="false">°</string>
     <string name="percent" translatable="false">%</string>
@@ -27,7 +28,7 @@
     <string name="mbar">" mBar"</string>
     <string name="updated">Updated</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="Precipations">Precipitation</string>
     <string name="humidity">Humidity</string>
     <string name="wind">Wind</string>

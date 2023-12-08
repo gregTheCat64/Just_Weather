@@ -34,4 +34,5 @@
     <string name="moonset">Заход луны</string>
     <string name="moonrise">Восход луны</string>
     <string name="sunset">Закат</string>
+    <string name="m_s">м/с</string>
 </resources>

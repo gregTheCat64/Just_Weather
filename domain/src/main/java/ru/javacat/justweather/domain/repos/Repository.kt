@@ -24,6 +24,8 @@ interface Repository {
 
     suspend fun getCurrentWeather(): Weather?
 
+    //suspend fun getCurrentWeatherFlow(): StateFlow<Weather?>
+
 
     suspend fun getHours(weatherId: String, date: String): List<Hour>
 

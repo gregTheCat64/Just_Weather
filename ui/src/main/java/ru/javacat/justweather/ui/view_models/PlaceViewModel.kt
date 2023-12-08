@@ -23,6 +23,7 @@ class PlaceViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val locationsLimit = LOC_LIMIT
+
     val allWeathersFlow = repository.allWeathers.asLiveData(viewModelScope.coroutineContext)
 
     private var _foundLocations = MutableLiveData<List<FoundLocation>>()
