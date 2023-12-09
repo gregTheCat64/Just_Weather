@@ -181,14 +181,8 @@
                 android:padding="8dp"
                 android:scrollHorizontally="true"
                 android:singleLine="true"
-
                 android:textSize="16sp" />
-
-
         </FrameLayout>
 
-
     </androidx.appcompat.widget.LinearLayoutCompat>
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

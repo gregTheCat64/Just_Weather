@@ -237,7 +237,7 @@ class MainFragment : LocationListenerImplFragment<FragmentMainBinding>() {
                     }
                     currentTime.isAfter(LocalTime.of(18,0)) && currentTime.isBefore(LocalTime.of(19,0)) -> {
                         fc.background = back18
-                        setLightTheme()
+                        setDarkTheme()
                         //println("back: back18")
                     }
 //                    currentTime.isAfter(LocalTime.of(20,0)) && currentTime.isBefore(LocalTime.of(22,0)) -> {

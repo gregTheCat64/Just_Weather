@@ -25,12 +25,14 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_margin="8dp"
+                    android:contentDescription="@string/backbtn"
                     android:drawableTint="@color/white"
                     app:icon="@drawable/baseline_keyboard_backspace_48" />
 
 
-                <SearchView
+                <android.widget.SearchView
                     android:id="@+id/placeInput"
+                    android:theme="@style/Android.Widget.SearchView.MySearch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
@@ -44,13 +46,12 @@
                     android:hint="@string/City"
                     android:submitBackground="@drawable/bg_white_rounded"
                     android:text="@string/City"
-                    style="@style/Android.Widget.SearchView.MySearch"
                     app:defaultQueryHint="@string/City"
                     app:queryHint="@string/City">
 
 
                     <!-- Search suggestions/results go here (ScrollView, RecyclerView, etc.). -->
-                </SearchView>
+                </android.widget.SearchView>
 
 
                 <ProgressBar
@@ -68,6 +69,7 @@
                     android:layout_gravity="bottom|center"
                     app:icon="@drawable/baseline_gps_fixed_24"
                     android:text="@string/my_location"/>
+
 
 
             </FrameLayout>
