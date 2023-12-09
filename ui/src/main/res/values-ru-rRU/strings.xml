@@ -35,4 +35,7 @@
     <string name="moonrise">Восход луны</string>
     <string name="sunset">Закат</string>
     <string name="m_s">м/с</string>
+    <string name="my_location">Моё местоположение</string>
+    <string name="Click_on_refresh">Обновите</string>
+    <string name="refresh">Повторить</string>
 </resources>

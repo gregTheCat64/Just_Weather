@@ -39,4 +39,12 @@
     <string name="moonset">Moonset</string>
     <string name="moonrise">Moonrise</string>
     <string name="sunset">Sunset</string>
+    <string name="my_location">My location</string>
+    <string name="Click_on_refresh">Click on refresh</string>
+    <string name="refreshbtn" translatable="false">refreshBtn</string>
+    <string name="refresh">Refresh</string>
+    <string name="made_by_javacat" translatable="false">made by JavaCat</string>
+    <string name="powered_by_weatherapi_com" translatable="false">powered by weatherapi.com</string>
+    <string name="locatedmarker" translatable="false">locatedMarker</string>
+    <string name="conditionimage" translatable="false">conditionImage</string>
 </resources>

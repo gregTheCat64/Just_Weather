@@ -33,7 +33,7 @@
         style="@style/Widget.Material3.Button.OutlinedButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Повторить"
+        android:text="@string/refresh"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/guideline2"
         app:layout_constraintEnd_toEndOf="parent"
@@ -53,13 +53,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="made by JavaCat"
+            android:text="@string/made_by_javacat"
             android:textColor="@color/white" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="powered by weatherapi.com"
+            android:text="@string/powered_by_weatherapi_com"
 
             android:textColor="@color/white" />
 

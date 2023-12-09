@@ -10,7 +10,7 @@
         <item name="textFillColor">@color/dark_text_accent</item>
         <item name="android:textColorSecondary">@color/light_text_secondary</item>
         <item name="cardBackgroundColor">@color/dark_card_back</item>
-        <item name="background">@drawable/back_day</item>
+        <item name="background">@drawable/back_12</item>
 
 
     </style>

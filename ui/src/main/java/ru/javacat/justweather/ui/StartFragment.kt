@@ -54,7 +54,7 @@ class StartFragment : LocationListenerImplFragment<FragmentStartBinding>(), Loca
         super.onCreate(savedInstanceState)
 
         permissionListener()
-        dispatcher = Dispatchers.Default
+        dispatcher = Dispatchers.IO
 
 
         val inflater = TransitionInflater.from(requireContext())
@@ -133,7 +133,7 @@ class StartFragment : LocationListenerImplFragment<FragmentStartBinding>(), Loca
 
     private fun initGetLocationObserver() {
         Log.i("StartFrag", "initGetLocationObserver")
-        lifecycleScope.launch {
+        lifecycleScope.launch(dispatcher) {
             coordsFlow.collectLatest {
                 loadData(it.first,it.second)
             }

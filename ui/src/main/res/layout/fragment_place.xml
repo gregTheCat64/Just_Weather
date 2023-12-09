@@ -67,7 +67,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|center"
                     app:icon="@drawable/baseline_gps_fixed_24"
-                    android:text="Моё местоположение"/>
+                    android:text="@string/my_location"/>
 
 
             </FrameLayout>
@@ -94,8 +94,6 @@
     </androidx.cardview.widget.CardView>
 
 
-
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/placesList"
         android:layout_width="match_parent"
@@ -113,6 +111,7 @@
         android:layout_height="48dp"
         android:layout_gravity="center|bottom"
         android:drawableTint="@color/white"
+        android:contentDescription="@string/refreshbtn"
         app:icon="@drawable/baseline_refresh_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

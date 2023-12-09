@@ -16,7 +16,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import androidx.transition.TransitionInflater
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -52,14 +51,12 @@ class MainFragment : LocationListenerImplFragment<FragmentMainBinding>() {
     private lateinit var fc: FragmentContainerView
 
     private lateinit var back5: Drawable
-    private lateinit var back8: Drawable
     private lateinit var back12: Drawable
     private lateinit var back18: Drawable
-    private lateinit var back20: Drawable
     private lateinit var back22: Drawable
     private lateinit var backRainy: Drawable
 
-    var locName = ""
+    private var locName = ""
     val bundle = Bundle()
 
 
@@ -70,7 +67,7 @@ class MainFragment : LocationListenerImplFragment<FragmentMainBinding>() {
         super.onCreate(savedInstanceState)
         Log.i("MainFragment", "onCreateFragment")
 
-        val inflater = TransitionInflater.from(requireContext())
+        //val inflater = TransitionInflater.from(requireContext())
         //exitTransition = inflater.inflateTransition(R.transition.fade)
         //currentTime = LocalTime.now()
         //enterTransition = inflater.inflateTransition(R.transition.slide_right)
@@ -81,10 +78,10 @@ class MainFragment : LocationListenerImplFragment<FragmentMainBinding>() {
 
         //backgrounds
         back5 = AppCompatResources.getDrawable(requireContext(), R.drawable.back_5)!!
-        back8 = AppCompatResources.getDrawable(requireContext(), R.drawable.back_8)!!
+        //back8 = AppCompatResources.getDrawable(requireContext(), R.drawable.back_8)!!
         back12 = AppCompatResources.getDrawable(requireContext(), R.drawable.back_12)!!
-        back18 = AppCompatResources.getDrawable(requireContext(), R.drawable.back_18)!!
-        back20 = AppCompatResources.getDrawable(requireContext(), R.drawable.back_20)!!
+        back18 = AppCompatResources.getDrawable(requireContext(), R.drawable.back_evening)!!
+        //back20 = AppCompatResources.getDrawable(requireContext(), R.drawable.back_20)!!
         back22 = AppCompatResources.getDrawable(requireContext(), R.drawable.back_22)!!
         backRainy = AppCompatResources.getDrawable(requireContext(), R.drawable.back_rainy)!!
 
@@ -312,8 +309,7 @@ class MainFragment : LocationListenerImplFragment<FragmentMainBinding>() {
 //            }
 //        })
 
-        val list = forecastdays
-        adapter.submitList(list)
+        adapter.submitList(forecastdays)
     }
 
     private fun setDarkTheme(){
@@ -322,11 +318,6 @@ class MainFragment : LocationListenerImplFragment<FragmentMainBinding>() {
             tempTxtView.setTextColor(AppCompatResources.getColorStateList(requireContext(), color))
             realfeelTxt.setTextColor(AppCompatResources.getColorStateList(requireContext(), color))
             realFeelTxtView.setTextColor(AppCompatResources.getColorStateList(requireContext(), color))
-            //imageView.setColorFilter(color, PorterDuff.Mode.MULTIPLY)
-//            DrawableCompat.setTint(
-//                DrawableCompat.wrap(imageView.drawable),
-//                ContextCompat.getColor(requireContext(), color)
-//            )
 
         }
     }
@@ -337,11 +328,6 @@ class MainFragment : LocationListenerImplFragment<FragmentMainBinding>() {
             tempTxtView.setTextColor(AppCompatResources.getColorStateList(requireContext(), color))
             realfeelTxt.setTextColor(AppCompatResources.getColorStateList(requireContext(), color))
             realFeelTxtView.setTextColor(AppCompatResources.getColorStateList(requireContext(), color))
-            //imageView.setColorFilter(color, PorterDuff.Mode.MULTIPLY)
-//            DrawableCompat.setTint(
-//                DrawableCompat.wrap(imageView.drawable),
-//                ContextCompat.getColor(requireContext(), color)
-//            )
 
         }
     }

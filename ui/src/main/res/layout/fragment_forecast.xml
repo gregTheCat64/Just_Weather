@@ -72,7 +72,7 @@
                         android:maxWidth="196dp"
                         android:lines="1"
                         android:ellipsize="end"
-                        android:text="Saratov"
+
                         android:textColor="?attr/colorPrimary" />
 
                     <TextView
@@ -80,7 +80,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom|start"
-                        android:text="Солнечно"
+                        android:lines="2"
+                        android:maxWidth="196dp"
+
                         android:ellipsize="end"
                         android:textColor="@color/light_text_secondary" />
 
@@ -94,7 +96,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
-                    android:text="16"
+
                     android:layout_marginEnd="8dp"
                     android:layout_marginTop="8dp"
                     android:textSize="32sp"
@@ -105,7 +107,7 @@
                     android:id="@+id/tempExtremumValues"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="8/16"
+
                     android:textColor="@color/light_text_secondary"
                     android:layout_gravity="end|bottom"
                     android:layout_marginEnd="12dp"
@@ -117,7 +119,7 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/hoursCardView"
                 android:layout_width="match_parent"
-                android:layout_height="156dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
 
                 android:backgroundTint="?attr/cardBackgroundColor"
@@ -307,7 +309,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="8dp"
-                        android:text="15 км/ч" />
+                         />
 
 
                 </androidx.cardview.widget.CardView>
@@ -351,7 +353,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="8dp"
-                        android:text="15 км"
+
                          />
 
 
@@ -408,7 +410,7 @@
                             android:layout_gravity="center"
                             android:layout_marginStart="8dp"
                             android:layout_marginTop="4dp"
-                            android:text="19:00РМ" />
+                            />
 
                         <TextView
                             android:id="@+id/uvIndexTxtView"
@@ -427,7 +429,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom|center_horizontal"
                             android:layout_marginBottom="4dp"
-                            android:text="2"
+
                             android:textColor="@color/white"
 
                             />
@@ -480,7 +482,7 @@
                             android:layout_gravity="center"
                             android:layout_marginStart="8dp"
                             android:layout_marginTop="4dp"
-                            android:text="8:00 АМ"
+
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="@+id/sunSetTxtView"
                             app:layout_constraintStart_toStartOf="@+id/sunSetTxtView"
@@ -541,7 +543,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:layout_marginTop="4dp"
-                            android:text="15:00PM" />
+                             />
 
 
                     </FrameLayout>
@@ -578,7 +580,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:layout_marginTop="4dp"
-                            android:text="8:00AM" />
+                             />
                     </FrameLayout>
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
