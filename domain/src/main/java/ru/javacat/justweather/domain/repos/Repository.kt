@@ -15,7 +15,9 @@ interface Repository {
     suspend fun getNewPlaceDetails(name: String, isLocated: Boolean, localTitle: String, localSubtitle: String, locationsLimit: Int)
     suspend fun updateWeatherById(locationId: String, setCurrent: Boolean)
 
-    suspend fun updateCurrentWeather(locationId: String)
+    //suspend fun updateCurrentWeather(locationId: String)
+
+    //suspend fun updateAllWeathers()
     suspend fun findLocation(name: String): SuggestLocationList
 
     suspend fun getCoords(uri: String): Point
@@ -23,9 +25,6 @@ interface Repository {
     suspend fun getLocationByCoords(coords: String): GeoObjectCollection
 
     suspend fun getCurrentWeather(): Weather?
-
-    //suspend fun getCurrentWeatherFlow(): StateFlow<Weather?>
-
 
     suspend fun getHours(weatherId: String, date: String): List<Hour>
 
@@ -36,8 +35,6 @@ interface Repository {
     suspend fun unCheckLocated()
 
     suspend fun unCheckCurrent()
-
-    suspend fun  clearDbs()
 
 
 

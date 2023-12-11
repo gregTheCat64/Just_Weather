@@ -106,18 +106,7 @@
 
 
 
-    <Button
-        android:id="@+id/refreshBtn"
-        style="@style/Widget.Material3.Button.IconButton.Filled"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_gravity="center|bottom"
-        android:drawableTint="@color/white"
-        android:contentDescription="@string/refreshbtn"
-        app:icon="@drawable/baseline_refresh_24"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

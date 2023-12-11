@@ -57,7 +57,7 @@ class MainViewModel @Inject constructor(
                 val place = repository.getCurrentWeather()
                 Log.i("MyTag", "restoring ${place?.location}")
                 val id = place?.id.toString()
-                repository.updateCurrentWeather(id)
+                repository.updateWeatherById(id,false)
                 loadingState.postValue(LoadingState.Success)
                 loadingState.postValue(LoadingState.Updated)
             }catch (e: ApiError) {

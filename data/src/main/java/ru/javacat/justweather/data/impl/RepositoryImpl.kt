@@ -57,79 +57,28 @@ class RepositoryImpl @Inject constructor(
     }
 
 
-    override suspend fun updateCurrentWeather(locationId: String) {
-        Log.i("Repo", "Updating weather")
-        val dbWeather = dbQuery { dao.getByLocationId(locationId) }
-        val coords = "${dbWeather?.location?.lat},${dbWeather?.location?.lon}"
-        val weatherResponse = apiRequest {
-            apiService.getByName(coords)
-        }
+//    override suspend fun updateCurrentWeather(locationId: String) {
+//
+//        updateWeatherById(locationId, false)
+//
+////        val currentDate = forecasts[0].date
+////        dao.clearOldForecastDays(currentDate)
+////        dao.clearOldHours(currentDate)
+//
+//    }
 
-        //восстанавливаем айдишник
-        Log.i("Repo", "restoring ID")
-        val locationName = weatherResponse.location.name
-        val region = weatherResponse.location.region
-        val weatherId = (locationName + region).toBase64()
+//    override suspend fun updateAllWeathers(){
+//        val weatherIdsList = getAllWeathers().map { it?.id }
+//        if (weatherIdsList.isNotEmpty()){
+//            clearOldData()
+//            for (id in weatherIdsList){
+//                if (id != null) {
+//                    updateWeatherById(id, false)
+//                }
+//            }
+//        }
+//    }
 
-        //формируем табличку Алертов
-        Log.i("Repo", "making alertsDb")
-        val alerts = weatherResponse.alerts.alert.map {
-            it.toDbAlert(weatherId)
-        }
-
-        //формируем табличку Прогнозов
-        Log.i("Repo", "making forecastDayDb")
-        val forecasts = weatherResponse.forecast.forecastday.map {
-            it.toDbForecastday(weatherId)
-        }
-        Log.i("Repo", "forecasts: $forecasts")
-
-        //формируем табличку Погоды
-        Log.i("Repo", "making weatherDb")
-        val weather = weatherResponse.toDbWeather(weatherId)
-
-        weather.isLocated = dbWeather?.weather?.isLocated == true
-
-        weather.positionId = dbWeather?.weather?.positionId?:0
-
-        weather.isCurrent = true
-
-        //формируем табличку Часиков
-        val hours = weatherResponse.forecast.forecastday.map { forecastdays ->
-            forecastdays.hour.map {
-                it.toDbHour(weatherId, forecastdays.date)
-            }
-        }.flatten()
-
-        //получаем каждый 3й час
-        val everyThirdHourList = mutableListOf<DbHour>()
-        for (i in hours.indices) {
-            if (i % 3 == 0) {
-                everyThirdHourList.add(hours[i])
-            }
-        }
-
-
-        dao.clearAlertsDb()
-        dao.clearHoursDb()
-        dao.clearForecastDaysDb()
-
-        //вставляем таблички в БД
-        dbQuery {
-            Log.i("Repo", "inserting tables")
-            dao.update(
-                weather,
-                alerts,
-                forecasts,
-                everyThirdHourList
-            )
-        }
-
-//        val currentDate = forecasts[0].date
-//        dao.clearOldForecastDays(currentDate)
-//        dao.clearOldHours(currentDate)
-
-    }
 
     override suspend fun updateWeatherById(locationId: String, setCurrent: Boolean) {
         Log.i("Repo", "updateWeatherById")
@@ -137,7 +86,6 @@ class RepositoryImpl @Inject constructor(
         Log.i("Repo", "getting weather from DB")
         val dbWeather = dbQuery { dao.getByLocationId(locationId) }
         val weatherList = dbQuery { dao.getAllWeathers() }
-
 
         val coords = "${dbWeather?.location?.lat},${dbWeather?.location?.lon}"
 
@@ -169,6 +117,8 @@ class RepositoryImpl @Inject constructor(
         //восстанавливаем параметры из БД
         weather.isLocated = dbWeather?.weather?.isLocated == true
 
+
+
         if (setCurrent){
             unCheckCurrent()
             weather.isCurrent = true
@@ -176,17 +126,15 @@ class RepositoryImpl @Inject constructor(
             weather.isCurrent = dbWeather?.weather?.isCurrent == true
         }
 
-
-        val listToChangePosition =
-            weatherList.filter {
-                it.weather.positionId != 0 && it.weather.positionId < dbWeather?.weather?.positionId!!
-            }
-
         //Log.i("Positions", "listToChange: ${listToChangePosition.map { it.weather.positionId }}")
         //Log.i("Positions", "currentPos: ${dbWeather?.weather?.positionId}")
 
         // двигаем города, если это не нулевой город и если стоит флаг - сетКарент
         if (setCurrent && !weather.isLocated) {
+            val listToChangePosition =
+                weatherList.filter {
+                    it.weather.positionId != 0 && it.weather.positionId < dbWeather?.weather?.positionId!!
+                }
             for (i in listToChangePosition) {
                 Log.i("Positions", "changinPos: ${i.weather.positionId}")
                 changePositionId(i.weather.id)
@@ -196,7 +144,6 @@ class RepositoryImpl @Inject constructor(
         } else {
             weather.positionId = dbWeather?.weather?.positionId!!
         }
-
 
         //формируем табличку Часиков
         val hours = weatherResponse.forecast.forecastday.map { forecastdays ->
@@ -214,6 +161,10 @@ class RepositoryImpl @Inject constructor(
             }
         }
 
+        val currentDate = forecasts[0].date
+
+        clearOldData(currentDate)
+
         //вставляем таблички в БД
         dbQuery {
             dao.update(
@@ -224,7 +175,6 @@ class RepositoryImpl @Inject constructor(
             )
         }
     }
-
 
     override suspend fun getNewPlaceDetails(
         name: String,
@@ -381,7 +331,6 @@ class RepositoryImpl @Inject constructor(
         }
     }
 
-
     override suspend fun unCheckLocated() {
         dbQuery { dao.unCheckLocated() }
     }
@@ -418,9 +367,11 @@ class RepositoryImpl @Inject constructor(
         dao.removeById(id)
     }
 
-    override suspend fun clearDbs() {
-        dao.clearDb()
+
+    private suspend fun clearOldData(curDate: String){
+        dao.clearAlertsDb()
         dao.clearHoursDb()
+        dao.clearOldForecastDays(curDate)
     }
 
 }

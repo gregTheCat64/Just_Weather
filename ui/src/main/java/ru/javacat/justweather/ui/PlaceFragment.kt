@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
 import android.widget.Toast
-
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -17,7 +16,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.TransitionInflater
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.javacat.justweather.domain.models.suggestModels.FoundLocation
 import ru.javacat.justweather.ui.adapters.OnPlacesInteractionListener
@@ -67,9 +65,7 @@ class PlaceFragment : LocationListenerImplFragment<FragmentPlaceBinding>() {
             findNavController().navigateUp()
         }
 
-        binding.refreshBtn.setOnClickListener {
-            updateDb()
-        }
+
 
         binding.locateBtn.setOnClickListener {
             when (Build.VERSION.SDK_INT) {
@@ -252,10 +248,10 @@ class PlaceFragment : LocationListenerImplFragment<FragmentPlaceBinding>() {
         }
     }
 
-    private fun updateDb(){
-        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO){
-            viewModel.updateDb()
-        }
-    }
+//    private fun updateDb(){
+//        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO){
+//            viewModel.updateDb()
+//        }
+//    }
 
 }

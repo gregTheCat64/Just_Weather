@@ -37,15 +37,7 @@ class PlaceViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             loadingState.postValue(LoadingState.Load)
             try {
-
-                val weathersIdList = repository.getAllWeathers()?.map { it?.id }
-                if (weathersIdList != null) {
-                    for (id in weathersIdList){
-                        if (id != null) {
-                            repository.updateWeatherById(id, false)
-                        }
-                    }
-                }
+                //repository.updateAllWeathers()
                 loadingState.postValue(LoadingState.Updated)
             }catch (e: ApiError) {
                 loadingState.postValue(LoadingState.InputError)
