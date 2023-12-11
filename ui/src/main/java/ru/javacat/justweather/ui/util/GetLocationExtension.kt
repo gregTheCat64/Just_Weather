@@ -53,7 +53,7 @@ abstract class LocationListenerImplFragment<VB : ViewBinding> : BaseFragment<VB>
 
 private lateinit var locationManager: LocationManager
 fun <VB : ViewBinding> LocationListenerImplFragment<VB>.getLocationOverGps() {
-
+    Log.i("GetLocFunc", "getLocationOverGPS")
     locationManager =
         requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
@@ -84,6 +84,7 @@ fun <VB : ViewBinding> LocationListenerImplFragment<VB>.getLocationOverGps() {
 
 @RequiresApi(Build.VERSION_CODES.P)
 fun <VB : ViewBinding> LocationListenerImplFragment<VB>.getLocationOverNetwork() {
+    Log.i("GetLocFunc", "getLocationOverNetwork")
     locationManager =
         requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
     if (!locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) &&

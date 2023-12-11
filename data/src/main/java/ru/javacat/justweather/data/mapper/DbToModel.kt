@@ -11,22 +11,27 @@ import ru.javacat.justweather.data.db.entities.DbForecastday
 import ru.javacat.justweather.data.db.entities.DbHour
 import ru.javacat.justweather.data.db.entities.DbLocation
 import ru.javacat.justweather.data.db.entities.DbWeatherWithForecastsAndAlerts
+import ru.javacat.justweather.domain.models.Current
+import ru.javacat.justweather.domain.models.Location
+import ru.javacat.justweather.domain.models.Weather
 
-fun DbWeatherWithForecastsAndAlerts.toModel(): ru.javacat.justweather.domain.models.Weather {
-    return ru.javacat.justweather.domain.models.Weather(
+fun DbWeatherWithForecastsAndAlerts.toModel(): Weather? {
+    return location?.toModel()?.let {
+        Weather(
         weather.id,
         weather.positionId,
         alerts.map { it.toModel() },
         weather.current.toModel(),
         forecasts.map { it.toModel() },
-        location.toModel(),
+            it,
         weather.isCurrent,
         weather.isLocated
     )
+    }
 }
 
-fun DbLocation.toModel(): ru.javacat.justweather.domain.models.Location =
-    ru.javacat.justweather.domain.models.Location(
+fun DbLocation.toModel(): Location =
+    Location(
         country,
         lat,
         localtime,
@@ -38,8 +43,8 @@ fun DbLocation.toModel(): ru.javacat.justweather.domain.models.Location =
         localTitle, localSubtitle
     )
 
-fun DbCurrent.toModel(): ru.javacat.justweather.domain.models.Current =
-    ru.javacat.justweather.domain.models.Current(
+fun DbCurrent.toModel(): Current =
+    Current(
         cloud,
         condition.toModel(),
         feelslike_c,
@@ -82,6 +87,7 @@ fun DbAlert.toModel(): ru.javacat.justweather.domain.models.Alert {
         urgency
     )
 }
+
 fun DbForecastday.toModel(): ru.javacat.justweather.domain.models.Forecastday {
     return ru.javacat.justweather.domain.models.Forecastday(
         weatherId, astro.toModel(), date.toLocalDate(), date_epoch, day.toModel(),

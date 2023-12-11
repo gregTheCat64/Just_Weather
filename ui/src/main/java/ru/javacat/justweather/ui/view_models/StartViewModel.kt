@@ -39,7 +39,7 @@ class StartViewModel @Inject constructor(
         repository.currentWeatherFlow.stateIn(
             CoroutineScope(Dispatchers.IO),
             SharingStarted.WhileSubscribed(),
-            repository.getCurrentWeather()
+            repository.getCurrentWeather()?:null
         )
 
 
@@ -72,31 +72,11 @@ class StartViewModel @Inject constructor(
         }
     }
 
-    fun updateCurrentWeather(){
-        viewModelScope.launch(Dispatchers.IO) {
-            loadingState.postValue(LoadingState.Load)
-            try {
-                val place = repository.getCurrentWeather()
-                Log.i("MyTag", "restoring ${place?.location}")
-                val id = place?.id.toString()
-                repository.updateCurrentWeather(id)
-                loadingState.postValue(LoadingState.Success)
-                loadingState.postValue(LoadingState.Updated)
-            }catch (e: ApiError) {
-                loadingState.postValue(LoadingState.InputError)
-                Log.i("MyTag", "ОШИБКА: ${e.code}")
-            } catch (e: NetworkError) {
-                loadingState.postValue(LoadingState.NetworkError)
-                Log.i("MyTag", "ОШИБКА: NETWORK")
-            }
-
-        }
-    }
 
     private fun setPlace(request: String, isLocated: Boolean, localTitle: String, localSubtitle: String) {
+        Log.i("StartVM", "settingLocation")
         viewModelScope.launch(Dispatchers.IO) {
             loadingState.postValue(LoadingState.Load)
-
             try {
                 repository.getNewPlaceDetails(request,  isLocated, localTitle, localSubtitle, locationsLimit)
                 loadingState.postValue(LoadingState.Success)

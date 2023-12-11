@@ -135,8 +135,9 @@ class PlaceFragment : LocationListenerImplFragment<FragmentPlaceBinding>() {
         })
         binding.placesList.adapter = adapter
         viewModel.allWeathersFlow.observe(viewLifecycleOwner) {
+            Log.i("PlaceFrag", it.toString())
             adapter.submitList(it)
-            Log.i("MyLog", it.toString())
+
         }
 
         ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(

@@ -5,7 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import androidx.room.Update
+import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 import ru.javacat.justweather.data.db.entities.*
 
@@ -21,7 +21,8 @@ interface WeatherDao {
         hours: List<DbHour>,
     )
 
-    @Update
+    //@Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Upsert()
     suspend fun update(
         weather: DbWeather,
         alerts: List<DbAlert>,
@@ -58,7 +59,7 @@ interface WeatherDao {
     fun getCurrentFlow(): Flow<DbWeatherWithForecastsAndAlerts?>
 
     @Query("SELECT * FROM weathers_table WHERE isCurrent = 1")
-    suspend fun getCurrent(): DbWeatherWithForecastsAndAlerts
+    suspend fun getCurrent(): DbWeatherWithForecastsAndAlerts?
 
     @Transaction
     @Query("UPDATE weathers_table SET isCurrent = 1 WHERE id = :weatherId")
@@ -76,8 +77,16 @@ interface WeatherDao {
     @Query("DELETE FROM weathers_table")
     suspend fun clearDb()
 
-    @Transaction
+    @Query("DELETE FROM forecast_days_table WHERE date(date) < date(:currentDate)")
+    suspend fun clearOldForecastDays(currentDate: String)
+
+    @Query("DELETE FROM hours_table WHERE date(forecastDate) < date(:currentDate)")
+    suspend fun clearOldHours(currentDate: String)
+
+    @Query("DELETE FROM alerts_table")
+    suspend fun clearAlertsDb()
     @Query("DELETE FROM hours_table")
     suspend fun clearHoursDb()
-
+    @Query("DELETE FROM forecast_days_table")
+    suspend fun clearForecastDaysDb()
 }

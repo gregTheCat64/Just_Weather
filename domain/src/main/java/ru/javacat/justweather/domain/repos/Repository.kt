@@ -8,10 +8,10 @@ import ru.javacat.justweather.domain.models.geoCoderModels.Point
 import ru.javacat.justweather.domain.models.suggestModels.SuggestLocationList
 
 interface Repository {
-    val allWeathers: Flow<List<Weather>>
+    val allWeathers: Flow<List<Weather?>>
     val currentWeatherFlow: Flow<Weather?>
 
-    suspend fun getAllWeathers(): List<Weather>?
+    suspend fun getAllWeathers(): List<Weather?>
     suspend fun getNewPlaceDetails(name: String, isLocated: Boolean, localTitle: String, localSubtitle: String, locationsLimit: Int)
     suspend fun updateWeatherById(locationId: String, setCurrent: Boolean)
 

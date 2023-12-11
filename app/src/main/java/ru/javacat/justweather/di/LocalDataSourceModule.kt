@@ -17,6 +17,15 @@ object LocalDataSourceModule {
     @Provides
     @Singleton
     fun provideDb(@ApplicationContext context: Context): AppDb {
-        return Room.databaseBuilder(context, AppDb::class.java, "app.db").build()
+        val db = Room.databaseBuilder(context, AppDb::class.java, "app.db").build()
+//        db.openHelper.readableDatabase.query(
+//            """
+//                CREATE TRIGGER IF NOT EXISTS delete_old AFTER INSERT ON forecast_days_table
+//                BEGIN
+//                DELETE FROM forecast_days_table
+//                WHERE date <
+//            """
+//        )
+        return db
     }
 }

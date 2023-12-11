@@ -32,7 +32,7 @@ class RepositoryImpl @Inject constructor(
 ) : Repository {
 
 
-    override val allWeathers: Flow<List<Weather>> =
+    override val allWeathers: Flow<List<Weather?>> =
         dao.getAll().map { it.map { it.toModel() } }
 
 
@@ -41,16 +41,24 @@ class RepositoryImpl @Inject constructor(
             it?.toModel()
         }
 
-    override suspend fun getAllWeathers(): List<Weather> {
+    override suspend fun getAllWeathers(): List<Weather?> {
         return dbQuery { dao.getAllWeathers().map { it.toModel() } }
     }
-    override suspend fun getCurrentWeather(): Weather {
-        Log.i("MyTag", "Getting weahter in repo")
-        return dbQuery { dao.getCurrent().toModel() }
+    override suspend fun getCurrentWeather(): Weather? {
+        Log.i("Repo", "Getting current weather")
+        var result: Weather? = null
+        try {
+            result = dao.getCurrent()?.toModel()
+        }catch (e:Exception){
+            println("АШИПКА: ${e.stackTrace}")
+        }
+        return result
+        //return dbQuery { dao.getCurrent()?.toModel() }
     }
 
 
     override suspend fun updateCurrentWeather(locationId: String) {
+        Log.i("Repo", "Updating weather")
         val dbWeather = dbQuery { dao.getByLocationId(locationId) }
         val coords = "${dbWeather?.location?.lat},${dbWeather?.location?.lon}"
         val weatherResponse = apiRequest {
@@ -58,21 +66,26 @@ class RepositoryImpl @Inject constructor(
         }
 
         //восстанавливаем айдишник
+        Log.i("Repo", "restoring ID")
         val locationName = weatherResponse.location.name
         val region = weatherResponse.location.region
         val weatherId = (locationName + region).toBase64()
 
         //формируем табличку Алертов
+        Log.i("Repo", "making alertsDb")
         val alerts = weatherResponse.alerts.alert.map {
             it.toDbAlert(weatherId)
         }
 
         //формируем табличку Прогнозов
+        Log.i("Repo", "making forecastDayDb")
         val forecasts = weatherResponse.forecast.forecastday.map {
             it.toDbForecastday(weatherId)
         }
+        Log.i("Repo", "forecasts: $forecasts")
 
         //формируем табличку Погоды
+        Log.i("Repo", "making weatherDb")
         val weather = weatherResponse.toDbWeather(weatherId)
 
         weather.isLocated = dbWeather?.weather?.isLocated == true
@@ -96,8 +109,14 @@ class RepositoryImpl @Inject constructor(
             }
         }
 
+
+        dao.clearAlertsDb()
+        dao.clearHoursDb()
+        dao.clearForecastDaysDb()
+
         //вставляем таблички в БД
         dbQuery {
+            Log.i("Repo", "inserting tables")
             dao.update(
                 weather,
                 alerts,
@@ -105,9 +124,15 @@ class RepositoryImpl @Inject constructor(
                 everyThirdHourList
             )
         }
+
+//        val currentDate = forecasts[0].date
+//        dao.clearOldForecastDays(currentDate)
+//        dao.clearOldHours(currentDate)
+
     }
 
     override suspend fun updateWeatherById(locationId: String, setCurrent: Boolean) {
+        Log.i("Repo", "updateWeatherById")
         //получаем запись из БД
         Log.i("Repo", "getting weather from DB")
         val dbWeather = dbQuery { dao.getByLocationId(locationId) }
@@ -136,6 +161,7 @@ class RepositoryImpl @Inject constructor(
         val forecasts = weatherResponse.forecast.forecastday.map {
             it.toDbForecastday(weatherId)
         }
+        Log.i("REPO","forecasts: $forecasts")
 
         //формируем табличку Погоды
         val weather = weatherResponse.toDbWeather(weatherId)
@@ -156,8 +182,8 @@ class RepositoryImpl @Inject constructor(
                 it.weather.positionId != 0 && it.weather.positionId < dbWeather?.weather?.positionId!!
             }
 
-        Log.i("Positions", "listToChange: ${listToChangePosition.map { it.weather.positionId }}")
-        Log.i("Positions", "currentPos: ${dbWeather?.weather?.positionId}")
+        //Log.i("Positions", "listToChange: ${listToChangePosition.map { it.weather.positionId }}")
+        //Log.i("Positions", "currentPos: ${dbWeather?.weather?.positionId}")
 
         // двигаем города, если это не нулевой город и если стоит флаг - сетКарент
         if (setCurrent && !weather.isLocated) {

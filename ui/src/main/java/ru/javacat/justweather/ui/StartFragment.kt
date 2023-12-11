@@ -56,7 +56,6 @@ class StartFragment : LocationListenerImplFragment<FragmentStartBinding>(), Loca
         permissionListener()
         dispatcher = Dispatchers.IO
 
-
         val inflater = TransitionInflater.from(requireContext())
         exitTransition = inflater.inflateTransition(R.transition.fade)
     }
@@ -72,8 +71,6 @@ class StartFragment : LocationListenerImplFragment<FragmentStartBinding>(), Loca
 
 //        locationManager =
 //            requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
-
-
 
         return super.onCreateView(inflater, container, savedInstanceState)
     }
@@ -178,6 +175,7 @@ class StartFragment : LocationListenerImplFragment<FragmentStartBinding>(), Loca
     }
 
     private fun loadData(lat: Double, long: Double) {
+        Log.i("StartFrag", "loadingData")
         viewModel.getLocationByCoords("$lat,$long")
         //viewModel.getLocationByCoords("0,0")
     }

@@ -38,10 +38,12 @@ class PlaceViewModel @Inject constructor(
             loadingState.postValue(LoadingState.Load)
             try {
 
-                val weathersIdList = repository.getAllWeathers()?.map { it.id }
+                val weathersIdList = repository.getAllWeathers()?.map { it?.id }
                 if (weathersIdList != null) {
                     for (id in weathersIdList){
-                        repository.updateWeatherById(id, false)
+                        if (id != null) {
+                            repository.updateWeatherById(id, false)
+                        }
                     }
                 }
                 loadingState.postValue(LoadingState.Updated)
