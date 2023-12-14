@@ -47,4 +47,5 @@
     <string name="powered_by_weatherapi_com" translatable="false">powered by weatherapi.com</string>
     <string name="locatedmarker" translatable="false">locatedMarker</string>
     <string name="conditionimage" translatable="false">conditionImage</string>
+    <string name="mmHg">mmHg</string>
 </resources>

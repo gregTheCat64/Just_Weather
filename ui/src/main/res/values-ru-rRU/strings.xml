@@ -4,12 +4,12 @@
     <string name="realfeel">Ощущается как</string>
     <string name="more">подробнее</string>
     <string name="new_moon">Новолуние</string>
-    <string name="Waxing_Crescent">Молодая луна</string>
+    <string name="Waxing_Crescent">Растущий полумесяц</string>
     <string name="First_Quarter">Первая четверть</string>
     <string name="Full_Moon">Полнолуние</string>
     <string name="Waning_Gibbous">Убывающая луна</string>
     <string name="Last_Quarter">Последняя четверть</string>
-    <string name="Waning_Crescent">Старая луна</string>
+    <string name="Waning_Crescent">Убывающий полумесяц</string>
     <string name="City">Город</string>
     <string name="enter_the_city">Введите город</string>
     <string name="location_disabled">Включите определение местоположения</string>
@@ -38,4 +38,5 @@
     <string name="my_location">Моё местоположение</string>
     <string name="Click_on_refresh">Обновите</string>
     <string name="refresh">Повторить</string>
+    <string name="mmHg">мм рт.ст</string>
 </resources>

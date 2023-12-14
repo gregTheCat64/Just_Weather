@@ -148,7 +148,7 @@
                 <androidx.cardview.widget.CardView
                     android:id="@+id/precipCardView"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/little_card_view_height"
+                    android:layout_height="match_parent"
                     android:layout_marginEnd="8dp"
                     android:layout_weight="1"
                     android:backgroundTint="?attr/cardBackgroundColor"
@@ -161,9 +161,8 @@
                         android:id="@+id/precipImageView"
                         android:layout_width="28dp"
                         android:layout_height="28dp"
-                        android:layout_gravity="start|center_vertical"
+                        android:layout_gravity="center_vertical"
                         android:layout_marginStart="8dp"
-
                         android:layout_weight="1"
                         android:src="@drawable/icon_precipation"
                         app:layout_constraintBottom_toBottomOf="@+id/linearLayout2"
@@ -190,8 +189,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-
-
                         android:layout_marginTop="4dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="@+id/guideline4"
@@ -205,8 +202,9 @@
                         android:layout_gravity="bottom|start"
                         android:layout_marginBottom="4dp"
                         android:layout_marginStart="8dp"
-
-
+                        android:layout_marginEnd="8dp"
+                        android:textSize="12sp"
+                        android:ellipsize="end"
                         android:textColor="@color/light_text_secondary"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent" />

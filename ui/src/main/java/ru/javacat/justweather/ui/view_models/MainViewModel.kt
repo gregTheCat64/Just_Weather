@@ -27,9 +27,6 @@ class MainViewModel @Inject constructor(
     private val repository: ru.javacat.justweather.domain.repos.Repository,
 ) : ViewModel(){
 
-
-    //val currentWeatherFlow = repository.currentWeatherFlow
-
     val loadingState = SingleLiveEvent<LoadingState>()
 
     private val _forecastData = MutableStateFlow<Forecastday?>(null)

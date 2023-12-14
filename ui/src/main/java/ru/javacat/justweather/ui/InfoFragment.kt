@@ -1,0 +1,36 @@
+package ru.javacat.justweather.ui
+
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
+import dagger.hilt.android.AndroidEntryPoint
+import ru.javacat.justweather.ui.base.BaseFragment
+import ru.javacat.ui.databinding.FragmentInfoBinding
+
+
+@AndroidEntryPoint
+class InfoFragment : BaseFragment<FragmentInfoBinding>() {
+
+    override val bindingInflater: (LayoutInflater, ViewGroup?) -> FragmentInfoBinding =
+        { inflater, container ->
+            FragmentInfoBinding.inflate(inflater, container, false)
+        }
+
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+
+        return super.onCreateView(inflater, container, savedInstanceState)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.backBtn.setOnClickListener {
+            findNavController().navigateUp()
+        }
+    }
+}

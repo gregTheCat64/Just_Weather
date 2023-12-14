@@ -64,7 +64,7 @@ class ForecastFragment : BaseFragment<FragmentForecastBinding>() {
     private fun initForecastObserver(locName: String) {
         Log.i("ForecastFrag", "initForecastObserver")
         val celciusSign = "°"
-        var precipChance = ""
+        var precipChance = StringBuffer()
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -92,12 +92,25 @@ class ForecastFragment : BaseFragment<FragmentForecastBinding>() {
                             moonRiseValue.text = it.astro.moonrise
                             moonSetValue.text = it.astro.moonset
 
-                            if (it.day.daily_will_it_rain == 1 && it.day.daily_will_it_snow == 1) {
-                                precipChance = "Cнег с дождем"
+
+                            if (it.day.daily_chance_of_rain >= 90 || it.day.daily_chance_of_snow >= 90) {
+                                precipChance.append("Ожидается")
                             } else {
-                                if (it.day.daily_will_it_rain == 1) precipChance = "Будет дождик"
-                                if (it.day.daily_will_it_snow == 1) precipChance = "Будет снег"
+                                if (it.day.daily_chance_of_rain >= 50 || it.day.daily_chance_of_snow >= 50) {
+                                    precipChance.append("Вероятен")
+                                } else {
+                                    if (it.day.daily_chance_of_rain >= 10 || it.day.daily_chance_of_snow >= 10) {
+                                        precipChance.append("Возможен")
+                                    }
+                                }
                             }
+
+                            if (it.day.daily_chance_of_rain >= 10 && it.day.daily_chance_of_snow >= 10) {
+                                precipChance.append(" снег с дождем")
+                            } else if (it.day.daily_chance_of_rain >= 10) precipChance.append(" дождь") else
+                                if (it.day.daily_chance_of_snow>=10) precipChance.append(" снег")
+
+
                             precipChanceValue.text = precipChance
 
                             moonPhaseValue.text = when (it.astro.moon_phase) {
@@ -113,6 +126,7 @@ class ForecastFragment : BaseFragment<FragmentForecastBinding>() {
                             }
                         }
                     }
+                    else findNavController().navigateUp()
                 }
             }
 

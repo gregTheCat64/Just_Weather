@@ -156,6 +156,10 @@ class MainFragment : LocationListenerImplFragment<FragmentMainBinding>() {
         initStateObserver()
         initDataObserver()
 
+        binding.infoBtn.setOnClickListener {
+            findNavController().navigate(R.id.action_mainFragment_to_infoFragment)
+        }
+
         binding.placeLayout.setOnClickListener {
             it.pushAnimation(requireContext())
             findNavController().navigate(R.id.placeFragment)
@@ -277,7 +281,7 @@ class MainFragment : LocationListenerImplFragment<FragmentMainBinding>() {
                 val humidityText =  it.current.humidity.toString() + getString(R.string.percent)
                 detailsLayout.humidity.text = humidityText
 
-                val pressureText = it.current.pressure_mb.roundToInt().toString()
+                val pressureText = (it.current.pressure_mb*0.75).roundToInt().toString()
                 detailsLayout.pressureTextValue.text = pressureText
                 val alerts = it.alerts
                 val alertMsgBuffer = StringBuilder()
