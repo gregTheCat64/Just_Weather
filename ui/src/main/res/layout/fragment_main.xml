@@ -7,45 +7,55 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/infoBtn"
+        style="@style/Widget.Material3.Button.IconButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        style="@style/Widget.Material3.Button.IconButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:icon="@drawable/baseline_info_24"
+        app:icon="@drawable/outline_info_24"
         app:iconTint="@color/light_text_secondary"
-        />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/refresh"
-        style="@style/Widget.Material3.Button.IconButton"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:contentDescription="@string/update_current_location"
-        app:icon="@drawable/baseline_refresh_24"
-        app:iconTint="?attr/colorPrimary"
+        android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="@+id/cardView2"
-        app:layout_constraintTop_toBottomOf="@+id/cardView2" />
+        app:layout_constraintTop_toBottomOf="@+id/cardView2">
 
-    <TextView
-        android:id="@+id/updateTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:textColor="@color/light_text_secondary"
-        app:layout_constraintEnd_toEndOf="@+id/refresh"
-        app:layout_constraintStart_toStartOf="@+id/refresh"
-        app:layout_constraintTop_toBottomOf="@id/refresh" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/refresh"
+            style="@style/Widget.Material3.Button.IconButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/update_current_location"
+            android:layout_marginStart="-8dp"
+            app:icon="@drawable/baseline_refresh_24"
+            app:iconTint="?attr/colorPrimary"
+            app:layout_constraintStart_toStartOf="@+id/cardView2"
+            app:layout_constraintTop_toBottomOf="@+id/cardView2" />
+
+        <TextView
+            android:id="@+id/updateTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:gravity="top"
+            android:textColor="@color/light_text_secondary"
+            app:layout_constraintStart_toStartOf="@+id/cardView2"
+            app:layout_constraintTop_toBottomOf="@+id/cardView2" />
+
+    </LinearLayout>
+
+
+
 
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_margin="24dp"
         app:cardBackgroundColor="?attr/cardBackgroundColor"
         app:cardCornerRadius="8dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -140,62 +150,76 @@
     </androidx.appcompat.widget.LinearLayoutCompat>
 
 
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/linearLayoutCompat5"
+    <include
+        android:id="@+id/detailsLayout"
+        layout="@layout/fragment_details"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/dayOne"
+        app:layout_constraintEnd_toEndOf="@+id/dayThree"
+        app:layout_constraintStart_toStartOf="@+id/dayOne" />
 
+
+    <include
+        android:id="@+id/dayOne"
+        layout="@layout/day_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/alarmCard"
+        app:layout_constraintEnd_toStartOf="@+id/dayTwo"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <include
+        android:id="@+id/dayTwo"
+        layout="@layout/day_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/dayOne"
+        app:layout_constraintEnd_toStartOf="@+id/dayThree"
+        app:layout_constraintStart_toEndOf="@+id/dayOne" />
+
+    <include
+        android:id="@+id/dayThree"
+        layout="@layout/day_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/dayTwo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/dayTwo" />
+
+
+    <FrameLayout
+        android:id="@+id/alarmCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:orientation="vertical"
+        android:layout_margin="8dp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <include
-            android:id="@+id/detailsLayout"
-            layout="@layout/fragment_details"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="64dp" />
-
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/daysRecView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="16dp"
-            android:orientation="horizontal"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:itemCount="3"
-            tools:listitem="@layout/day_item" />
-
-
-        <FrameLayout
-            android:id="@+id/alarmCard"
+        <TextView
+            android:id="@+id/alarmMsg"
+            style="@style/TextAppearance.Material3.LabelMedium.SecondaryText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:visibility="invisible">
+            android:layout_gravity="bottom"
+            android:backgroundTint="?attr/cardBackgroundColor"
+            android:ellipsize="marquee"
+            android:fadingEdge="horizontal"
+            android:focusedByDefault="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:maxHeight="100dp"
+            android:padding="8dp"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:textSize="16sp" />
+    </FrameLayout>
 
-            <TextView
-                android:id="@+id/alarmMsg"
-                style="@style/TextAppearance.Material3.LabelMedium.SecondaryText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:backgroundTint="?attr/cardBackgroundColor"
-                android:ellipsize="marquee"
-                android:fadingEdge="horizontal"
-                android:focusedByDefault="true"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:maxHeight="100dp"
-                android:padding="8dp"
-                android:scrollHorizontally="true"
-                android:singleLine="true"
-                android:textSize="16sp" />
-        </FrameLayout>
 
-    </androidx.appcompat.widget.LinearLayoutCompat>
 </androidx.constraintlayout.widget.ConstraintLayout>

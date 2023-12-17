@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ru.javacat.justweather.common.util.asHour
-import ru.javacat.justweather.common.util.toWindRus
 import ru.javacat.justweather.ui.util.load
 import ru.javacat.ui.R
 import ru.javacat.ui.databinding.HourItemBinding
@@ -36,7 +35,8 @@ class ForecastAdapter(): ListAdapter<ru.javacat.justweather.domain.models.Hour, 
                 hourValue.text = item.time.asHour()
                 tempTxtView.text = item.temp_c.roundToInt().toString() + "\u00B0"
                 windSpeedValue.text = (item.wind_kph*0.28).roundToInt().toString() + " м/с"
-                windDirValue.text = item.wind_dir.toWindRus()
+                //windDirValue.text = item.wind_dir.toWindRus()
+                windDirArrow.rotation = (item.wind_degree+90).toFloat()
             }
         }
     }

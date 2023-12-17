@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
@@ -20,16 +21,13 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import ru.javacat.justweather.common.util.asDayOfWeek
 import ru.javacat.justweather.common.util.toLocalDateTime
-import ru.javacat.justweather.common.util.toWindRus
 import ru.javacat.justweather.domain.models.Forecastday
 import ru.javacat.justweather.domain.models.Weather
-import ru.javacat.justweather.ui.adapters.MainAdapter
-import ru.javacat.justweather.ui.adapters.OnInteractionListener
 import ru.javacat.justweather.ui.util.LocationListenerImplFragment
 import ru.javacat.justweather.ui.util.load
 import ru.javacat.justweather.ui.util.pushAnimation
-import ru.javacat.justweather.ui.util.refreshAnimation
 import ru.javacat.justweather.ui.util.snack
 import ru.javacat.justweather.ui.view_models.MainViewModel
 import ru.javacat.ui.R
@@ -46,7 +44,7 @@ class MainFragment : LocationListenerImplFragment<FragmentMainBinding>() {
             FragmentMainBinding.inflate(inflater, container, false)
         }
 
-    private lateinit var adapter: MainAdapter
+    //private lateinit var adapter: MainAdapter
     //private lateinit var currentTime: LocalTime
     private lateinit var fc: FragmentContainerView
 
@@ -142,16 +140,16 @@ class MainFragment : LocationListenerImplFragment<FragmentMainBinding>() {
         super.onViewCreated(view, savedInstanceState)
         Log.i("MainFragment", "onViewCreated")
 
-        adapter = MainAdapter(object : OnInteractionListener {
-            override fun onForecastItem(item: Forecastday, view: View) {
-                //val color = context!!.resources.getColor(R.color.md_theme_light_primary)
-                //view.changeColorOnPush(requireContext())
-                findNavController().navigate(R.id.forecastFragment, bundle)
-                viewModel.chooseForecastDay(item)
-            }
-        })
+//        adapter = MainAdapter(object : OnInteractionListener {
+//            override fun onForecastItem(item: Forecastday, view: View) {
+//                //val color = context!!.resources.getColor(R.color.md_theme_light_primary)
+//                //view.changeColorOnPush(requireContext())
+//                findNavController().navigate(R.id.action_mainFragment_to_forecastFragment, bundle)
+//                viewModel.chooseForecastDay(item)
+//            }
+//        })
 
-        binding.daysRecView.adapter = adapter
+        //binding.daysRecView.adapter = adapter
 
         initStateObserver()
         initDataObserver()
@@ -162,7 +160,7 @@ class MainFragment : LocationListenerImplFragment<FragmentMainBinding>() {
 
         binding.placeLayout.setOnClickListener {
             it.pushAnimation(requireContext())
-            findNavController().navigate(R.id.placeFragment)
+            findNavController().navigate(R.id.action_mainFragment_to_placeFragment)
 //            parentFragmentManager
 //                .beginTransaction()
 //                .addToBackStack(null)
@@ -172,7 +170,7 @@ class MainFragment : LocationListenerImplFragment<FragmentMainBinding>() {
 
         binding.refresh.setOnClickListener {
             viewModel.updateCurrentWeather()
-            it.refreshAnimation(requireContext())
+            //it.refreshAnimation(requireContext())
         }
     }
 
@@ -189,7 +187,7 @@ class MainFragment : LocationListenerImplFragment<FragmentMainBinding>() {
                     locName = weather?.location?.localTitle.toString()
                     bundle.putString("LOC_NAME", locName)
 
-                    weather?.forecasts?.let { updateForecast(forecastdays = it) }
+                    //weather?.forecasts?.let { updateForecast(forecastdays = it) }
                 }
             }
         }
@@ -226,6 +224,40 @@ class MainFragment : LocationListenerImplFragment<FragmentMainBinding>() {
                 locatedMarker.isVisible = it.isLocated
 
                 updateTime.text = currentTime.toString()
+
+                val image1 = it.forecasts[0].day.condition.icon.toUri().toString()
+                val image2 = it.forecasts[1].day.condition.icon.toUri().toString()
+                val image3 = it.forecasts[2].day.condition.icon.toUri().toString()
+
+                binding.dayOne.dayOfWeek.text = it.forecasts[0].date.asDayOfWeek()
+                binding.dayTwo.dayOfWeek.text = it.forecasts[1].date.asDayOfWeek()
+                binding.dayThree.dayOfWeek.text = it.forecasts[2].date.asDayOfWeek()
+
+                binding.dayOne.maxTempTxtView.text = it.forecasts[0].day.avgtemp_c.roundToInt().toString()+"\u00B0"
+                binding.dayTwo.maxTempTxtView.text = it.forecasts[1].day.avgtemp_c.roundToInt().toString()+"\u00B0"
+                binding.dayThree.maxTempTxtView.text = it.forecasts[2].day.avgtemp_c.roundToInt().toString()+"\u00B0"
+
+                binding.dayOne.conditionImgView.load(image1)
+                binding.dayTwo.conditionImgView.load(image2)
+                binding.dayThree.conditionImgView.load(image3)
+
+                binding.dayOne.root.setOnClickListener {btn->
+                    btn.pushAnimation(requireContext())
+                    viewModel.chooseForecastDay(it.forecasts[0])
+                    findNavController().navigate(R.id.action_mainFragment_to_forecastFragment, bundle)
+                }
+
+                binding.dayTwo.root.setOnClickListener {btn->
+                    btn.pushAnimation(requireContext())
+                    viewModel.chooseForecastDay(it.forecasts[1])
+                    findNavController().navigate(R.id.action_mainFragment_to_forecastFragment, bundle)
+                }
+
+                binding.dayThree.root.setOnClickListener {btn->
+                    btn.pushAnimation(requireContext())
+                    viewModel.chooseForecastDay(it.forecasts[2])
+                    findNavController().navigate(R.id.action_mainFragment_to_forecastFragment, bundle)
+                }
 
                 when{
                     currentTime.isAfter(LocalTime.of(6,0)) && currentTime.isBefore(LocalTime.of(12,0)) -> {
@@ -276,7 +308,7 @@ class MainFragment : LocationListenerImplFragment<FragmentMainBinding>() {
 
                 detailsLayout.windSpeed.text = speedText
 
-                detailsLayout.windDir.text = it.current.wind_dir.toWindRus()
+                detailsLayout.windDir.rotation = (it.current.wind_degree+90).toFloat()
 
                 val humidityText =  it.current.humidity.toString() + getString(R.string.percent)
                 detailsLayout.humidity.text = humidityText
@@ -313,7 +345,7 @@ class MainFragment : LocationListenerImplFragment<FragmentMainBinding>() {
 //            }
 //        })
 
-        adapter.submitList(forecastdays)
+        //adapter.submitList(forecastdays)
     }
 
     private fun setDarkTheme(){

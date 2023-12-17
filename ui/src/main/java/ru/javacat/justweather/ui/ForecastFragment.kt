@@ -10,7 +10,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import androidx.transition.TransitionInflater
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import ru.javacat.justweather.common.util.asLocalDate
@@ -34,8 +33,8 @@ class ForecastFragment : BaseFragment<FragmentForecastBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.i("ForecastFrag", "onCreate2")
-        val inflater = TransitionInflater.from(requireContext())
-        enterTransition = inflater.inflateTransition(R.transition.slide_right)
+        //val inflater = TransitionInflater.from(requireContext())
+        //enterTransition = inflater.inflateTransition(R.transition.slide_right)
 
     }
 
