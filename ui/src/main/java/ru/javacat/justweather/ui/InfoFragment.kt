@@ -43,7 +43,6 @@ class InfoFragment : BaseFragment<FragmentInfoBinding>() {
 
 
         binding.sendMoneyBtn.setOnClickListener {
-            println("here")
             startActivity(sendMoneyIntent)
         }
 

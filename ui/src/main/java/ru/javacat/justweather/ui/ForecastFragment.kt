@@ -63,11 +63,12 @@ class ForecastFragment : BaseFragment<FragmentForecastBinding>() {
     private fun initForecastObserver(locName: String) {
         Log.i("ForecastFrag", "initForecastObserver")
         val celciusSign = "°"
-        var precipChance = StringBuffer()
+
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.forecastData.collectLatest {
+                    val precipChance = StringBuffer()
                     if (it != null) {
                         Log.i("ForecastFrag", "getting data")
                         viewModel.getHours(it.weatherId, it.date.toString())

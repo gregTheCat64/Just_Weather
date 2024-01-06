@@ -214,6 +214,7 @@ class MainFragment : LocationListenerImplFragment<FragmentMainBinding>() {
 
     private fun updateUI(weather: Weather?){
         Log.i("MainFragment", "updateUI")
+        Log.i("MainFragment", "weather: $weather")
         binding.apply {
             alarmCard.visibility = View.INVISIBLE
 

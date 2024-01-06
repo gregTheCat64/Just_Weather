@@ -94,11 +94,13 @@ class RepositoryImpl @Inject constructor(
         val weatherResponse = apiRequest {
             apiService.getByName(coords)
         }
+        Log.i("REPO", "name: ${weatherResponse.location.name}, region:  ${weatherResponse.location.region}")
 
         //восстанавливаем айдишник
-        val locationName = weatherResponse.location.name
-        val region = weatherResponse.location.region
-        val weatherId = (locationName + region).toBase64()
+        val weatherId = dbWeather?.weather?.id.toString()
+//        val locationName = weatherResponse.location.name
+//        val region = weatherResponse.location.region
+//        val weatherId = (locationName + region).toBase64()
 
         //формируем табличку Алертов
         val alerts = weatherResponse.alerts.alert.map {

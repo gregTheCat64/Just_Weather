@@ -104,8 +104,9 @@ class StartFragment : LocationListenerImplFragment<FragmentStartBinding>(), Loca
         viewLifecycleOwner.lifecycleScope.launch {
                 viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                     viewModel.getCurrentWeatherFlow().collectLatest  {
-                        Log.i("StartFrag", "curFlow: ${it?.location}")
+                        Log.i("StartFrag", "name: ${it?.location?.name}, region: ${it?.location?.region}")
                         if (it != null){
+
                             //viewModel.updateCurrentWeather()
                             findNavController().navigate(R.id.mainFragment)
                         } else {

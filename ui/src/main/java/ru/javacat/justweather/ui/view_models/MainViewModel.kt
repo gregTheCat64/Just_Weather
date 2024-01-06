@@ -64,7 +64,6 @@ class MainViewModel @Inject constructor(
                 loadingState.postValue(LoadingState.NetworkError)
                 Log.i("MyTag", "ОШИБКА: NETWORK")
             }
-
         }
     }
 
