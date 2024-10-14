@@ -6,10 +6,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.addCallback
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.net.toUri
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
@@ -17,16 +19,16 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import ru.javacat.justweather.common.util.asDayOfWeek
 import ru.javacat.justweather.common.util.toLocalDateTime
 import ru.javacat.justweather.domain.models.Forecastday
 import ru.javacat.justweather.domain.models.Weather
+import ru.javacat.justweather.ui.adapters.MainAdapter
+import ru.javacat.justweather.ui.adapters.OnInteractionListener
+import ru.javacat.justweather.ui.common.ConditionIconRepository.icons
 import ru.javacat.justweather.ui.util.LocationListenerImplFragment
-import ru.javacat.justweather.ui.util.load
 import ru.javacat.justweather.ui.util.pushAnimation
 import ru.javacat.justweather.ui.util.snack
 import ru.javacat.justweather.ui.view_models.MainViewModel
@@ -44,8 +46,7 @@ class MainFragment : LocationListenerImplFragment<FragmentMainBinding>() {
             FragmentMainBinding.inflate(inflater, container, false)
         }
 
-    //private lateinit var adapter: MainAdapter
-    //private lateinit var currentTime: LocalTime
+    private lateinit var adapter: MainAdapter
     private lateinit var fc: FragmentContainerView
 
     private lateinit var back5: Drawable
@@ -56,6 +57,7 @@ class MainFragment : LocationListenerImplFragment<FragmentMainBinding>() {
 
     private var locName = ""
     val bundle = Bundle()
+    var alertMsg: String? = null
 
 
 
@@ -140,16 +142,16 @@ class MainFragment : LocationListenerImplFragment<FragmentMainBinding>() {
         super.onViewCreated(view, savedInstanceState)
         Log.i("MainFragment", "onViewCreated")
 
-//        adapter = MainAdapter(object : OnInteractionListener {
-//            override fun onForecastItem(item: Forecastday, view: View) {
-//                //val color = context!!.resources.getColor(R.color.md_theme_light_primary)
-//                //view.changeColorOnPush(requireContext())
-//                findNavController().navigate(R.id.action_mainFragment_to_forecastFragment, bundle)
-//                viewModel.chooseForecastDay(item)
-//            }
-//        })
+        adapter = MainAdapter(object : OnInteractionListener {
+            override fun onForecastItem(item: Forecastday, view: View) {
+                //val color = context!!.resources.getColor(R.color.md_theme_light_primary)
+                //view.changeColorOnPush(requireContext())
+                findNavController().navigate(R.id.action_mainFragment_to_forecastFragment, bundle)
+                viewModel.chooseForecastDay(item)
+            }
+        })
 
-        //binding.daysRecView.adapter = adapter
+        binding.daysRecView.adapter = adapter
 
         initStateObserver()
         initDataObserver()
@@ -168,10 +170,28 @@ class MainFragment : LocationListenerImplFragment<FragmentMainBinding>() {
 //                .commit()
         }
 
-        binding.refresh.setOnClickListener {
+//        binding.refresh.setOnClickListener {
+//            viewModel.updateCurrentWeather()
+//            //it.refreshAnimation(requireContext())
+//        }
+
+        binding.swipeToRefresh.setOnRefreshListener {
             viewModel.updateCurrentWeather()
-            //it.refreshAnimation(requireContext())
+            binding.swipeToRefresh.isRefreshing = false
         }
+
+        binding.alarmCard.setOnClickListener {
+            if (alertMsg != null) {
+                val builder = AlertDialog.Builder(requireContext())
+                builder.setTitle(getString(R.string.information))
+                builder.setMessage(alertMsg)
+                builder.setPositiveButton("ОК") { dialog, _ -> dialog.dismiss() }
+                val dialog = builder.create()
+                dialog.show()
+            }
+
+        }
+
     }
 
     private fun initDataObserver() {
@@ -197,14 +217,11 @@ class MainFragment : LocationListenerImplFragment<FragmentMainBinding>() {
         viewModel.loadingState.observe(viewLifecycleOwner) {
             when (it) {
                 is LoadingState.NetworkError -> {
-                    Snackbar.make(
-                        requireView(),
-                        getString(R.string.network_error),
-                        Snackbar.LENGTH_LONG
-                    ).show()
+                    snack(getString(R.string.network_error))
                 }
                 is LoadingState.Updated -> {
-                    snack(getString(R.string.updated))
+                    //snack(getString(R.string.updated))
+                    Toast.makeText(requireContext(), getString(R.string.updated), Toast.LENGTH_SHORT).show()
                 }
                 else -> {}
             }
@@ -222,59 +239,31 @@ class MainFragment : LocationListenerImplFragment<FragmentMainBinding>() {
                 val currentTime = it.current.last_updated.toLocalDateTime()
                     .toLocalTime()
 
+                val iconCode = it.current.condition.code
+                Log.i("MainFrag", "iconCode: $iconCode")
+
                 locatedMarker.isVisible = it.isLocated
 
                 updateTime.text = currentTime.toString()
 
-                val image1 = it.forecasts[0].day.condition.icon.toUri().toString()
-                val image2 = it.forecasts[1].day.condition.icon.toUri().toString()
-                val image3 = it.forecasts[2].day.condition.icon.toUri().toString()
-
-                binding.dayOne.dayOfWeek.text = it.forecasts[0].date.asDayOfWeek()
-                binding.dayTwo.dayOfWeek.text = it.forecasts[1].date.asDayOfWeek()
-                binding.dayThree.dayOfWeek.text = it.forecasts[2].date.asDayOfWeek()
-
-                binding.dayOne.maxTempTxtView.text = it.forecasts[0].day.avgtemp_c.roundToInt().toString()+"\u00B0"
-                binding.dayTwo.maxTempTxtView.text = it.forecasts[1].day.avgtemp_c.roundToInt().toString()+"\u00B0"
-                binding.dayThree.maxTempTxtView.text = it.forecasts[2].day.avgtemp_c.roundToInt().toString()+"\u00B0"
-
-                binding.dayOne.conditionImgView.load(image1)
-                binding.dayTwo.conditionImgView.load(image2)
-                binding.dayThree.conditionImgView.load(image3)
-
-                binding.dayOne.root.setOnClickListener {btn->
-                    btn.pushAnimation(requireContext())
-                    viewModel.chooseForecastDay(it.forecasts[0])
-                    findNavController().navigate(R.id.action_mainFragment_to_forecastFragment, bundle)
-                }
-
-                binding.dayTwo.root.setOnClickListener {btn->
-                    btn.pushAnimation(requireContext())
-                    viewModel.chooseForecastDay(it.forecasts[1])
-                    findNavController().navigate(R.id.action_mainFragment_to_forecastFragment, bundle)
-                }
-
-                binding.dayThree.root.setOnClickListener {btn->
-                    btn.pushAnimation(requireContext())
-                    viewModel.chooseForecastDay(it.forecasts[2])
-                    findNavController().navigate(R.id.action_mainFragment_to_forecastFragment, bundle)
-                }
+                adapter.submitList(weather.forecasts)
 
                 when{
                     currentTime.isAfter(LocalTime.of(6,0)) && currentTime.isBefore(LocalTime.of(12,0)) -> {
                         fc.background = back5
-                        setLightTheme()
+                        setLightTheme(iconCode)
+
                         //println("back: back5")
                     }
 
                     currentTime.isAfter(LocalTime.of(12,0)) && currentTime.isBefore(LocalTime.of(18,0)) -> {
-                        setLightTheme()
+                        setLightTheme(iconCode)
                         fc.background = back12
                         //println("back: back12")
                     }
                     currentTime.isAfter(LocalTime.of(18,0)) && currentTime.isBefore(LocalTime.of(19,0)) -> {
                         fc.background = back18
-                        setDarkTheme()
+                        setDarkTheme(iconCode)
                         //println("back: back18")
                     }
 //                    currentTime.isAfter(LocalTime.of(20,0)) && currentTime.isBefore(LocalTime.of(22,0)) -> {
@@ -282,16 +271,19 @@ class MainFragment : LocationListenerImplFragment<FragmentMainBinding>() {
 //                        println("back: back20")
 //                    }
                     currentTime.isAfter(LocalTime.of(19,0)) || currentTime.isBefore(LocalTime.of(6,0)) -> {
-                        setDarkTheme()
+                        setDarkTheme(iconCode)
                         fc.background = back22
                         //println("back: back22")
                     }
                     currentTime.isAfter(LocalTime.of(9,0)) &&  currentTime.isBefore(LocalTime.of(19,0))
                             && it.current.condition.code in (1150..1201) -> {
-                        setLightTheme()
+                        setLightTheme(iconCode)
                         fc.background = backRainy
+                    } else -> {
+                        setLightTheme(iconCode)
                     }
                 }
+
                 val tempText =  it.current.temp_c.roundToInt()
                     .toString() + getString(R.string.celcius)
                 tempTxtView.text = tempText
@@ -300,9 +292,8 @@ class MainFragment : LocationListenerImplFragment<FragmentMainBinding>() {
                 val reelFeelText =  it.current.feelslike_c.roundToInt().toString() + getString(
                     R.string.celcius
                 )
-                realFeelTxtView.text =reelFeelText
 
-                it.current.condition.icon.let { it1 -> imageView.load(it1) }
+                realFeelTxtView.text =reelFeelText
 
                 val speedInmS = (it.current.wind_kph*0.28).roundToInt().toString()
                 val speedText =  "$speedInmS ${getString(R.string.m_s)}"
@@ -327,6 +318,7 @@ class MainFragment : LocationListenerImplFragment<FragmentMainBinding>() {
                         alarmCard.visibility = View.INVISIBLE
                     }
                 }
+                alertMsg = alertMsgBuffer.toString()
                 alarmMsg.text = alertMsgBuffer
             }
         }
@@ -349,24 +341,39 @@ class MainFragment : LocationListenerImplFragment<FragmentMainBinding>() {
         //adapter.submitList(forecastdays)
     }
 
-    private fun setDarkTheme(){
+    private fun setDarkTheme(iconCode: Int){
         val color = R.color.white
+        val currentIcon = icons.findLast {icon->
+            icon.code == iconCode }?.nightIcon?:R.drawable.i113
+
+        Log.i("MainFrag", "setDarkTheme in currentIcon: $currentIcon")
+
+        val iconRes = ContextCompat.getDrawable(requireContext(), currentIcon)
         binding.apply {
             tempTxtView.setTextColor(AppCompatResources.getColorStateList(requireContext(), color))
             realfeelTxt.setTextColor(AppCompatResources.getColorStateList(requireContext(), color))
             realFeelTxtView.setTextColor(AppCompatResources.getColorStateList(requireContext(), color))
-
+            imageView.setImageDrawable(iconRes)
         }
     }
 
-    private fun setLightTheme(){
+    private fun setLightTheme(iconCode: Int){
         val color = R.color.grey
+        val currentIcon = icons.findLast {icon->
+            icon.code == iconCode }?.icon?:R.drawable.i113
+
+        Log.i("MainFrag", "setLightTheme in currentIcon: $currentIcon")
+
+        val iconRes = ContextCompat.getDrawable(requireContext(), currentIcon)
         binding.apply {
             tempTxtView.setTextColor(AppCompatResources.getColorStateList(requireContext(), color))
             realfeelTxt.setTextColor(AppCompatResources.getColorStateList(requireContext(), color))
             realFeelTxtView.setTextColor(AppCompatResources.getColorStateList(requireContext(), color))
-
+            imageView.setImageDrawable(iconRes)
         }
+
+
+
     }
 
 }

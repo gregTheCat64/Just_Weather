@@ -29,17 +29,20 @@ class MainAdapter(
 
         fun bind(item: Forecastday)  {
             binding.apply {
+
                 val image = item.day.condition.icon
+//                val icon = ConditionIconRepository.icons.findLast {icon->
+//                    icon.code == item.day.condition.code
+//                }?.nightIcon?:R.drawable.i113_night
                 dayOfWeek.text = item.date.asDayOfWeek()
                 maxTempTxtView.text = item.day.avgtemp_c.roundToInt().toString()+ "\u00B0"
-                //minTempTxtView.text = item.day.mintemp_c.roundToInt().toString()+ "°"
+
                 root.setOnClickListener {
                     it.pushAnimation(binding.root.context)
                     onInteractionListener.onForecastItem(item, binding.forecastLayout)
                 }
-
                 conditionImgView.load(image.toUri().toString())
-
+                //conditionImgView.setImageResource(icon)
             }
         }
     }

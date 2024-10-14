@@ -48,6 +48,7 @@ dependencies {
     implementation(libs.bundles.viewmodel)
     implementation(libs.bundles.nav)
     implementation(libs.bundles.coroutines)
+    implementation (libs.androidx.swiperefreshlayout)
 
     implementation(libs.hilt)
     kapt(libs.hilt.compiler)

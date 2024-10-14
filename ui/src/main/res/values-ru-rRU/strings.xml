@@ -41,4 +41,5 @@
     <string name="mmHg">мм рт.ст</string>
     <string name="update">Обновить</string>
     <string name="choose_e_mail_app">Выберите приложение для отправки</string>
+    <string name="information">Информация</string>
 </resources>

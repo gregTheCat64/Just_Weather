@@ -1,0 +1,57 @@
+package ru.javacat.justweather.ui.common
+
+import ru.javacat.ui.R
+
+object IconMap {
+        val icons = mapOf(
+            1000 to R.drawable.i113,
+            1003 to R.drawable.i116,
+            1106 to R.drawable.i119,
+            1009 to R.drawable.i122,
+            1030 to R.drawable.i143,
+            1063 to R.drawable.i176,
+            1066 to R.drawable.i179,
+            1069 to R.drawable.i182,
+            1072 to R.drawable.i185,
+            1087 to R.drawable.i200,
+            1114 to R.drawable.i227,
+            1117 to R.drawable.i230,
+            1135 to R.drawable.i248,
+            1147 to R.drawable.i260,
+            1150 to R.drawable.i263,
+            1153 to R.drawable.i266,
+            1168 to R.drawable.i281,
+            1171 to R.drawable.i284,
+            1180 to R.drawable.i293,
+            1183 to R.drawable.i296,
+            1186 to R.drawable.i299,
+            1189 to R.drawable.i302,
+            1192 to R.drawable.i305,
+            1195 to R.drawable.i308,
+            1198 to R.drawable.i311,
+            1201 to R.drawable.i314,
+            1204 to R.drawable.i317,
+            1207 to R.drawable.i320,
+            1210 to R.drawable.i323,
+            1213 to R.drawable.i326,
+            1216 to R.drawable.i329,
+            1219 to R.drawable.i332,
+            1222 to R.drawable.i335,
+            1225 to R.drawable.i338,
+            1237 to R.drawable.i350,
+            1240 to R.drawable.i353,
+            1243 to R.drawable.i356,
+            1246 to R.drawable.i359,
+            1249 to R.drawable.i362,
+            1252 to R.drawable.i365,
+            1255 to R.drawable.i368,
+            1258 to R.drawable.i371,
+            1261 to R.drawable.i374,
+            1264 to R.drawable.i377,
+            1273 to R.drawable.i386,
+            1276 to R.drawable.i389,
+            1279 to R.drawable.i392,
+            1282 to R.drawable.i395
+        )
+
+}

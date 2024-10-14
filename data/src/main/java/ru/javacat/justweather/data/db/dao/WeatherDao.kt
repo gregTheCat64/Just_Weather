@@ -7,7 +7,12 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
-import ru.javacat.justweather.data.db.entities.*
+import ru.javacat.justweather.data.db.entities.DbAlert
+import ru.javacat.justweather.data.db.entities.DbForecastday
+import ru.javacat.justweather.data.db.entities.DbHour
+import ru.javacat.justweather.data.db.entities.DbLocation
+import ru.javacat.justweather.data.db.entities.DbWeather
+import ru.javacat.justweather.data.db.entities.DbWeatherWithForecastsAndAlerts
 
 @Dao
 interface WeatherDao {
@@ -58,6 +63,7 @@ interface WeatherDao {
     @Query("SELECT * FROM weathers_table WHERE isCurrent = 1")
     fun getCurrentFlow(): Flow<DbWeatherWithForecastsAndAlerts?>
 
+    @Transaction
     @Query("SELECT * FROM weathers_table WHERE isCurrent = 1")
     suspend fun getCurrent(): DbWeatherWithForecastsAndAlerts?
 

@@ -1,132 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/infoBtn"
-        style="@style/Widget.Material3.Button.IconButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        app:icon="@drawable/outline_info_24"
-        app:iconTint="@color/light_text_secondary"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
-        android:layout_width="wrap_content"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeToRefresh"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="@+id/cardView2"
-        app:layout_constraintTop_toBottomOf="@+id/cardView2">
+        app:layout_constraintStart_toStartOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/refresh"
+            android:id="@+id/infoBtn"
             style="@style/Widget.Material3.Button.IconButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/update_current_location"
-            android:layout_marginStart="-8dp"
-            app:icon="@drawable/baseline_refresh_24"
-            app:iconTint="?attr/colorPrimary"
-            app:layout_constraintStart_toStartOf="@+id/cardView2"
-            app:layout_constraintTop_toBottomOf="@+id/cardView2" />
+            android:layout_margin="8dp"
+            app:icon="@drawable/outline_info_24"
+            app:iconTint="@color/light_text_secondary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/updateTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top"
-            android:gravity="top"
-            android:textColor="@color/light_text_secondary"
-            app:layout_constraintStart_toStartOf="@+id/cardView2"
-            app:layout_constraintTop_toBottomOf="@+id/cardView2" />
-
-    </LinearLayout>
-
-
-
-
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="24dp"
-        app:cardBackgroundColor="?attr/cardBackgroundColor"
-        app:cardCornerRadius="8dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/placeLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="8dp">
-
-            <ImageView
-                android:id="@+id/locatedMarker"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginEnd="8dp"
-                android:contentDescription="@string/locatedmarker"
-                android:src="@drawable/baseline_location_on_24"
-                app:tint="?attr/colorPrimary" />
 
             <TextView
-                android:id="@+id/cityTxtView"
-                style="@style/TextAppearance.Material3.LabelLarge.ForecastLargeText"
+                android:id="@+id/updateTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textColor="@color/white" />
-        </androidx.appcompat.widget.LinearLayoutCompat>
+                android:layout_gravity="top"
+                android:gravity="top"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/light_text_secondary"
+                app:layout_constraintStart_toStartOf="@+id/cardView2"
+                app:layout_constraintTop_toBottomOf="@+id/cardView2" />
 
 
-    </androidx.cardview.widget.CardView>
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="24dp"
+            app:cardBackgroundColor="?attr/cardBackgroundColor"
+            app:cardCornerRadius="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
 
-    <TextView
-        android:id="@+id/tempTxtView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="96dp"
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/placeLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="8dp">
 
-        android:textSize="96sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.4"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+                <ImageView
+                    android:id="@+id/locatedMarker"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="8dp"
+                    android:contentDescription="@string/locatedmarker"
+                    android:src="@drawable/baseline_location_on_24"
+                    app:tint="?attr/colorPrimary" />
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:layout_gravity="center"
-        android:layout_marginStart="16dp"
-        android:contentDescription="@string/conditionimage"
-        app:layout_constraintBottom_toBottomOf="@+id/tempTxtView"
-        app:layout_constraintStart_toEndOf="@+id/tempTxtView"
-        app:layout_constraintTop_toTopOf="@+id/tempTxtView" />
+                <TextView
+                    android:id="@+id/cityTxtView"
+                    style="@style/TextAppearance.Material3.LabelLarge.ForecastLargeText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/white" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
 
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/linearLayoutCompat4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tempTxtView">
+        </androidx.cardview.widget.CardView>
+
+
+        <TextView
+            android:id="@+id/tempTxtView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="96dp"
+
+            android:textSize="96sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.4"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="16dp"
+            android:contentDescription="@string/conditionimage"
+            app:layout_constraintBottom_toBottomOf="@+id/tempTxtView"
+            app:layout_constraintStart_toEndOf="@+id/tempTxtView"
+            app:layout_constraintTop_toTopOf="@+id/tempTxtView" />
+
 
         <TextView
             android:id="@+id/realfeelTxt"
@@ -135,91 +116,81 @@
             android:layout_height="wrap_content"
             android:text="@string/realfeel"
             android:textColor="?attr/textFillColor"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@+id/tempTxtView"
+            app:layout_constraintTop_toBottomOf="@+id/tempTxtView" />
 
-        <TextView
-            android:id="@+id/realFeelTxtView"
-            style="@style/TextAppearance.Material3.TitleLarge.TitleTextValue"
+            <TextView
+                android:id="@+id/realFeelTxtView"
+                style="@style/TextAppearance.Material3.TitleLarge.TitleTextValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Click_on_refresh"
+                android:textColor="?attr/textFillColor"
+                android:textSize="22sp"
+                android:layout_marginStart="8dp"
+                app:layout_constraintBottom_toBottomOf="@+id/realfeelTxt"
+                app:layout_constraintStart_toEndOf="@+id/realfeelTxt" />
+
+
+        <include
+            android:id="@+id/detailsLayout"
+            layout="@layout/fragment_details"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="@string/Click_on_refresh"
-            android:textColor="?attr/textFillColor"
-            android:textSize="22sp" />
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-    <include
-        android:id="@+id/detailsLayout"
-        layout="@layout/fragment_details"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/dayOne"
-        app:layout_constraintEnd_toEndOf="@+id/dayThree"
-        app:layout_constraintStart_toStartOf="@+id/dayOne" />
+            android:layout_gravity="center"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toTopOf="@+id/daysRecView"
+            app:layout_constraintEnd_toEndOf="@+id/daysRecView"
+            app:layout_constraintStart_toStartOf="@+id/daysRecView" />
 
 
-    <include
-        android:id="@+id/dayOne"
-        layout="@layout/day_item"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/alarmCard"
-        app:layout_constraintEnd_toStartOf="@+id/dayTwo"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <include
-        android:id="@+id/dayTwo"
-        layout="@layout/day_item"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/dayOne"
-        app:layout_constraintEnd_toStartOf="@+id/dayThree"
-        app:layout_constraintStart_toEndOf="@+id/dayOne" />
-
-    <include
-        android:id="@+id/dayThree"
-        layout="@layout/day_item"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintBottom_toBottomOf="@+id/dayTwo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/dayTwo" />
+      <androidx.recyclerview.widget.RecyclerView
+          android:id="@+id/daysRecView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+          android:orientation="horizontal"
+          tools:itemCount="3"
+          tools:listitem="@layout/day_item"
+          android:layout_marginBottom="16dp"
+          app:layout_constraintBottom_toTopOf="@id/alarmCard"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintEnd_toEndOf="parent"
+          />
 
 
-    <FrameLayout
-        android:id="@+id/alarmCard"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <TextView
-            android:id="@+id/alarmMsg"
-            style="@style/TextAppearance.Material3.LabelMedium.SecondaryText"
+        <FrameLayout
+            android:id="@+id/alarmCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:backgroundTint="?attr/cardBackgroundColor"
-            android:ellipsize="marquee"
-            android:fadingEdge="horizontal"
-            android:focusedByDefault="true"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:maxHeight="100dp"
-            android:padding="8dp"
-            android:scrollHorizontally="true"
-            android:singleLine="true"
-            android:textSize="16sp" />
-    </FrameLayout>
+            android:layout_margin="8dp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <TextView
+                android:id="@+id/alarmMsg"
+                style="@style/TextAppearance.Material3.LabelMedium.SecondaryText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:backgroundTint="?attr/cardBackgroundColor"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
+                android:focusedByDefault="true"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:maxHeight="100dp"
+                android:padding="8dp"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:textSize="16sp" />
+        </FrameLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>
