@@ -67,11 +67,6 @@ class MainFragment : LocationListenerImplFragment<FragmentMainBinding>() {
         super.onCreate(savedInstanceState)
         Log.i("MainFragment", "onCreateFragment")
 
-        //val inflater = TransitionInflater.from(requireContext())
-        //exitTransition = inflater.inflateTransition(R.transition.fade)
-        //currentTime = LocalTime.now()
-        //enterTransition = inflater.inflateTransition(R.transition.slide_right)
-
         requireActivity().onBackPressedDispatcher.addCallback(this) {
             requireActivity().finish()
         }
@@ -307,39 +302,27 @@ class MainFragment : LocationListenerImplFragment<FragmentMainBinding>() {
 
                 val pressureText = (it.current.pressure_mb*0.75).roundToInt().toString()
                 detailsLayout.pressureTextValue.text = pressureText
-                val alerts = it.alerts
-                val alertMsgBuffer = StringBuilder()
-                for (element in alerts) {
+
+                //alerts
+                val alertList = mutableListOf<String>()
+                for (element in it.alerts) {
                     if (element.desc.isNotEmpty()) {
                         alarmCard.visibility = View.VISIBLE
-                        alertMsgBuffer.append(element.desc)
+                        alertList.add(element.desc)
                         alarmMsg.isSelected = true
                     } else {
                         alarmCard.visibility = View.INVISIBLE
                     }
                 }
-                alertMsg = alertMsgBuffer.toString()
-                alarmMsg.text = alertMsgBuffer
+
+                val alertText = alertList.joinToString(separator = " ")
+
+                alertMsg = alertText
+                alarmMsg.text = alertText
             }
         }
     }
 
-    private fun updateForecast(forecastdays: List<Forecastday>){
-//        val bundle = Bundle()
-//        bundle.putString("LOC_NAME", locName)
-//        adapter = MainAdapter(object : OnInteractionListener {
-//            override fun onForecastItem(item: Forecastday, view: View) {
-//                //val color = context!!.resources.getColor(R.color.md_theme_light_primary)
-//                //view.changeColorOnPush(requireContext())
-//                findNavController().navigate(R.id.action_mainFragment_to_forecastFragment, bundle)
-//                viewModel.getHours(item.weatherId, item.date.toString())
-//                viewModel.chooseForecastDay(item)
-//
-//            }
-//        })
-
-        //adapter.submitList(forecastdays)
-    }
 
     private fun setDarkTheme(iconCode: Int){
         val color = R.color.white
